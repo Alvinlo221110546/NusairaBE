@@ -18,6 +18,8 @@ db.connect((err) => {
   console.log('Connected to the database');
 });
 
+
+//ini untuk cek table
 // connection.query('SHOW TABLES', (err, results) => {
 //   if (err) {
 //       console.error('Gagal melakukan query:', err);
