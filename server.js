@@ -3,7 +3,11 @@ import express from 'express';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import tambakRoutes from './routes/TambakRoutes.js';
-import bodyParser from "body-parser";
+import siklusRoutes from './routes/MulaiSiklus.js';
+import kematianRoutes from './routes/Kematian.js';
+import dataPakanRoutes from './routes/Pakan.js';
+import dataPanenRoutes from './routes/Panen.js'
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -11,42 +15,25 @@ const __dirname = dirname(__filename);
 const app = express();
 const port = 3020;
 
-app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.urlencoded({ extended: false }));
-app.use(cors());
 
-app.use(cors({
-  origin: 'http://localhost:3020',
-  credentials: true,
-}));
-
-app.use(bodyParser.json());
-
-app.use('/api/tambak', tambakRoutes);
+app.use(express.json());  
+app.use(express.urlencoded({ extended: false })); 
 
 const corsOptions = {
   origin: 'http://localhost:5173',  
-  methods: 'GET, POST, PUT, DELETE',  
-  allowedHeaders: 'Content-Type, Authorization',  
+  methods: 'GET, POST, PUT, DELETE',
+  allowedHeaders: 'Content-Type, Authorization',
 };
+app.use(cors(corsOptions));
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(cors(corsOptions));  
-
-app.use(express.json());
-
-
-app.post('/api/tambak', (req, res) => {
-  const formData = req.body;
-  console.log(req.body); 
-  console.log('Data diterima:', formData);
-
-  res.status(200).json({ message: 'Data berhasil diterima', data: formData });
-});
-
-
-
-
+// Routing
+app.use('/tambak', tambakRoutes);
+app.use('/siklus',siklusRoutes );
+app.use('/kematian',kematianRoutes );
+app.use('/penyakit',kematianRoutes );
+app.use('/pakan', dataPakanRoutes);
+app.use('/panen', dataPanenRoutes); 
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);

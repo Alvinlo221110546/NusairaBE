@@ -1,0 +1,1 @@
+//lagi cari algoritma rencana perhitungan biasa kalau ga bisa machine learning
