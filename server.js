@@ -27,7 +27,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false })); 
 
 const corsOptions = {
-  origin: 'https://nusaira-be.vercel.app/',  
+  origin: 'http://localhost:3306',  
   methods: 'GET, POST, PUT, DELETE',
   allowedHeaders: 'Content-Type, Authorization',
 };
@@ -51,5 +51,5 @@ app.use('/api', kualitasAirRoutes);
 
 
 app.listen(port, () => {
-  console.log(`Server is running at https://nusaira-be.vercel.app/:${port}`);
+  console.log(`Server is running at http://localhost:${port}`);
 });
