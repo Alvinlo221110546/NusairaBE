@@ -2,7 +2,7 @@ import db from '../database/Nusairadb.js';
 
 class DataPakan {
     constructor(data) {
-        this.kolamId = data.kolamId;
+        this.kolam_id = data.kolam_id;  
         this.tanggal = data.tanggal;
         this.waktu = data.waktu;
         this.puasa = data.puasa || false;
@@ -10,39 +10,35 @@ class DataPakan {
         this.catatan = data.catatan || null;
     }
 
-    // Validasi data input
+   
     static async validate(data) {
         const errors = [];
 
-  
-        if (!data.kolamId) errors.push("Kolam ID harus diisi.");
-
-   
+        if (!data.kolam_id) errors.push("Kolam ID harus diisi.");
         if (!data.tanggal) errors.push("Tanggal harus diisi.");
-
-      
         if (!data.waktu) errors.push("Waktu harus diisi.");
-
         if (data.jumlah && data.jumlah <= 0) errors.push("Jumlah harus lebih dari 0.");
 
         return errors;
     }
 
-    static save(data) {
-        return new Promise((resolve, reject) => {
-            DataPakan.validate(data).then((validationErrors) => {
-                if (validationErrors.length > 0) {
-                    return reject(new Error(validationErrors.join(", ")));
-                }
+    
+    static async save(data) {
+        try {
+            const validationErrors = await DataPakan.validate(data);
+            if (validationErrors.length > 0) {
+                throw new Error(validationErrors.join(", "));
+            }
 
-                const query = `
-                    INSERT INTO data_pakan (kolamId, tanggal, waktu, puasa, jumlah, catatan)
-                    VALUES (?, ?, ?, ?, ?, ?)
-                `;
-                
+            const query = `
+                INSERT INTO data_pakan (kolam_id, tanggal, waktu, puasa, jumlah, catatan)
+                VALUES (?, ?, ?, ?, ?, ?)
+            `;
+
+            return new Promise((resolve, reject) => {
                 db.query(
-                    query, 
-                    [data.kolamId, data.tanggal, data.waktu, data.puasa, data.jumlah, data.catatan],
+                    query,
+                    [data.kolam_id, data.tanggal, data.waktu, data.puasa, data.jumlah, data.catatan],
                     (err, result) => {
                         if (err) {
                             return reject(err);
@@ -50,11 +46,14 @@ class DataPakan {
                         resolve(result);
                     }
                 );
-            }).catch((error) => reject(error));
-        });
+            });
+        } catch (error) {
+            return Promise.reject(error);
+        }
     }
 
-    static getAll() {
+    
+    static async getAll() {
         return new Promise((resolve, reject) => {
             db.query('SELECT * FROM data_pakan', (err, results) => {
                 if (err) {

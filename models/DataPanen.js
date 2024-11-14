@@ -2,56 +2,54 @@ import db from '../database/Nusairadb.js';
 
 class DataPanen {
   constructor(data) {
-    this.kolamId = data.kolamId; 
+    this.kolam_id = data.kolam_id;  
     this.tanggal = data.tanggal;
     this.berat = data.berat;
     this.size = data.size;
-    this.hargaJual = data.hargaJual;
+    this.harga_jual = data.harga_jual;  
     this.status = data.status;
-    this.catatan = data.catatan;
+    this.catatan = data.catatan || null;  
   }
 
-
+ 
   static async validate(data) {
     const errors = [];
-    
-   
-    if (!data.kolamId) errors.push("Kolam ID harus diisi.");
-   
-    if (!data.tanggal) errors.push("Tanggal harus diisi.");
-    
- 
-    if (data.berat <= 0) errors.push("Berat harus lebih dari 0.");
-  
-    if (!data.size) errors.push("Size harus diisi.");
-    
-  
-    if (data.hargaJual <= 0) errors.push("Harga jual harus lebih dari 0.");
 
+    if (!data.kolam_id) errors.push("Kolam ID harus diisi.");
+    if (!data.tanggal) errors.push("Tanggal harus diisi.");
+    if (data.berat <= 0) errors.push("Berat harus lebih dari 0.");
+    if (!data.size) errors.push("Size harus diisi.");
+    if (data.harga_jual <= 0) errors.push("Harga jual harus lebih dari 0.");
     if (!data.status) errors.push("Status harus diisi.");
-    
+
     return errors;
   }
 
-  static save(data) {
-    return new Promise((resolve, reject) => {
-      DataPanen.validate(data).then((validationErrors) => {
-        if (validationErrors.length > 0) {
-          return reject(new Error(validationErrors.join(", ")));
-        }
+  
+  static async save(data) {
+    try {
+      const validationErrors = await DataPanen.validate(data);
+      if (validationErrors.length > 0) {
+        throw new Error(validationErrors.join(", "));
+      }
 
-        
+      const query = `
+        INSERT INTO data_panen (kolam_id, tanggal, berat, size, harga_jual, status, catatan)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `;
+
+      return new Promise((resolve, reject) => {
         db.query(
-          'INSERT INTO data_panen (kolamId, tanggal, berat, size, hargaJual, status, catatan) VALUES (?, ?, ?, ?, ?, ?, ?)', 
+          query,
           [
-            data.kolamId, 
+            data.kolam_id, 
             data.tanggal, 
             data.berat, 
             data.size, 
-            data.hargaJual, 
+            data.harga_jual, 
             data.status, 
             data.catatan
-          ], 
+          ],
           (err, result) => {
             if (err) {
               return reject(err);
@@ -59,18 +57,20 @@ class DataPanen {
             resolve(result);
           }
         );
-      }).catch((error) => reject(error));
-    });
+      });
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 
-
-  static getAll() {
+  
+  static async getAll() {
     return new Promise((resolve, reject) => {
-      db.query('SELECT * FROM data_panen', (err, result) => {
+      db.query('SELECT * FROM data_panen', (err, results) => {
         if (err) {
           return reject(err);
         }
-        resolve(result);
+        resolve(results);
       });
     });
   }

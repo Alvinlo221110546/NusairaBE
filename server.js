@@ -9,6 +9,12 @@ import dataPakanRoutes from './routes/Pakan.js';
 import dataPanenRoutes from './routes/Panen.js'
 import penyakitRoutes from './routes/Penyakit.js';
 import ancoRoutes from './routes/Anco.js';
+import penyakitLeleRoutes from './routes/PenyakitLele.js';
+import beritaRoutes from './routes/Berita.js';
+import notifikasiRoutes from './routes/Notifikasi.js';
+import pengeluaranRoutes from './routes/Pengeluaran.js';
+import pemasukanRoutes from './routes/Pemasukan.js';
+import kualitasAirRoutes from './routes/Air.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -36,6 +42,12 @@ app.use('/api', penyakitRoutes);
 app.use('/api', dataPakanRoutes);
 app.use('/api', dataPanenRoutes); 
 app.use('/api', ancoRoutes);
+app.use('/api', penyakitLeleRoutes);
+app.use('/api', beritaRoutes);
+app.use('/api', notifikasiRoutes);
+app.use('/api', pengeluaranRoutes);
+app.use('/api', pemasukanRoutes);
+app.use('/api', kualitasAirRoutes);
 
 
 app.listen(port, () => {
