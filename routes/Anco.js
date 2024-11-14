@@ -1,14 +1,15 @@
 import express from 'express';
-import AncoController from '../controller/AncoController.js'; 
+import AncoController from '../controller/AncoController.js';
 
 const router = express.Router();
 
 
-router.post('/anco', AncoController.addAnco);
+router.post('/anco', AncoController.saveAnco);
 
-router.get('/ancos', AncoController.getAllAncos);
+
+router.get('/anco', AncoController.getAllAnco);
 
 
 router.get('/anco/:id', AncoController.getAncoById);
 
-export default router; 
+export default router;

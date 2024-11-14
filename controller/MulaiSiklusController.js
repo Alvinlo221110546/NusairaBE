@@ -1,45 +1,28 @@
 import Siklus from '../models/DataMulaiSiklus.js';
-import db from '../database/Nusairadb.js'; 
 
 class SiklusController {
-  
-  static async addSiklus(req, res) {
-    try {
-      const data = req.body;
+    
+    async addSiklus(req, res) {
+        const data = req.body;
 
-     
-      await Siklus.save(data, db);
-
-      res.status(201).json({
-        message: 'Siklus berhasil disimpan!',
-        data,
-      });
-    } catch (error) {
-      console.error('Error saving siklus:', error);
-      res.status(500).json({
-        message: 'Terjadi kesalahan saat menyimpan data siklus.',
-        error: error.message,
-      });
+        try {
+            
+            const result = await Siklus.save(data);
+            res.status(201).json({ message: 'Siklus berhasil ditambahkan', result });
+        } catch (err) {
+            return res.status(500).json({ error: err.message });
+        }
     }
-  }
 
- 
-  static async getSiklus(req, res) {
-    try {
-      const siklusList = await Siklus.getAll(db);
-
-      res.status(200).json({
-        message: 'Data siklus berhasil diambil.',
-        data: siklusList,
-      });
-    } catch (error) {
-      console.error('Error retrieving siklus:', error);
-      res.status(500).json({
-        message: 'Terjadi kesalahan saat mengambil data siklus.',
-        error: error.message,
-      });
+    
+    async getAllSiklus(req, res) {
+        try {
+            const siklus = await Siklus.getAll();
+            res.status(200).json(siklus);
+        } catch (err) {
+            return res.status(500).json({ error: 'Server error' });
+        }
     }
-  }
 }
 
-export default SiklusController;
+export default new SiklusController();

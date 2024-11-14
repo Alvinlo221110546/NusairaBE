@@ -1,20 +1,14 @@
 import express from 'express';
-import { createTambak } from '../controller/TambakController.js';
+import TambakController from '../controller/TambakController.js';  
 
 const router = express.Router();
 
-
-router.post('/', createTambak);  
-
-
-router.get('/', (req, res) => {
-    res.send('Menampilkan semua tambak');
+router.post('/', (req, res) => {
+    console.log('Request body:', req.body); 
+    TambakController.addTambak(req, res);
 });
 
+router.get('/', TambakController.getAllTambak);
 
-router.get('/:id', (req, res) => {
-    const { id } = req.params;
-    res.send(`Menampilkan tambak dengan ID: ${id}`);
-});
 
 export default router;

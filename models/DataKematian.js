@@ -1,84 +1,79 @@
-class DataKematianModel {
-    constructor(kolam, tanggalTebar, umur, jumlahEkor, totalBerat, multiplier) {
-      this.kolam = kolam;
-      this.tanggalTebar = tanggalTebar;
-      this.umur = umur;
-      this.jumlahEkor = jumlahEkor;
-      this.totalBerat = totalBerat;
-      this.multiplier = multiplier;
+import db from '../database/Nusairadb.js'; 
+
+class Kematian {
+    constructor(data) {
+        this.kolamId = data.kolamId; 
+        this.tanggalTebar = data.tanggalTebar;
+        this.umur = data.umur;
+        this.jumlahEkor = data.jumlahEkor || null;
+        this.totalBerat = data.totalBerat || null;
+        this.multiplier = data.multiplier;
     }
-  
-   
-    validate() {
-      let errors = [];
-  
-      if (this.jumlahEkor === '' || Number(this.jumlahEkor) <= 0) {
-        errors.push('Field jumlahEkor tidak boleh kosong atau negatif.');
-      }
-  
-      if (this.totalBerat === '' || Number(this.totalBerat) <= 0) {
-        errors.push('Field totalBerat tidak boleh kosong atau negatif.');
-      }
-  
-      if (this.multiplier === '' || Number(this.multiplier) <= 0) {
-        errors.push('Field multiplier tidak boleh kosong atau negatif.');
-      }
-  
-      return errors;
-    }
-  
+
     
-    calculateTotalDeaths(trackingMethod) {
-      if (trackingMethod === 'jumlahEkor') {
-        return parseInt(this.jumlahEkor) || 0;
-      } else {
-        const weight = parseFloat(this.totalBerat) || 0;
-        const mult = parseFloat(this.multiplier) || 0;
-        const totalWeightInKg = this.convertToKilograms(weight, 'kg');
-        const internationalAverageWeightPerEkor = 0.25;
-        return Math.round((totalWeightInKg * mult) / internationalAverageWeightPerEkor);
-      }
-    }
-  
+    static async validate(data) {
+        const errors = [];
+       
+        if (!data.tanggalTebar) errors.push("Tanggal tebar harus diisi.");
+
+        
+        if (data.umur <= 0) errors.push("Umur harus lebih dari 0.");
+        
+        
+        if (!data.jumlahEkor && !data.totalBerat) {
+            errors.push("Salah satu dari Jumlah Ekor atau Total Berat harus diisi.");
+        }
+
    
-    convertToKilograms(weight, unit) {
-      switch (unit) {
-        case 'g':
-          return weight * 0.001;
-        case 'ton':
-          return weight * 1000;
-        default:
-          return weight;
-      }
+        if (data.jumlahEkor && data.totalBerat) {
+            errors.push("Hanya salah satu dari Jumlah Ekor atau Total Berat yang boleh diisi.");
+        }
+
+    
+        if (data.multiplier <= 0) errors.push("Multiplier harus lebih dari 0.");
+
+        return errors;
     }
-  
-    async save(db) {
-      const totalDeaths = this.calculateTotalDeaths('jumlahEkor');
-      const query = `
-        INSERT INTO data_kematian (kolam, tanggal_tebar, umur, jumlah_ekor, total_berat, multiplier, total_deaths)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-      `;
-      const values = [this.kolam, this.tanggalTebar, this.umur, this.jumlahEkor, this.totalBerat, this.multiplier, totalDeaths];
-      
-      return new Promise((resolve, reject) => {
-        db.execute(query, values, (err, result) => {
-          if (err) reject(err);
-          resolve(result);
+
+ 
+    static save(data) {
+        return new Promise((resolve, reject) => {
+            Kematian.validate(data).then((validationErrors) => {
+                if (validationErrors.length > 0) {
+                    return reject(new Error(validationErrors.join(", ")));
+                }
+
+                db.query(
+                    'INSERT INTO kematian (kolamId, tanggalTebar, umur, jumlahEkor, totalBerat, multiplier) VALUES (?, ?, ?, ?, ?, ?)', 
+                    [
+                        data.kolamId, 
+                        data.tanggalTebar, 
+                        data.umur, 
+                        data.jumlahEkor, 
+                        data.totalBerat, 
+                        data.multiplier
+                    ], 
+                    (err, result) => {
+                        if (err) {
+                            return reject(err);
+                        }
+                        resolve(result);
+                    }
+                );
+            }).catch((error) => reject(error));
         });
-      });
     }
-  
-   
-    static async getAll(db) {
-      const query = `SELECT * FROM data_kematian`;
-      return new Promise((resolve, reject) => {
-        db.execute(query, (err, results) => {
-          if (err) reject(err);
-          resolve(results);
+
+    static getAll() {
+        return new Promise((resolve, reject) => {
+            db.query('SELECT * FROM kematian', (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(result);
+            });
         });
-      });
     }
-  }
-  
-  export default DataKematianModel;
-  
+}
+
+export default Kematian;

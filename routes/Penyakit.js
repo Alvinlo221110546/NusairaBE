@@ -4,9 +4,8 @@ import PenyakitController from '../controller/PenyakitController.js';
 const router = express.Router();
 
 
-router.post('/penyakit', PenyakitController.addPenyakit);
+router.post('/penyakit', PenyakitController.createPenyakit);
 
-
-router.get('/penyakit', PenyakitController.getPenyakit);
+router.get('/penyakit', PenyakitController.getAllPenyakit);
 
 export default router;

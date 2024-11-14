@@ -1,57 +1,58 @@
-import AncoModel from '../models/DataAnco.js';
-
+import AncoModel from '../models/DataAnco.js'; 
 class AncoController {
   
-  async addAnco(req, res) {
+  static async saveAnco(req, res) {
     try {
-      const { pilihKolam, tanggalPanenParsial, waktuPemberianPakan, waktuCekAnco, catatan } = req.body;
+      const data = req.body; 
+      const savedAnco = await AncoModel.save(data);
 
-      if (!pilihKolam || !tanggalPanenParsial || !waktuPemberianPakan || !waktuCekAnco || !catatan) {
-        return res.status(400).json({ error: 'All fields are required' });
-      }
-
-      const newAnco = await AncoModel.save({
-        pilihKolam,
-        tanggalPanenParsial,
-        waktuPemberianPakan,
-        waktuCekAnco,
-        catatan
+     
+      res.status(201).json({
+        message: 'Data Anco berhasil disimpan',
+        data: savedAnco
       });
-
-      return res.status(201).json(newAnco);
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'Server error' });
+    
+      console.error('Error saving Anco data:', error);
+      res.status(400).json({
+        message: 'Gagal menyimpan data Anco',
+        error: error.message
+      });
     }
   }
 
  
-  async getAllAncos(req, res) {
+  static async getAllAnco(req, res) {
     try {
-      const ancos = await AncoModel.getAll();
-      return res.status(200).json(ancos);
+      const ancoData = await AncoModel.getAll();
+      res.status(200).json(ancoData);
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'Server error' });
+      console.error('Error fetching Anco data:', error);
+      res.status(400).json({
+        message: 'Gagal mengambil data Anco',
+        error: error.message
+      });
     }
   }
 
-  
-  async getAncoById(req, res) {
+  static async getAncoById(req, res) {
+    const { id } = req.params; 
     try {
-      const { id } = req.params;
-      const anco = await AncoModel.getById(Number(id));
-
+      const anco = await AncoModel.getById(id);
+      
       if (!anco) {
-        return res.status(404).json({ error: 'Anco not found' });
+        return res.status(404).json({ message: 'Data Anco tidak ditemukan' });
       }
 
-      return res.status(200).json(anco);
+      res.status(200).json(anco);
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'Server error' });
+      console.error('Error fetching Anco data by ID:', error);
+      res.status(400).json({
+        message: 'Gagal mengambil data Anco',
+        error: error.message
+      });
     }
   }
 }
 
-export default new AncoController();
+export default AncoController;

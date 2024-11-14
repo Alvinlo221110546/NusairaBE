@@ -7,6 +7,6 @@ const router = express.Router();
 router.post('/siklus', SiklusController.addSiklus);
 
 
-router.get('/siklus', SiklusController.getSiklus);
+router.get('/siklus', SiklusController.getAllSiklus);
 
 export default router;
