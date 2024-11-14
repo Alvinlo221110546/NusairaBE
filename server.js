@@ -3,11 +3,12 @@ import express from 'express';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import tambakRoutes from './routes/TambakRoutes.js';
-import siklusRoutes from './routes/MulaiSiklus.js';
+import siklusRouter from './routes/MulaiSiklus.js';
 import kematianRoutes from './routes/Kematian.js';
 import dataPakanRoutes from './routes/Pakan.js';
 import dataPanenRoutes from './routes/Panen.js'
-
+import penyakitRoutes from './routes/Penyakit.js';
+import ancoRoutes from './routes/Anco.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -28,12 +29,14 @@ app.use(cors(corsOptions));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routing
-app.use('/tambak', tambakRoutes);
-app.use('/siklus',siklusRoutes );
-app.use('/kematian',kematianRoutes );
-app.use('/penyakit',kematianRoutes );
-app.use('/pakan', dataPakanRoutes);
-app.use('/panen', dataPanenRoutes); 
+app.use('/api/tambak', tambakRoutes); 
+app.use('/api', siklusRouter);
+app.use('/api', kematianRoutes);
+app.use('/api', penyakitRoutes);
+app.use('/api', dataPakanRoutes);
+app.use('/api', dataPanenRoutes); 
+app.use('/api', ancoRoutes);
+
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);

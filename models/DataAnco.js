@@ -1,44 +1,81 @@
-import db from '../db.js';
+import db from '../database/Nusairadb.js'; 
 
 class AncoModel {
-
-  async save(data) {
-    try {
-      const { pilihKolam, tanggalPanenParsial, waktuPemberianPakan, waktuCekAnco, catatan } = data;
-
-      const [result] = await db.execute(
-        'INSERT INTO anco (pilihKolam, tanggalPanenParsial, waktuPemberianPakan, waktuCekAnco, catatan) VALUES (?, ?, ?, ?, ?)', 
-        [pilihKolam, tanggalPanenParsial, waktuPemberianPakan, waktuCekAnco, catatan]
-      );
-
-      return { id: result.insertId, ...data }; 
-    } catch (error) {
-      console.error('Error saving Anco data:', error);
-      throw error;
+    constructor(data) {
+        this.kolamId = data.kolamId;
+        this.tanggalPanenParsial = data.tanggalPanenParsial;
+        this.waktuPemberianPakan = data.waktuPemberianPakan;
+        this.waktuCekAnco = data.waktuCekAnco;
+        this.catatan = data.catatan || null;
     }
-  }
 
- 
-  async getAll() {
-    try {
-      const [rows] = await db.execute('SELECT * FROM anco');
-      return rows;
-    } catch (error) {
-      console.error('Error fetching Anco data:', error);
-      throw error;
-    }
-  }
+    
+    static async validate(data) {
+        const errors = [];
+      
+        if (!data.kolamId) errors.push("Kolam ID harus diisi.");
 
-  
-  async getById(id) {
-    try {
-      const [rows] = await db.execute('SELECT * FROM anco WHERE id = ?', [id]);
-      return rows[0];
-    } catch (error) {
-      console.error('Error fetching Anco data by ID:', error);
-      throw error;
+     
+        if (!data.tanggalPanenParsial) errors.push("Tanggal Panen Parsial harus diisi.");
+
+        if (!data.waktuCekAnco) errors.push("Waktu Cek Anco harus diisi.");
+
+        
+        if (!data.waktuPemberianPakan) errors.push("Waktu Pemberian Pakan harus diisi.");
+
+        return errors;
     }
-  }
+
+   
+    static save(data) {
+        return new Promise((resolve, reject) => {
+            AncoModel.validate(data).then((validationErrors) => {
+                if (validationErrors.length > 0) {
+                    return reject(new Error(validationErrors.join(", ")));
+                }
+
+                db.query(
+                    'INSERT INTO anco (kolamId, tanggalPanenParsial, waktuPemberianPakan, waktuCekAnco, catatan) VALUES (?, ?, ?, ?, ?)', 
+                    [
+                        data.kolamId, 
+                        data.tanggalPanenParsial, 
+                        data.waktuPemberianPakan, 
+                        data.waktuCekAnco, 
+                        data.catatan
+                    ], 
+                    (err, result) => {
+                        if (err) {
+                            return reject(err);
+                        }
+                        resolve(result);
+                    }
+                );
+            }).catch((error) => reject(error));
+        });
+    }
+
+
+    static getAll() {
+        return new Promise((resolve, reject) => {
+            db.query('SELECT * FROM anco', (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(result);
+            });
+        });
+    }
+
+    static getById(id) {
+        return new Promise((resolve, reject) => {
+            db.query('SELECT * FROM anco WHERE id = ?', [id], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(result[0]);
+            });
+        });
+    }
 }
 
-export default new AncoModel();
+export default AncoModel;

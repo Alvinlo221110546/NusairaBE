@@ -1,34 +1,36 @@
-import DataPanen from '../models/DataPanen.js'; 
+import DataPanen from '../models/DataPanen.js';
 
-const addDataPanen = async (req, res) => {
-  try {
-    const { kolam, tanggal, berat, size, hargaJual, status, catatan } = req.body;
 
-    
-    if (!kolam || !tanggal || !berat || !size || !hargaJual || !status) {
-      return res.status(400).json({ message: "Semua field wajib diisi." });
+class DataPanenController {
+  
+    static async createDataPanen(req, res) {
+        try {
+            const data = req.body;
+            const result = await DataPanen.save(data);
+            res.status(201).json({
+                message: "Data Panen entry created successfully",
+                data: result
+            });
+        } catch (error) {
+            res.status(400).json({
+                message: "Failed to create Data Panen entry",
+                errors: error.message
+            });
+        }
     }
 
     
-    const dataPanen = new DataPanen(kolam, tanggal, berat, size, hargaJual, status, catatan);
-    const result = await DataPanen.save(dataPanen);
+    static async getAllDataPanen(req, res) {
+        try {
+            const result = await DataPanen.getAll();
+            res.status(200).json(result);
+        } catch (error) {
+            res.status(500).json({
+                message: "Failed to retrieve Data Panen entries",
+                errors: error.message
+            });
+        }
+    }
+}
 
-  
-    res.status(200).json({ message: "Data panen berhasil disimpan", result });
-  } catch (err) {
-    console.error("Error saving data panen:", err);
-    res.status(500).json({ message: "Terjadi kesalahan", error: err.message });
-  }
-};
-
-const getDataPanen = async (req, res) => {
-  try {
-    const data = await DataPanen.getAll();
-    res.status(200).json(data);
-  } catch (err) {
-    console.error("Error fetching data panen:", err);
-    res.status(500).json({ message: "Terjadi kesalahan", error: err.message });
-  }
-};
-
-export { addDataPanen, getDataPanen };  
+export default DataPanenController;

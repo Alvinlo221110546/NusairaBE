@@ -1,12 +1,12 @@
-import { Router } from 'express'; 
-import { addDataPanen, getDataPanen } from '../controller/PanenController.js';  
+import express from 'express';
+import DataPanenController from '../controller/PanenController.js';
 
-const router = Router();
-
-
-router.post('/panen', addDataPanen);
+const router = express.Router();
 
 
-router.get('/panen', getDataPanen);
+router.post('/data-panen', DataPanenController.createDataPanen);
 
-export default router;  
+
+router.get('/data-panen', DataPanenController.getAllDataPanen);
+
+export default router;
