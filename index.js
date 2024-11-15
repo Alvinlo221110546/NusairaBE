@@ -20,14 +20,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
-const port = 3306;
+const port = 3020;
 
 
 app.use(express.json());  
 app.use(express.urlencoded({ extended: false })); 
 
 const corsOptions = {
-  origin: 'http://localhost:3306',  
+  origin: 'http://localhost:5173',  
   methods: 'GET, POST, PUT, DELETE',
   allowedHeaders: 'Content-Type, Authorization',
 };

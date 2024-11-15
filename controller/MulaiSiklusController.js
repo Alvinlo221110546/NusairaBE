@@ -8,7 +8,7 @@ class SiklusController {
         try {
             
             const result = await Siklus.save(data);
-            res.status(201).json({ message: 'Siklus berhasil ditambahkan', result });
+            res.status(200).json({ message: 'Siklus berhasil ditambahkan', result });
         } catch (err) {
             return res.status(500).json({ error: err.message });
         }

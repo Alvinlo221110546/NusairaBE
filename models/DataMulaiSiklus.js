@@ -20,7 +20,7 @@ class Siklus {
 
     static validate(data) {
         const errors = [];
-        if (!data.kolam_id) errors.push("Kolam harus dipilih.");
+        // if (!data.kolam_id) errors.push("Kolam harus dipilih.");
         if (data.lama_persiapan <= 0) errors.push("Lama persiapan harus lebih dari 0.");
         if (data.total_tebar <= 0) errors.push("Total tebar harus lebih dari 0.");
         if (data.jumlah_anco < 0) errors.push("Jumlah anco tidak boleh negatif.");

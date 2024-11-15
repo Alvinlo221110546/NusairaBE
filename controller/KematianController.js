@@ -8,7 +8,7 @@ class KematianController {
         try {
           
             const result = await Kematian.save(data);
-            res.status(201).json({ message: 'Data kematian berhasil ditambahkan.', result });
+            res.status(200).json({ message: 'Data kematian berhasil ditambahkan.', result });
         } catch (error) {
             res.status(400).json({ error: error.message });
         }
