@@ -20,7 +20,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
-const port = 3306;
+const port = 3020;
 
 
 app.use(express.json());  
@@ -48,6 +48,7 @@ app.use('/api', notifikasiRoutes);
 app.use('/api', pengeluaranRoutes);
 app.use('/api', pemasukanRoutes);
 app.use('/api', kualitasAirRoutes);
+app.use('/uploads', express.static('uploads'));
 
 
 app.listen(port, () => {

@@ -2,7 +2,7 @@ import db from '../database/Nusairadb.js';
 
 class DataPanen {
   constructor(data) {
-    this.kolam_id = data.kolam_id;  
+    this.kolam_idolam_id = data.kolam_id;  
     this.tanggal = data.tanggal;
     this.berat = data.berat;
     this.size = data.size;

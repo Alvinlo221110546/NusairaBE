@@ -4,36 +4,51 @@ import { Kolam } from '../models/DataKolam.js';
 class TambakController {
     async addTambak(req, res) {
         const { nama, negara, provinsi, kabupaten, alamat, jumlahKolam, kolamDetails } = req.body;
-        
-        
+    
         if (!nama || !negara || !provinsi || !kabupaten || !alamat || !jumlahKolam || !kolamDetails) {
             return res.status(400).json({ message: 'Semua kolom harus diisi!' });
         }
-
+    
         try {
-            
-            const tambak = new Tambak(nama, negara, provinsi, kabupaten, alamat, jumlahKolam);
-            await tambak.simpan();  
+            // Create and save Tambak
+            const tambak = await Tambak.save({
+                nama,
+                negara,
+                provinsi,
+                kabupaten,
+                alamat,
+                jumlahKolam
+            });
+    
+            // Add Kolam details using the provided kolamDetails array
             for (let i = 0; i < jumlahKolam; i++) {
-                const kolam = new Kolam(
-                    tambak.id,  
-                    kolamDetails[i].namaKolam,  
-                    kolamDetails[i].tipeKolam,  
-                    kolamDetails[i].panjang,   
-                    kolamDetails[i].lebar,      
-                    kolamDetails[i].kedalaman   
-                );
-                await kolam.simpan(); 
+                const kolamData = kolamDetails[i];  // Get kolam data from request body
+    
+                // Create a Kolam object
+                const kolam = {
+                    tambak_id: tambak.id, // Link kolam to the tambak's id
+                    nama_kolam: kolamData.NamaKolam,
+                    tipe_kolam: kolamData.tipeKolam,
+                    panjang: kolamData.panjang,
+                    lebar: kolamData.lebar,
+                    kedalaman: kolamData.kedalaman,
+                    size: kolamData.panjang * kolamData.lebar * kolamData.kedalaman,
+                    jumlah_anco: kolamData.jumlahAnco, 
+                };
+    
+                // Call the static save method on Kolam to insert into the database
+                await Kolam.save(kolam); // Use Kolam.save(), not kolam.save()
             }
-
+    
             res.status(201).json({ message: 'Tambak dan kolam berhasil ditambahkan!' });
-
+    
         } catch (err) {
             console.error(err);
             res.status(500).json({ message: 'Terjadi kesalahan dalam menambahkan tambak dan kolam', error: err.message });
         }
     }
-
+    
+    
    
     async getTambakById(req, res) {
         const tambakId = req.params.id;
