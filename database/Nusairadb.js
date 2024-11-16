@@ -1,8 +1,9 @@
-import mysql from 'mysql2/promise'; // Menggunakan promise untuk penanganan async/await
+import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
+// Konfigurasi database
 const dbConfig = {
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -10,10 +11,10 @@ const dbConfig = {
   database: process.env.DB_NAME,
 };
 
-// Buat pool koneksi
+// Buat pool koneksi database
 const db = mysql.createPool(dbConfig);
 
-// Cek koneksi ke database
+// Tes koneksi saat aplikasi berjalan
 (async () => {
   try {
     const connection = await db.getConnection();
@@ -24,16 +25,4 @@ const db = mysql.createPool(dbConfig);
   }
 })();
 
-// Fungsi untuk memeriksa tabel
-const checkTables = async () => {
-  try {
-    const [results] = await db.query('SHOW TABLES');
-    console.log('Tables in database:', results);
-  } catch (err) {
-    console.error('Error querying tables:', err.message);
-  }
-};
-
-// Export pool untuk digunakan di tempat lain
 export default db;
-export { checkTables };
