@@ -9,6 +9,8 @@ router.post('/', (req, res) => {
 });
 
 router.get('/', TambakController.getAllTambak);
+router.get('/:id', TambakController.getTambakById);
+
 
 
 export default router;

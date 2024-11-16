@@ -7,7 +7,7 @@ class AncoController {
       const savedAnco = await AncoModel.save(data);
 
      
-      res.status(201).json({
+      res.status(200).json({
         message: 'Data Anco berhasil disimpan',
         data: savedAnco
       });

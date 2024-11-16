@@ -8,6 +8,7 @@ class Kolam {
         this.panjang = data.panjang;
         this.lebar = data.lebar;
         this.kedalaman = data.kedalaman;
+        this.jumlah_anco = data.jumlahAnco
         this.size = this.hitungSize();
     }
 
@@ -25,6 +26,7 @@ class Kolam {
         if (data.panjang <= 0) errors.push("Panjang kolam harus lebih dari 0.");
         if (data.lebar <= 0) errors.push("Lebar kolam harus lebih dari 0.");
         if (data.kedalaman <= 0) errors.push("Kedalaman kolam harus lebih dari 0.");
+        if (data.jumlah_anco <= 0) errors.push("jumlah anco kolam harus lebih dari 0.");
 
         return errors;
     }
@@ -35,9 +37,9 @@ class Kolam {
             throw new Error(validationErrors.join(", "));
         }
 
-        const query = 'INSERT INTO kolam (tambak_id, nama_kolam, tipe_kolam, panjang, lebar, kedalaman, size) VALUES (?, ?, ?, ?, ?, ?, ?)';
+        const query = 'INSERT INTO kolam (tambak_id, nama_kolam, tipe_kolam, panjang, lebar, kedalaman, size, jumlah_anco) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
         return new Promise((resolve, reject) => {
-            db.query(query, [data.tambak_id, data.nama_kolam, data.tipe_kolam, data.panjang, data.lebar, data.kedalaman, data.size], (err, result) => {
+            db.query(query, [data.tambak_id, data.nama_kolam, data.tipe_kolam, data.panjang, data.lebar, data.kedalaman, data.size, data.jumlah_anco], (err, result) => {
                 if (err) {
                     return reject(err);
                 }
@@ -74,9 +76,9 @@ class Kolam {
             throw new Error(validationErrors.join(", "));
         }
 
-        const query = 'UPDATE kolam SET nama_kolam = ?, tipe_kolam = ?, panjang = ?, lebar = ?, kedalaman = ?, size = ? WHERE tambak_id = ?';
+        const query = 'UPDATE kolam SET nama_kolam = ?, tipe_kolam = ?, panjang = ?, lebar = ?, kedalaman = ?, size = ?, jumlah_anco = ? WHERE tambak_id = ?';
         return new Promise((resolve, reject) => {
-            db.query(query, [data.nama_kolam, data.tipe_kolam, data.panjang, data.lebar, data.kedalaman, data.size, tambak_id], (err, result) => {
+            db.query(query, [data.nama_kolam, data.tipe_kolam, data.panjang, data.lebar, data.kedalaman, data.size, tambak_id,jumlah_anco], (err, result) => {
                 if (err) {
                     return reject(err);
                 }
