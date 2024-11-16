@@ -1,9 +1,9 @@
-import mysql from 'mysql2/promise';
+import mysql from 'mysql2/promise'; // Gunakan versi promise dari mysql2
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Konfigurasi database
+// Konfigurasi koneksi database
 const dbConfig = {
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -14,7 +14,7 @@ const dbConfig = {
 // Buat pool koneksi database
 const db = mysql.createPool(dbConfig);
 
-// Tes koneksi saat aplikasi berjalan
+// Tes koneksi saat aplikasi mulai
 (async () => {
   try {
     const connection = await db.getConnection();
