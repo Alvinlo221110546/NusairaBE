@@ -48,6 +48,7 @@ app.use('/api', notifikasiRoutes);
 app.use('/api', pengeluaranRoutes);
 app.use('/api', pemasukanRoutes);
 app.use('/api', kualitasAirRoutes);
+app.use('/uploads', express.static('uploads'));
 
 
 app.listen(port, () => {

@@ -7,7 +7,7 @@ class DataPanenController {
         try {
             const data = req.body;
             const result = await DataPanen.save(data);
-            res.status(201).json({
+            res.status(200).json({
                 message: "Data Panen entry created successfully",
                 data: result
             });
