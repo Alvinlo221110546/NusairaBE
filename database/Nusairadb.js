@@ -1,44 +1,39 @@
-import mysql from 'mysql2';
+import mysql from 'mysql2/promise'; // Menggunakan promise untuk penanganan async/await
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-// const db = mysql.createConnection({
-//   host: process.env.DB_HOST,
-//   user: process.env.DB_USER,
-//   password: process.env.DB_PASSWORD,
-//   database: process.env.DB_NAME,
-//   database: process.env.DATABASE_URL,
-// });
-
-// COBA INI GI , PAKAI CREATE POOL
-
-const db = mysql.createPool({
+const dbConfig = {
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  database: process.env.DATABASE_URL,
-});
+};
 
+// Buat pool koneksi
+const db = mysql.createPool(dbConfig);
 
-db.connect((err) => {
-  if (err) {
-    console.error('Error connecting to the database:', err.stack);
-    return;
+// Cek koneksi ke database
+(async () => {
+  try {
+    const connection = await db.getConnection();
+    console.log('Connected to the database');
+    connection.release(); // Kembalikan koneksi ke pool
+  } catch (err) {
+    console.error('Error connecting to the database:', err.message);
   }
-  console.log('Connected to the database');
-});
+})();
 
+// Fungsi untuk memeriksa tabel
+const checkTables = async () => {
+  try {
+    const [results] = await db.query('SHOW TABLES');
+    console.log('Tables in database:', results);
+  } catch (err) {
+    console.error('Error querying tables:', err.message);
+  }
+};
 
-//ini untuk cek table
-// connection.query('SHOW TABLES', (err, results) => {
-//   if (err) {
-//       console.error('Gagal melakukan query:', err);
-//   } else {
-//       console.log('Tables in database:', results);
-//   }
-// });
-
-
+// Export pool untuk digunakan di tempat lain
 export default db;
+export { checkTables };
