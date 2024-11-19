@@ -1,4 +1,4 @@
-import db from '../database/Nusairadb.js'; 
+import db from '../database/Nusairadb.js';
 
 class Penyakit {
   constructor(data) {
@@ -29,6 +29,7 @@ class Penyakit {
         throw new Error(validationErrors.join(", "));
       }
 
+    
       const query = `
         INSERT INTO penyakit (kolam_id, tanggal_tebar, jenis_penyakit, catatan, images)
         VALUES (?, ?, ?, ?, ?)
@@ -39,31 +40,24 @@ class Penyakit {
         data.tanggal_tebar,
         data.jenis_penyakit,
         data.catatan,
-        JSON.stringify(data.images),
+        JSON.stringify(data.images), 
       ];
 
-      return new Promise((resolve, reject) => {
-        db.query(query, values, (err, result) => {
-          if (err) {
-            return reject(err);
-          }
-          resolve(result);
-        });
-      });
+      const [result] = await db.execute(query, values);
+      return result;
     } catch (error) {
-      return Promise.reject(error);
+      throw new Error(`Gagal menyimpan data penyakit: ${error.message}`);
     }
   }
 
   static async getAll() {
-    return new Promise((resolve, reject) => {
-      db.query('SELECT * FROM penyakit', (err, results) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(results);
-      });
-    });
+    try {
+      const query = 'SELECT * FROM penyakit';
+      const [results] = await db.execute(query);
+      return results;
+    } catch (error) {
+      throw new Error(`Gagal mengambil data penyakit: ${error.message}`);
+    }
   }
 }
 

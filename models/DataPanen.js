@@ -2,17 +2,16 @@ import db from '../database/Nusairadb.js';
 
 class DataPanen {
   constructor(data) {
-    this.kolam_idolam_id = data.kolam_id;  
+    this.kolam_id = data.kolam_id;
     this.tanggal = data.tanggal;
     this.berat = data.berat;
     this.size = data.size;
-    this.harga_jual = data.harga_jual;  
+    this.harga_jual = data.harga_jual;
     this.status = data.status;
-    this.catatan = data.catatan || null;  
+    this.catatan = data.catatan || null;
   }
 
- 
-  static async validate(data) {
+  static validate(data) {
     const errors = [];
 
     if (!data.kolam_id) errors.push("Kolam ID harus diisi.");
@@ -25,54 +24,41 @@ class DataPanen {
     return errors;
   }
 
-  
   static async save(data) {
-    try {
-      const validationErrors = await DataPanen.validate(data);
-      if (validationErrors.length > 0) {
-        throw new Error(validationErrors.join(", "));
-      }
+    const validationErrors = this.validate(data);
+    if (validationErrors.length > 0) {
+      throw new Error(validationErrors.join(", "));
+    }
 
+    try {
       const query = `
         INSERT INTO data_panen (kolam_id, tanggal, berat, size, harga_jual, status, catatan)
         VALUES (?, ?, ?, ?, ?, ?, ?)
       `;
-
-      return new Promise((resolve, reject) => {
-        db.query(
-          query,
-          [
-            data.kolam_id, 
-            data.tanggal, 
-            data.berat, 
-            data.size, 
-            data.harga_jual, 
-            data.status, 
-            data.catatan
-          ],
-          (err, result) => {
-            if (err) {
-              return reject(err);
-            }
-            resolve(result);
-          }
-        );
-      });
+      const [result] = await db.execute(query, [
+        data.kolam_id,
+        data.tanggal,
+        data.berat,
+        data.size,
+        data.harga_jual,
+        data.status,
+        data.catatan,
+      ]);
+      return result;
     } catch (error) {
-      return Promise.reject(error);
+      console.error("Error saving data panen:", error.message);
+      throw error;
     }
   }
 
-  
   static async getAll() {
-    return new Promise((resolve, reject) => {
-      db.query('SELECT * FROM data_panen', (err, results) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(results);
-      });
-    });
+    try {
+      const [results] = await db.execute('SELECT * FROM data_panen');
+      return results;
+    } catch (error) {
+      console.error("Error fetching all data panen:", error.message);
+      throw error;
+    }
   }
 }
 
