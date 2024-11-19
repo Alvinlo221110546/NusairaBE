@@ -1,4 +1,4 @@
-import db from '../database/Nusairadb.js'; // Pastikan sesuai dengan konfigurasi koneksi database Anda
+import db from '../database/Nusairadb.js';
 
 class Pemasukan {
     constructor(data) {
@@ -11,12 +11,11 @@ class Pemasukan {
         this.user_id = data.user_id;
     }
 
-    // Menyimpan pemasukan ke dalam database
+    // Menyimpan pemasukan ke database
     static async save(data) {
-        return new Promise((resolve, reject) => {
+        try {
             const pemasukan = new Pemasukan(data);
-
-            db.query(
+            const [result] = await db.execute(
                 'INSERT INTO pemasukan (date, kategori, jumlah, harga, keterangan, total, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
                 [
                     pemasukan.date,
@@ -26,46 +25,54 @@ class Pemasukan {
                     pemasukan.keterangan,
                     pemasukan.total,
                     pemasukan.user_id
-                ],
-                (err, result) => {
-                    if (err) {
-                        return reject(err);
-                    }
-                    resolve(result);
-                }
+                ]
             );
-        });
+            return result;
+        } catch (error) {
+            console.error('Error saving pemasukan:', error);
+            throw error;
+        }
     }
 
     // Mengambil semua pemasukan
-    static getAll() {
-        return new Promise((resolve, reject) => {
-            db.query('SELECT * FROM pemasukan', (err, result) => {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(result);
-            });
-        });
+    static async getAll() {
+        try {
+            const [rows] = await db.execute('SELECT * FROM pemasukan ORDER BY date DESC');
+            return rows;
+        } catch (error) {
+            console.error('Error getting all pemasukan:', error);
+            throw error;
+        }
     }
 
     // Mengambil pemasukan berdasarkan ID
-    static getById(id) {
-        return new Promise((resolve, reject) => {
-            db.query('SELECT * FROM pemasukan WHERE id = ?', [id], (err, result) => {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(result[0]);
-            });
-        });
+    static async getById(id) {
+        try {
+            const [rows] = await db.execute(
+                'SELECT * FROM pemasukan WHERE id = ?', 
+                [id]
+            );
+            return rows[0];
+        } catch (error) {
+            console.error('Error getting pemasukan by ID:', error);
+            throw error;
+        }
     }
 
     // Mengupdate pemasukan berdasarkan ID
-    static update(id, data) {
-        return new Promise((resolve, reject) => {
-            db.query(
-                'UPDATE pemasukan SET date = ?, kategori = ?, jumlah = ?, harga = ?, keterangan = ?, total = ?, user_id = ?, updated_at = ? WHERE id = ?',
+    static async update(id, data) {
+        try {
+            const [result] = await db.execute(
+                `UPDATE pemasukan 
+                 SET date = ?, 
+                     kategori = ?, 
+                     jumlah = ?, 
+                     harga = ?, 
+                     keterangan = ?, 
+                     total = ?, 
+                     user_id = ?, 
+                     updated_at = CURRENT_TIMESTAMP 
+                 WHERE id = ?`,
                 [
                     data.date,
                     data.kategori,
@@ -74,29 +81,28 @@ class Pemasukan {
                     data.keterangan,
                     data.total,
                     data.user_id,
-                    new Date(),
                     id
-                ],
-                (err, result) => {
-                    if (err) {
-                        return reject(err);
-                    }
-                    resolve(result);
-                }
+                ]
             );
-        });
+            return result;
+        } catch (error) {
+            console.error('Error updating pemasukan:', error);
+            throw error;
+        }
     }
 
     // Menghapus pemasukan berdasarkan ID
-    static delete(id) {
-        return new Promise((resolve, reject) => {
-            db.query('DELETE FROM pemasukan WHERE id = ?', [id], (err, result) => {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(result);
-            });
-        });
+    static async delete(id) {
+        try {
+            const [result] = await db.execute(
+                'DELETE FROM pemasukan WHERE id = ?', 
+                [id]
+            );
+            return result;
+        } catch (error) {
+            console.error('Error deleting pemasukan:', error);
+            throw error;
+        }
     }
 }
 
