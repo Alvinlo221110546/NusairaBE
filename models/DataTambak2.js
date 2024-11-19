@@ -1,7 +1,7 @@
 import db from '../database/Nusairadb.js';
 import { Kolam } from './DataKolam.js';
 
-class Tambak {
+class Tambak2 {
   constructor(data) {
     this.id = data.id || null;
     this.nama = data.nama;
@@ -13,73 +13,73 @@ class Tambak {
     this.kolamDetails = [];
   }
 
-  // Simpan Tambak dan Kolam
+  // Simpan Tambak2 dan Kolam
   static async save(data) {
     try {
-      const tambak = new Tambak(data);
+      const tambak2 = new Tambak2(data);
 
       const query = `
-        INSERT INTO tambak (nama, negara, provinsi, kabupaten, alamat, jumlah_kolam) 
+        INSERT INTO tambak2 (nama, negara, provinsi, kabupaten, alamat, jumlah_kolam) 
         VALUES (?, ?, ?, ?, ?, ?)
       `;
       const [result] = await db.promise().query(query, [
-        tambak.nama,
-        tambak.negara,
-        tambak.provinsi,
-        tambak.kabupaten,
-        tambak.alamat,
-        tambak.jumlahKolam,
+        tambak2.nama,
+        tambak2.negara,
+        tambak2.provinsi,
+        tambak2.kabupaten,
+        tambak2.alamat,
+        tambak2.jumlahKolam,
       ]);
-      tambak.id = result.insertId;
+      tambak2.id = result.insertId;
 
       // Tambahkan Kolam jika ada
       if (data.kolamDetails && data.kolamDetails.length > 0) {
-        tambak.kolamDetails = await Promise.all(
-          data.kolamDetails.map((kolam) => Kolam.save({ tambak_id: tambak.id, ...kolam }))
+        tambak2.kolamDetails = await Promise.all(
+          data.kolamDetails.map((kolam) => Kolam.save({ tambak_id: tambak2.id, ...kolam }))
         );
       }
 
-      return tambak;
+      return tambak2;
     } catch (err) {
-      throw new Error('Gagal menyimpan data Tambak: ' + err.message);
+      throw new Error('Gagal menyimpan data Tambak2: ' + err.message);
     }
   }
 
-  // Ambil Detail Tambak Berdasarkan ID
+  // Ambil Detail Tambak2 Berdasarkan ID
   static async getDetailById(id) {
     try {
-      const queryTambak = 'SELECT * FROM tambak WHERE id = ?';
-      const [tambakResult] = await db.promise().query(queryTambak, [id]);
+      const queryTambak2 = 'SELECT * FROM tambak2 WHERE id = ?';
+      const [tambak2Result] = await db.promise().query(queryTambak2, [id]);
 
-      if (tambakResult.length === 0) {
-        throw new Error('Tambak tidak ditemukan');
+      if (tambak2Result.length === 0) {
+        throw new Error('Tambak2 tidak ditemukan');
       }
 
-      const tambak = tambakResult[0];
+      const tambak2 = tambak2Result[0];
       const kolam = await Kolam.getByTambakId(id); // Delegasikan ke model Kolam
-      tambak.kolamDetails = kolam;
+      tambak2.kolamDetails = kolam;
 
-      return tambak;
+      return tambak2;
     } catch (err) {
-      throw new Error('Gagal mengambil detail Tambak: ' + err.message);
+      throw new Error('Gagal mengambil detail Tambak2: ' + err.message);
     }
   }
 
-  // Ambil Semua Tambak
-  static async getAllTambak() {
+  // Ambil Semua Tambak2
+  static async getAllTambak2() {
     try {
       const query = `
         SELECT t.*, k.nama_kolam, k.tipe_kolam, k.panjang, k.lebar, k.kedalaman, k.jumlah_anco 
-        FROM tambak t
+        FROM tambak2 t
         LEFT JOIN kolam k ON t.id = k.tambak_id
       `;
       const [results] = await db.promise().query(query);
 
-      const tambakMap = {};
+      const tambak2Map = {};
 
       results.forEach((row) => {
-        if (!tambakMap[row.id]) {
-          tambakMap[row.id] = {
+        if (!tambak2Map[row.id]) {
+          tambak2Map[row.id] = {
             id: row.id,
             nama: row.nama,
             negara: row.negara,
@@ -91,7 +91,7 @@ class Tambak {
           };
         }
         if (row.nama_kolam) {
-          tambakMap[row.id].kolamDetails.push({
+          tambak2Map[row.id].kolamDetails.push({
             namaKolam: row.nama_kolam,
             tipeKolam: row.tipe_kolam,
             panjang: row.panjang,
@@ -102,11 +102,11 @@ class Tambak {
         }
       });
 
-      return Object.values(tambakMap);
+      return Object.values(tambak2Map);
     } catch (err) {
-      throw new Error('Gagal mengambil data Tambak dan Kolam: ' + err.message);
+      throw new Error('Gagal mengambil data Tambak2 dan Kolam: ' + err.message);
     }
   }
 }
 
-export { Tambak };
+export { Tambak2 };

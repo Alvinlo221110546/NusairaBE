@@ -1,6 +1,6 @@
 import db from '../database/Nusairadb.js';
 
-class Kolam {
+class Tambak2 {
     constructor(data) {
         this.tambak_id = data.tambak_id;
         this.nama_kolam = data.nama_kolam;
@@ -30,13 +30,13 @@ class Kolam {
     }
 
     static async save(data) {
-        const validationErrors = await Kolam.validate(data);
+        const validationErrors = await Tambak2.validate(data);
         if (validationErrors.length > 0) {
             throw new Error(validationErrors.join(", "));
         }
 
         const query = `
-            INSERT INTO kolam (tambak_id, nama_kolam, tipe_kolam, panjang, lebar, kedalaman, size, jumlah_anco) 
+            INSERT INTO tambak2 (tambak_id, nama_kolam, tipe_kolam, panjang, lebar, kedalaman, size, jumlah_anco) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `;
         try {
@@ -52,38 +52,38 @@ class Kolam {
             ]);
             return result;
         } catch (err) {
-            throw new Error('Gagal menyimpan data Kolam: ' + err.message);
+            throw new Error('Gagal menyimpan data Tambak2: ' + err.message);
         }
     }
 
     static async getKolamByTambakId(tambak_id) {
         try {
-            const query = 'SELECT * FROM kolam WHERE tambak_id = ?';
+            const query = 'SELECT * FROM tambak2 WHERE tambak_id = ?';
             const [result] = await db.promise().query(query, [tambak_id]);
             return result;
         } catch (err) {
-            throw new Error('Gagal mendapatkan kolam: ' + err.message);
+            throw new Error('Gagal mendapatkan kolam dari Tambak2: ' + err.message);
         }
     }
 
     static async getAll() {
         try {
-            const query = 'SELECT * FROM kolam';
+            const query = 'SELECT * FROM tambak2';
             const [result] = await db.promise().query(query);
             return result;
         } catch (err) {
-            throw new Error('Gagal mendapatkan data kolam: ' + err.message);
+            throw new Error('Gagal mendapatkan data Tambak2: ' + err.message);
         }
     }
 
     static async update(tambak_id, data) {
-        const validationErrors = await Kolam.validate(data);
+        const validationErrors = await Tambak2.validate(data);
         if (validationErrors.length > 0) {
             throw new Error(validationErrors.join(", "));
         }
 
         const query = `
-            UPDATE kolam 
+            UPDATE tambak2 
             SET nama_kolam = ?, tipe_kolam = ?, panjang = ?, lebar = ?, kedalaman = ?, size = ?, jumlah_anco = ? 
             WHERE tambak_id = ?
         `;
@@ -100,19 +100,19 @@ class Kolam {
             ]);
             return result;
         } catch (err) {
-            throw new Error('Gagal mengupdate kolam: ' + err.message);
+            throw new Error('Gagal mengupdate Tambak2: ' + err.message);
         }
     }
 
     static async delete(tambak_id) {
         try {
-            const query = 'DELETE FROM kolam WHERE tambak_id = ?';
+            const query = 'DELETE FROM tambak2 WHERE tambak_id = ?';
             const [result] = await db.promise().query(query, [tambak_id]);
             return result;
         } catch (err) {
-            throw new Error('Gagal menghapus kolam: ' + err.message);
+            throw new Error('Gagal menghapus Tambak2: ' + err.message);
         }
     }
 }
 
-export { Kolam };
+export { Tambak2 };
