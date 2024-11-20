@@ -16,7 +16,7 @@ class KualitasAir {
         const kualitasAir = new KualitasAir(data);
         try {
             const result = await db.execute(
-                'INSERT INTO kualitas_air (location, ph, suhu, oksigen, salinitas, date, user_id, tambak_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                'INSERT INTO air (location, ph, suhu, oksigen, salinitas, date, user_id, tambak_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
                 [
                     kualitasAir.location,
                     kualitasAir.ph,
@@ -36,7 +36,7 @@ class KualitasAir {
 
     static async getAll() {
         try {
-            const result = await db.execute('SELECT * FROM kualitas_air');
+            const result = await db.execute('SELECT * FROM air');
             return result;
         } catch (err) {
             throw new Error(`Error retrieving data: ${err.message}`);
@@ -45,7 +45,7 @@ class KualitasAir {
 
     static async getById(id) {
         try {
-            const result = await db.execute('SELECT * FROM kualitas_air WHERE id = ?', [id]);
+            const result = await db.execute('SELECT * FROM air WHERE id = ?', [id]);
             return result[0];  
         } catch (err) {
             throw new Error(`Error retrieving data by ID: ${err.message}`);
@@ -55,7 +55,7 @@ class KualitasAir {
     static async update(id, data) {
         try {
             const result = await db.execute(
-                'UPDATE kualitas_air SET location = ?, ph = ?, suhu = ?, oksigen = ?, salinitas = ?, date = ?, user_id = ?, tambak_id = ?, updated_at = ? WHERE id = ?',
+                'UPDATE air SET location = ?, ph = ?, suhu = ?, oksigen = ?, salinitas = ?, date = ?, user_id = ?, tambak_id = ?, updated_at = ? WHERE id = ?',
                 [
                     data.location,
                     data.ph,
