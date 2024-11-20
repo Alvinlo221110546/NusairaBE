@@ -13,15 +13,16 @@ class Tambak {
         this.kolamDetails = [];
     }
 
+
     tambahKolam(tipeKolam) {
         for (let i = 0; i < this.jumlahKolam; i++) {
             const kolam = new Kolam(
                 this.id, 
                 `Kolam ${i + 1}`, 
                 tipeKolam, 
-                10, 
-                5,  
-                2   
+                10, // Panjang (contoh nilai)
+                5,  // Lebar (contoh nilai)
+                2   // Kedalaman (contoh nilai)
             );
             this.kolamDetails.push(kolam);
         }
@@ -51,6 +52,7 @@ class Tambak {
         }
     }
 
+    // Menyimpan data kolam terkait dengan tambak
     async saveKolam() {
         try {
             await Promise.all(this.kolamDetails.map((kolam) => kolam.save(this.id)));
@@ -59,7 +61,7 @@ class Tambak {
         }
     }
 
-    // Mengambil detail tambak dengan ID kolam
+    // Mengambil detail tambak berdasarkan ID
     static async getDetailById(id) {
         try {
             const [tambakResult] = await db.execute('SELECT * FROM tambak WHERE id = ?', [id]);
@@ -68,16 +70,15 @@ class Tambak {
             }
 
             const tambak = tambakResult[0];
-            const [kolamResult] = await db.execute('SELECT id, nama_kolam, tipe_kolam, panjang, lebar, kedalaman, jumlah_anco FROM kolam WHERE tambak_id = ?', [id]);
+            const [kolamResult] = await db.execute('SELECT * FROM kolam WHERE tambak_id = ?', [id]);
 
             tambak.kolamDetails = kolamResult.map((kolam) => ({
-                id: kolam.id,
                 namaKolam: kolam.nama_kolam,
                 tipeKolam: kolam.tipe_kolam,
                 panjang: kolam.panjang,
                 lebar: kolam.lebar,
                 kedalaman: kolam.kedalaman,
-                jumlahAnco: kolam.jumlah_anco
+                jumlahAnco: kolam.jumlah_anco,
             }));
 
             return tambak;
@@ -86,13 +87,33 @@ class Tambak {
         }
     }
 
-    // Simple method untuk mendapatkan ID kolam
-    static async getKolamByTambakId(tambakId) {
+    // Mengambil semua data tambak beserta kolam
+    static async getAllTambak() {
         try {
-            const [result] = await db.execute('SELECT id, nama_kolam FROM kolam WHERE tambak_id = ?', [tambakId]);
-            return result;
+            const [tambakResult] = await db.execute('SELECT * FROM tambak');
+            if (tambakResult.length === 0) {
+                return [];
+            }
+
+            // Menambahkan detail kolam untuk setiap tambak
+            await Promise.all(
+                tambakResult.map(async (tambak) => {
+                    const [kolamResult] = await db.execute('SELECT * FROM kolam WHERE tambak_id = ?', [tambak.id]);
+                    tambak.kolamDetails = kolamResult.map((kolam) => ({
+                        id: kolam.id,
+                        namaKolam: kolam.nama_kolam,
+                        tipeKolam: kolam.tipe_kolam,
+                        panjang: kolam.panjang,
+                        lebar: kolam.lebar,
+                        kedalaman: kolam.kedalaman,
+                        jumlahAnco: kolam.jumlah_anco,
+                    }));
+                })
+            );
+
+            return tambakResult;
         } catch (error) {
-            throw new Error('Gagal mengambil data kolam: ' + error.message);
+            throw new Error('Gagal mengambil data Tambak dan Kolam: ' + error.message);
         }
     }
 }
