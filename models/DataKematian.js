@@ -26,23 +26,23 @@ class Kematian {
         if (!data.tanggal_tebar) {
             errors.push("Tanggal tebar harus diisi.");
         }
-
+        
         if (data.umur <= 0) {
             errors.push("Umur harus lebih dari 0.");
         }
-
+        
         if (!data.jumlah_ekor && !data.total_berat) {
             errors.push("Salah satu dari Jumlah Ekor atau Total Berat harus diisi.");
         }
-
+        
         if (data.jumlah_ekor && data.total_berat) {
             errors.push("Hanya salah satu dari Jumlah Ekor atau Total Berat yang boleh diisi.");
         }
-
-        if (!data.jumlah_ekor && data.multiplier <= 0) {
-            errors.push("Multiplier harus lebih dari 0.");
+        
+        if (data.total_berat && data.multiplier <= 0) {
+            errors.push("Multiplier harus lebih dari 0 saat Total Berat diisi.");
         }
-
+        
         return errors;
     }
 
