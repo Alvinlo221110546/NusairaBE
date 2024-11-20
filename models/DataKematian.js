@@ -1,3 +1,4 @@
+import db from '../database/Nusairadb.js';
 class Kematian {
     constructor(data) {
         this.kolam_id = data.kolam_id;
