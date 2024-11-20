@@ -4,7 +4,7 @@ import KematianController from '../controller/KematianController.js';
 const router = express.Router();
 
 
-router.post('/kematian', async (req, res) => {
+router.post('/data-kematian', async (req, res) => {
     try {
         await KematianController.tambahDataKematian(req, res);
     } catch (error) {
@@ -14,7 +14,7 @@ router.post('/kematian', async (req, res) => {
 });
 
 
-router.get('/kematian', async (req, res) => {
+router.get('/data-kematian', async (req, res) => {
     try {
         await KematianController.getAllDataKematian(req, res);
     } catch (error) {
