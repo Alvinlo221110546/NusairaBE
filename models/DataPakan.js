@@ -2,7 +2,7 @@ import db from '../database/Nusairadb.js';
 
 class DataPakan {
     constructor(data) {
-        this.kolam_id = data.kolam_id;  
+        this.kolam_id = data.kolam_id;
         this.tanggal = data.tanggal;
         this.waktu = data.waktu;
         this.puasa = data.puasa || false;
@@ -10,8 +10,7 @@ class DataPakan {
         this.catatan = data.catatan || null;
     }
 
-   
-    static async validate(data) {
+    static validate(data) {
         const errors = [];
 
         if (!data.kolam_id) errors.push("Kolam ID harus diisi.");
@@ -22,46 +21,40 @@ class DataPakan {
         return errors;
     }
 
-    
     static async save(data) {
-        try {
-            const validationErrors = await DataPakan.validate(data);
-            if (validationErrors.length > 0) {
-                throw new Error(validationErrors.join(", "));
-            }
+        const validationErrors = this.validate(data);
+        if (validationErrors.length > 0) {
+            throw new Error(validationErrors.join(", "));
+        }
 
+        try {
             const query = `
                 INSERT INTO data_pakan (kolam_id, tanggal, waktu, puasa, jumlah, catatan)
                 VALUES (?, ?, ?, ?, ?, ?)
             `;
-
-            return new Promise((resolve, reject) => {
-                db.query(
-                    query,
-                    [data.kolam_id, data.tanggal, data.waktu, data.puasa, data.jumlah, data.catatan],
-                    (err, result) => {
-                        if (err) {
-                            return reject(err);
-                        }
-                        resolve(result);
-                    }
-                );
-            });
+            const [result] = await db.execute(query, [
+                data.kolam_id,
+                data.tanggal,
+                data.waktu,
+                data.puasa,
+                data.jumlah,
+                data.catatan,
+            ]);
+            return result;
         } catch (error) {
-            return Promise.reject(error);
+            console.error("Error saving data pakan:", error.message);
+            throw error;
         }
     }
 
-    
     static async getAll() {
-        return new Promise((resolve, reject) => {
-            db.query('SELECT * FROM data_pakan', (err, results) => {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(results);
-            });
-        });
+        try {
+            const [results] = await db.execute('SELECT * FROM data_pakan');
+            return results;
+        } catch (error) {
+            console.error("Error fetching all data pakan:", error.message);
+            throw error;
+        }
     }
 }
 
