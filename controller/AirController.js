@@ -3,14 +3,14 @@ import KualitasAir from '../models/DataAir.js'; // Sesuaikan path sesuai
 class KualitasAirController {
     // Menambahkan kualitas air baru
     async addKualitasAir(req, res) {
-        const { location, ph, suhu, oksigen, salinitas, date, user_id, tambak_id } = req.body;
+        const { ph, suhu, oksigen, salinitas, tambak_id } = req.body;
 
-        if (!location || ph === undefined || suhu === undefined || oksigen === undefined || salinitas === undefined || !date || !user_id || !tambak_id) {
+        if (ph === undefined || suhu === undefined || oksigen === undefined || salinitas === undefined || !tambak_id) {
             return res.status(400).json({ message: 'Semua kolom harus diisi!' });
         }
 
         try {
-            const kualitasAir = { location, ph, suhu, oksigen, salinitas, date, user_id, tambak_id };
+            const kualitasAir = { ph, suhu, oksigen, salinitas, tambak_id };
             await KualitasAir.save(kualitasAir);
             res.status(201).json({ message: 'Kualitas air berhasil ditambahkan!' });
         } catch (err) {
@@ -54,14 +54,14 @@ class KualitasAirController {
     // Mengupdate kualitas air berdasarkan ID
     async updateKualitasAir(req, res) {
         const kualitasAirId = req.params.id;
-        const { location, ph, suhu, oksigen, salinitas, date, user_id, tambak_id } = req.body;
+        const { ph, suhu, oksigen, salinitas, tambak_id } = req.body;
 
-        if (!location || ph === undefined || suhu === undefined || oksigen === undefined || salinitas === undefined || !date || !user_id || !tambak_id) {
+        if (ph === undefined || suhu === undefined || oksigen === undefined || salinitas === undefined || !tambak_id) {
             return res.status(400).json({ message: 'Semua kolom harus diisi!' });
         }
 
         try {
-            const updatedKualitasAir = { location, ph, suhu, oksigen, salinitas, date, user_id, tambak_id };
+            const updatedKualitasAir = { ph, suhu, oksigen, salinitas, tambak_id };
             await KualitasAir.update(kualitasAirId, updatedKualitasAir);
             res.status(200).json({ message: 'Kualitas air berhasil diperbarui!' });
         } catch (err) {
