@@ -15,6 +15,7 @@ import notifikasiRoutes from './routes/Notifikasi.js';
 import pengeluaranRoutes from './routes/Pengeluaran.js';
 import pemasukanRoutes from './routes/Pemasukan.js';
 import kualitasAirRoutes from './routes/Air.js';
+import tagihanRoutes from './routes/Tagihan.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -54,6 +55,7 @@ app.use('/api', notifikasiRoutes);
 app.use('/api', pengeluaranRoutes);
 app.use('/api', pemasukanRoutes);
 app.use('/api', kualitasAirRoutes);
+app.use('/api', tagihanRoutes);
 app.use('/uploads', express.static('uploads'));
 
 
