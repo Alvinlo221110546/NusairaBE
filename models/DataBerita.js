@@ -1,4 +1,4 @@
-import db from '../database/Nusairadb.js'; // Pastikan ini sesuai dengan koneksi database Anda
+import db from '../database/Nusairadb.js'; 
 
 class Berita {
     constructor(data) {
@@ -10,90 +10,85 @@ class Berita {
         this.date = data.date;
     }
 
-    // Menyimpan data berita ke dalam database
     static async save(data) {
-        return new Promise((resolve, reject) => {
+        try {
             const berita = new Berita(data);
 
-            db.query(
-                'INSERT INTO berita (writer, title, description, content, image, date) VALUES (?, ?, ?, ?, ?, ?)',
-                [
-                    berita.writer,
-                    berita.title,
-                    berita.description,
-                    berita.content,
-                    berita.image,
-                    berita.date
-                ],
-                (err, result) => {
-                    if (err) {
-                        return reject(err);
-                    }
-                    resolve(result);
-                }
-            );
-        });
+            const query = 'INSERT INTO berita (writer, title, description, content, image, date) VALUES (?, ?, ?, ?, ?, ?)';
+            const [result] = await db.execute(query, [
+                berita.writer,
+                berita.title,
+                berita.description,
+                berita.content,
+                berita.image,
+                berita.date
+            ]);
+            return result;
+        } catch (err) {
+            throw new Error('Error saving berita: ' + err.message);
+        }
     }
 
-    // Mengambil semua berita
-    static getAll() {
-        return new Promise((resolve, reject) => {
-            db.query('SELECT * FROM berita', (err, result) => {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(result);
-            });
-        });
+    static async getAll() {
+        try {
+            const [result] = await db.execute('SELECT * FROM berita');
+            return result;
+        } catch (err) {
+            throw new Error('Error fetching all berita: ' + err.message);
+        }
     }
 
-    // Mengambil berita berdasarkan ID
-    static getById(id) {
-        return new Promise((resolve, reject) => {
-            db.query('SELECT * FROM berita WHERE id = ?', [id], (err, result) => {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(result[0]);
-            });
-        });
+    static async getById(id) {
+        try {
+            const query = 'SELECT * FROM berita WHERE id = ?';
+            const [result] = await db.execute(query, [id]);
+
+            if (result.length === 0) {
+                throw new Error('Berita not found');
+            }
+            return result[0];
+        } catch (err) {
+            throw new Error('Error fetching berita by ID: ' + err.message);
+        }
     }
 
-    // Mengupdate berita berdasarkan ID
-    static update(id, data) {
-        return new Promise((resolve, reject) => {
-            db.query(
-                'UPDATE berita SET writer = ?, title = ?, description = ?, content = ?, image = ?, date = ?, updated_at = ? WHERE id = ?',
-                [
-                    data.writer,
-                    data.title,
-                    data.description,
-                    data.content,
-                    data.image,
-                    data.date,
-                    new Date(),
-                    id
-                ],
-                (err, result) => {
-                    if (err) {
-                        return reject(err);
-                    }
-                    resolve(result);
-                }
-            );
-        });
+    static async update(id, data) {
+        try {
+            const query = 'UPDATE berita SET writer = ?, title = ?, description = ?, content = ?, image = ?, date = ?, updated_at = ? WHERE id = ?';
+            const [result] = await db.execute(query, [
+                data.writer,
+                data.title,
+                data.description,
+                data.content,
+                data.image,
+                data.date,
+                new Date(),
+                id
+            ]);
+
+            if (result.affectedRows === 0) {
+                throw new Error('Berita not found to update');
+            }
+
+            return result;
+        } catch (err) {
+            throw new Error('Error updating berita: ' + err.message);
+        }
     }
 
-    
-    static delete(id) {
-        return new Promise((resolve, reject) => {
-            db.query('DELETE FROM berita WHERE id = ?', [id], (err, result) => {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(result);
-            });
-        });
+    static async delete(id) {
+        try {
+            const query = 'DELETE FROM berita WHERE id = ?';
+            const [result] = await db.execute(query, [id]);
+
+            if (result.affectedRows === 0) {
+                throw new Error('Berita not found to delete');
+            }
+
+            return result;
+        } catch (err) {
+            throw new Error('Error deleting berita: ' + err.message);
+        }
     }
 }
 
