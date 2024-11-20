@@ -39,7 +39,7 @@ class Kematian {
             errors.push("Hanya salah satu dari Jumlah Ekor atau Total Berat yang boleh diisi.");
         }
 
-        if (data.multiplier <= 0) {
+        if (!data.jumlah_ekor && data.multiplier <= 0) {
             errors.push("Multiplier harus lebih dari 0.");
         }
 
