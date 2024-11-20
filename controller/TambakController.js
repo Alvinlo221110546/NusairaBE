@@ -36,11 +36,11 @@ class TambakController {
                     jumlah_anco: kolamData.jumlahAnco, 
                 };
     
-                // Call the static save method on Kolam to insert into the database
-                await Kolam.save(kolam); // Use Kolam.save(), not kolam.save()
+               
+                await Kolam.save(kolam); 
             }
     
-            res.status(201).json({ message: 'Tambak dan kolam berhasil ditambahkan!' });
+            res.status(200).json({ message: 'Tambak dan kolam berhasil ditambahkan!' });
     
         } catch (err) {
             console.error(err);
