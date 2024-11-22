@@ -1,54 +1,32 @@
 import Penyakit from '../models/DataPenyakit.js';
-import upload from '../middleware/Upload.js';  
+import upload from '../middleware/Upload.js';
 import { v2 as cloudinary } from 'cloudinary';
 
 class PenyakitController {
-  // Middleware untuk menangani upload multiple images
   static uploadMiddleware = upload.array('images', 3); 
 
-  // Fungsi untuk create data penyakit
   static async createPenyakit(req, res) {
     try {
       const { kolam_id, tanggal_tebar, jenis_penyakit, catatan } = req.body;
+      
+     
+      const uploadedImages = await PenyakitController.uploadImages(req.files);
 
-      // Proses upload file ke Cloudinary dan ambil path-nya
-      const imagePromises = req.files.map(file => {
-        return new Promise((resolve, reject) => {
-          cloudinary.uploader.upload_stream(
-            { folder: 'penyakit_images' }, // Tentukan folder di Cloudinary
-            (error, result) => {
-              if (error) {
-                reject(error);
-              } else {
-                resolve(result.secure_url); // Ambil URL dari Cloudinary
-              }
-            }
-          ).end(file.buffer); // Kirim file buffer ke Cloudinary
-        });
-      });
-
-      // Tunggu hingga semua gambar ter-upload ke Cloudinary
-      const imagePaths = await Promise.all(imagePromises);
-
-      // Menyiapkan data yang akan disimpan
       const dataPenyakit = {
         kolam_id,
         tanggal_tebar,
         jenis_penyakit,
         catatan,
-        images: imagePaths
+        images: uploadedImages, 
       };
 
-      // Simpan data penyakit ke database
       const result = await Penyakit.save(dataPenyakit);
 
-      // Kirim respons sukses
       res.status(200).json({
         message: "Penyakit entry created successfully",
         data: result
       });
     } catch (error) {
-      // Tangani error
       res.status(400).json({
         message: "Failed to create Penyakit entry",
         errors: error.message
@@ -56,7 +34,26 @@ class PenyakitController {
     }
   }
 
-  // Fungsi untuk mendapatkan semua data penyakit
+  static async uploadImages(files) {
+    try {
+      const uploadPromises = files.map(file =>
+        cloudinary.uploader.upload_stream(
+          { folder: 'penyakit' }, 
+          (error, result) => {
+            if (error) throw error;
+            return result?.secure_url;  
+          }
+        ).end(file.buffer) 
+      );
+
+      const uploadedImages = await Promise.all(uploadPromises);
+      return uploadedImages; 
+    } catch (error) {
+      throw new Error(`Gagal mengupload gambar: ${error.message}`);
+    }
+  }
+
+
   static async getAllPenyakit(req, res) {
     try {
       const result = await Penyakit.getAll();
