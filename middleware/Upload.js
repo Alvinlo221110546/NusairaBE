@@ -17,17 +17,17 @@ const fileFilter = (req, file, cb) => {
   const mimetype = filetypes.test(file.mimetype);
 
   if (mimetype) {
-    cb(null, true); // File diterima
+    cb(null, true); 
   } else {
-    cb(new Error('Only image files are allowed!'), false); // File ditolak
+    cb(new Error('Only image files are allowed!'), false); 
   }
 };
 
-// Inisialisasi multer untuk upload dengan limit ukuran 5MB dan file filter
+
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  limits: { fileSize: 5 * 1024 * 1024 }, 
 });
 
 export default upload;
