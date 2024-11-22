@@ -6,7 +6,7 @@ class Penyakit {
     this.tanggal_tebar = data.tanggal_tebar;
     this.jenis_penyakit = data.jenis_penyakit;
     this.catatan = data.catatan || null;
-    this.images = data.images || [];
+    this.images = data.images || []; 
   }
 
   static async validate(data) {
@@ -49,9 +49,9 @@ class Penyakit {
     }
   }
 
-  
+  // Pastikan metode create ada di sini
   static async create(data) {
-    return await Penyakit.save(data);
+    return await Penyakit.save(data); // Memanggil save untuk menyimpan data
   }
 
   static async getAll() {

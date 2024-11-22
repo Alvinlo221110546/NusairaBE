@@ -20,9 +20,8 @@ class PenyakitController {
         images: uploadedImages,
       };
 
-      // Save data
-      const result = await Penyakit.save(dataPenyakit);
-
+      // Pastikan menggunakan Penyakit.create dan bukan Penyakit.save
+      const result = await Penyakit.create(dataPenyakit); // Memanggil metode create
 
       res.status(200).json({
         message: "Penyakit entry created successfully",
@@ -60,7 +59,7 @@ class PenyakitController {
 
   static async getAllPenyakit(req, res) {
     try {
-      const result = await Penyakit.find();
+      const result = await Penyakit.getAll(); // Menggunakan getAll() untuk mengambil data
       res.status(200).json(result);
     } catch (error) {
       res.status(500).json({
