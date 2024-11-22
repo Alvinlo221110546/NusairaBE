@@ -29,11 +29,16 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 
 const corsOptions = {
-  origin: '*',  
+  origin: 'https://nusaira.vercel.app',
   methods: 'GET, POST, PUT, DELETE',
   allowedHeaders: 'Content-Type, Authorization',
 };
-app.use(cors(corsOptions));
+use(cors(corsOptions));
+app.use((req, res, next) => {
+  console.log('CORS Headers Set:', res.getHeaders());
+  next();
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 
