@@ -23,24 +23,23 @@ const __dirname = dirname(__filename);
 const app = express();
 const port = 3020;
 
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
+app.use(express.json());  
+app.use(express.urlencoded({ extended: false })); 
 
+app.use(cors({
+  origin: 'http://localhost:5173', 
+  methods: 'GET,POST,PUT,DELETE',
+  credentials: true
+}));
 
 const corsOptions = {
-  origin: 'https://nusaira.vercel.app',
+  origin: '*',  
   methods: 'GET, POST, PUT, DELETE',
   allowedHeaders: 'Content-Type, Authorization',
 };
-use(cors(corsOptions));
-app.use((req, res, next) => {
-  console.log('CORS Headers Set:', res.getHeaders());
-  next();
-});
-
+app.use(cors(corsOptions));
 app.use(express.static(path.join(__dirname, 'public')));
-
 
 // Routing
 app.use('/api/tambak', tambakRoutes); 
