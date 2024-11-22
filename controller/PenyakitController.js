@@ -21,7 +21,8 @@ class PenyakitController {
       };
 
       // Save data
-      const result = await Penyakit.create(dataPenyakit);
+      const result = await Penyakit.save(dataPenyakit);
+
 
       res.status(200).json({
         message: "Penyakit entry created successfully",

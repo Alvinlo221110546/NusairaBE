@@ -6,10 +6,9 @@ class Penyakit {
     this.tanggal_tebar = data.tanggal_tebar;
     this.jenis_penyakit = data.jenis_penyakit;
     this.catatan = data.catatan || null;
-    this.images = data.images || []; 
+    this.images = data.images || [];
   }
 
-  
   static async validate(data) {
     const errors = [];
 
@@ -23,7 +22,6 @@ class Penyakit {
     return errors;
   }
 
- 
   static async save(data) {
     try {
       const validationErrors = await Penyakit.validate(data);
@@ -31,21 +29,19 @@ class Penyakit {
         throw new Error(validationErrors.join(", "));
       }
 
-     
       const query = `
         INSERT INTO penyakit (kolam_id, tanggal_tebar, jenis_penyakit, catatan, images)
         VALUES (?, ?, ?, ?, ?)
       `;
-
+      
       const values = [
         data.kolam_id,
         data.tanggal_tebar,
         data.jenis_penyakit,
         data.catatan,
-        JSON.stringify(data.images), 
+        JSON.stringify(data.images),
       ];
 
-      
       const [result] = await db.execute(query, values);
       return result;
     } catch (error) {
@@ -53,7 +49,11 @@ class Penyakit {
     }
   }
 
- 
+  
+  static async create(data) {
+    return await Penyakit.save(data);
+  }
+
   static async getAll() {
     try {
       const query = 'SELECT * FROM penyakit';
