@@ -10,6 +10,9 @@ const dbConfig = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   url: process.env.DB_URL,
+  waitForConnections: true,
+  connectionLimit: 10, 
+  queueLimit: 0,
 };
 
 // Buat pool koneksi database
