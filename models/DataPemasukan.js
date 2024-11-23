@@ -2,13 +2,13 @@ import db from '../database/Nusairadb.js';
 
 class Pemasukan {
     constructor(data) {
-        this.date = data.date;
+        this.date = new Date(data.date).toISOString().split('T')[0]; // Format YYYY-MM-DD
         this.kategori = data.kategori;
         this.jumlah = data.jumlah;
         this.harga = data.harga;
         this.keterangan = data.keterangan;
         this.total = data.total;
-        this.user_id = data.user_id;
+        // this.tambak_id = data.tambak_id
     }
 
     // Menyimpan pemasukan ke database
@@ -16,7 +16,8 @@ class Pemasukan {
         try {
             const pemasukan = new Pemasukan(data);
             const [result] = await db.execute(
-                'INSERT INTO pemasukan (date, kategori, jumlah, harga, keterangan, total, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                'INSERT INTO pemasukan (date, kategori, jumlah, harga, keterangan, total, tambak_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                // 'INSERT INTO pemasukan (date, kategori, jumlah, harga, keterangan, total, tambak_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
                 [
                     pemasukan.date,
                     pemasukan.kategori,
@@ -24,7 +25,7 @@ class Pemasukan {
                     pemasukan.harga,
                     pemasukan.keterangan,
                     pemasukan.total,
-                    pemasukan.user_id
+                    // pemasukan.tambak_id
                 ]
             );
             return result;
@@ -70,9 +71,19 @@ class Pemasukan {
                      harga = ?, 
                      keterangan = ?, 
                      total = ?, 
-                     user_id = ?, 
+                     tambak_id = ?, 
                      updated_at = CURRENT_TIMESTAMP 
                  WHERE id = ?`,
+                //  `UPDATE pemasukan 
+                //  SET date = ?, 
+                //      kategori = ?, 
+                //      jumlah = ?, 
+                //      harga = ?, 
+                //      keterangan = ?, 
+                //      total = ?, 
+                //      tambak_id = ?, 
+                //      updated_at = CURRENT_TIMESTAMP 
+                //  WHERE id = ?`,
                 [
                     data.date,
                     data.kategori,
@@ -80,7 +91,7 @@ class Pemasukan {
                     data.harga,
                     data.keterangan,
                     data.total,
-                    data.user_id,
+                    // data.tambak_id,
                     id
                 ]
             );

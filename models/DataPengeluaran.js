@@ -13,90 +13,96 @@ class Pengeluaran {
 
     // Menyimpan pengeluaran ke dalam database
     static async save(data) {
-        return new Promise((resolve, reject) => {
+        try {
             const pengeluaran = new Pengeluaran(data);
-
-            db.query(
-                'INSERT INTO pengeluaran (date, jenis_pengeluaran, nama_barang, catatan, status, sisa_tagihan, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                [
-                    pengeluaran.date,
-                    pengeluaran.jenis_pengeluaran,
-                    pengeluaran.nama_barang,
-                    pengeluaran.catatan,
-                    pengeluaran.status,
-                    pengeluaran.sisa_tagihan,
-                    pengeluaran.user_id
-                ],
-                (err, result) => {
-                    if (err) {
-                        return reject(err);
-                    }
-                    resolve(result);
-                }
-            );
-        });
+            const query = `
+                INSERT INTO pengeluaran 
+                (date, jenis_pengeluaran, nama_barang, catatan, status, sisa_tagihan, user_id) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            `;
+            const [result] = await db.execute(query, [
+                pengeluaran.date,
+                pengeluaran.jenis_pengeluaran,
+                pengeluaran.nama_barang,
+                pengeluaran.catatan,
+                pengeluaran.status,
+                pengeluaran.sisa_tagihan,
+                pengeluaran.user_id
+            ]);
+            return result;
+        } catch (err) {
+            console.error("Error saving pengeluaran:", err);
+            throw err;
+        }
     }
 
     // Mengambil semua pengeluaran
-    static getAll() {
-        return new Promise((resolve, reject) => {
-            db.query('SELECT * FROM pengeluaran', (err, result) => {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(result);
-            });
-        });
+    static async getAll() {
+        try {
+            const query = 'SELECT * FROM pengeluaran';
+            const [rows] = await db.execute(query);
+            return rows;
+        } catch (err) {
+            console.error("Error fetching all pengeluaran:", err);
+            throw err;
+        }
     }
 
     // Mengambil pengeluaran berdasarkan ID
-    static getById(id) {
-        return new Promise((resolve, reject) => {
-            db.query('SELECT * FROM pengeluaran WHERE id = ?', [id], (err, result) => {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(result[0]);
-            });
-        });
+    static async getById(id) {
+        try {
+            const query = 'SELECT * FROM pengeluaran WHERE id = ?';
+            const [rows] = await db.execute(query, [id]);
+            return rows[0];
+        } catch (err) {
+            console.error(`Error fetching pengeluaran with ID ${id}:`, err);
+            throw err;
+        }
     }
 
     // Mengupdate pengeluaran berdasarkan ID
-    static update(id, data) {
-        return new Promise((resolve, reject) => {
-            db.query(
-                'UPDATE pengeluaran SET date = ?, jenis_pengeluaran = ?, nama_barang = ?, catatan = ?, status = ?, sisa_tagihan = ?, user_id = ?, updated_at = ? WHERE id = ?',
-                [
-                    data.date,
-                    data.jenis_pengeluaran,
-                    data.nama_barang,
-                    data.catatan,
-                    data.status,
-                    data.sisa_tagihan,
-                    data.user_id,
-                    new Date(),
-                    id
-                ],
-                (err, result) => {
-                    if (err) {
-                        return reject(err);
-                    }
-                    resolve(result);
-                }
-            );
-        });
+    static async update(id, data) {
+        try {
+            const query = `
+                UPDATE pengeluaran 
+                SET 
+                    date = ?, 
+                    jenis_pengeluaran = ?, 
+                    nama_barang = ?, 
+                    catatan = ?, 
+                    status = ?, 
+                    sisa_tagihan = ?, 
+                    user_id = ?, 
+                    updated_at = CURRENT_TIMESTAMP 
+                WHERE id = ?
+            `;
+            const [result] = await db.execute(query, [
+                data.date,
+                data.jenis_pengeluaran,
+                data.nama_barang,
+                data.catatan,
+                data.status,
+                data.sisa_tagihan,
+                data.user_id,
+                id
+            ]);
+            return result;
+        } catch (err) {
+            console.error(`Error updating pengeluaran with ID ${id}:`, err);
+            throw err;
+        }
     }
 
     // Menghapus pengeluaran berdasarkan ID
-    static delete(id) {
-        return new Promise((resolve, reject) => {
-            db.query('DELETE FROM pengeluaran WHERE id = ?', [id], (err, result) => {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(result);
-            });
-        });
+    static async delete(id) {
+        try {
+            const query = 'DELETE FROM pengeluaran WHERE id = ?';
+            const [result] = await db.execute(query, [id]);
+            return result;
+        } catch (err) {
+            console.error(`Error deleting pengeluaran with ID ${id}:`, err);
+            throw err;
+        }
     }
 }
 
