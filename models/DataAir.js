@@ -13,7 +13,7 @@ class KualitasAir {
         const kualitasAir = new KualitasAir(data);
         try {
             const result = await db.execute(
-                'INSERT INTO air (ph, suhu, oksigen, salinitas, tambak_id) VALUES (?, ?, ?, ?, ?)',
+                'INSERT INTO kualitas_air (ph, suhu, oksigen, salinitas, tambak_id) VALUES (?, ?, ?, ?, ?)',
                 [
                     kualitasAir.ph,
                     kualitasAir.suhu,
@@ -30,7 +30,7 @@ class KualitasAir {
 
     static async getAll() {
         try {
-            const result = await db.execute('SELECT * FROM air');
+            const result = await db.execute('SELECT * FROM kualitas_air');
             return result;
         } catch (err) {
             throw new Error(`Error retrieving data: ${err.message}`);
@@ -39,7 +39,7 @@ class KualitasAir {
 
     static async getById(id) {
         try {
-            const result = await db.execute('SELECT * FROM air WHERE id = ?', [id]);
+            const result = await db.execute('SELECT * FROM kualitas_air WHERE id = ?', [id]);
             return result[0];  
         } catch (err) {
             throw new Error(`Error retrieving data by ID: ${err.message}`);
@@ -49,7 +49,7 @@ class KualitasAir {
     static async update(id, data) {
         try {
             const result = await db.execute(
-                'UPDATE air SET ph = ?, suhu = ?, oksigen = ?, salinitas = ?, tambak_id = ?, updated_at = ? WHERE id = ?',
+                'UPDATE kualitas_air SET ph = ?, suhu = ?, oksigen = ?, salinitas = ?, tambak_id = ?, updated_at = ? WHERE id = ?',
                 [
                     data.ph,
                     data.suhu,
@@ -68,7 +68,7 @@ class KualitasAir {
 
     static async delete(id) {
         try {
-            const result = await db.execute('DELETE FROM air WHERE id = ?', [id]);
+            const result = await db.execute('DELETE FROM kualitas_air WHERE id = ?', [id]);
             return result;
         } catch (err) {
             throw new Error(`Error deleting data: ${err.message}`);
