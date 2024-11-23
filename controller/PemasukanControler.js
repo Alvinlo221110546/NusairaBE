@@ -3,14 +3,14 @@ import Pemasukan from '../models/DataPemasukan.js'; // Pastikan path sesuai
 class PemasukanController {
     // Menambahkan pemasukan baru
     async addPemasukan(req, res) {
-        const { date, kategori, jumlah, harga, keterangan, total, user_id } = req.body;
+        const { date, kategori, jumlah, harga, keterangan, total, tambak_id } = req.body;
 
-        if (!date || !kategori || jumlah === undefined || harga === undefined || !keterangan || total === undefined || !user_id) {
+        if (!date || !kategori || jumlah === undefined || harga === undefined || !keterangan || total === undefined || !tambak_id) {
             return res.status(400).json({ message: 'Semua kolom harus diisi!' });
         }
 
         try {
-            const pemasukan = { date, kategori, jumlah, harga, keterangan, total, user_id };
+            const pemasukan = { date, kategori, jumlah, harga, keterangan, total, tambak_id };
             await Pemasukan.save(pemasukan);
             res.status(201).json({ message: 'Pemasukan berhasil ditambahkan!' });
         } catch (err) {
@@ -54,14 +54,14 @@ class PemasukanController {
     // Mengupdate pemasukan berdasarkan ID
     async updatePemasukan(req, res) {
         const pemasukanId = req.params.id;
-        const { date, kategori, jumlah, harga, keterangan, total, user_id } = req.body;
+        const { date, kategori, jumlah, harga, keterangan, total, tambak_id } = req.body;
 
-        if (!date || !kategori || jumlah === undefined || harga === undefined || !keterangan || total === undefined || !user_id) {
+        if (!date || !kategori || jumlah === undefined || harga === undefined || !keterangan || total === undefined || !tambak_id) {
             return res.status(400).json({ message: 'Semua kolom harus diisi!' });
         }
 
         try {
-            const updatedPemasukan = { date, kategori, jumlah, harga, keterangan, total, user_id };
+            const updatedPemasukan = { date, kategori, jumlah, harga, keterangan, total, tambak_id };
             await Pemasukan.update(pemasukanId, updatedPemasukan);
             res.status(200).json({ message: 'Pemasukan berhasil diperbarui!' });
         } catch (err) {
