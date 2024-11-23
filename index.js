@@ -17,6 +17,9 @@ import pemasukanRoutes from './routes/Pemasukan.js';
 import kualitasAirRoutes from './routes/Air.js';
 import tagihanRoutes from './routes/Tagihan.js';
 import penggunaRoutes from './routes/Pengguna.js';
+import bukuRoutes from './routes/Buku.js';
+import favoritRoutes from './routes/Favorit.js';
+import bookmarkRoutes from './routes/Bookmark.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -58,6 +61,9 @@ app.use('/api', pemasukanRoutes);
 app.use('/api', kualitasAirRoutes);
 app.use('/api', tagihanRoutes);
 app.use('/api', penggunaRoutes);
+app.use('/api', bukuRoutes);
+app.use('/api', favoritRoutes);
+app.use('/api', bookmarkRoutes);
 app.use('/uploads', express.static('uploads'));
 
 
