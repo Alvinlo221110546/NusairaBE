@@ -68,7 +68,7 @@ class PenyakitController {
   
   static async getAllPenyakit(req, res) {
     try {
-      const result = await Penyakit.findAll();
+      const result = await Penyakit.getAll();
       return res.status(200).json(result);
     } catch (error) {
       return res.status(500).json({
