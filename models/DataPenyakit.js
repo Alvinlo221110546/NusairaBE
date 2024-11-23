@@ -49,9 +49,8 @@ class Penyakit {
     }
   }
 
-  // Pastikan metode create ada di sini
   static async create(data) {
-    return await Penyakit.save(data); // Memanggil save untuk menyimpan data
+    return await Penyakit.save(data); 
   }
 
   static async getAll() {

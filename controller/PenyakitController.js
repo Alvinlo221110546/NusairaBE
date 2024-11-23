@@ -1,40 +1,48 @@
 import Penyakit from '../models/DataPenyakit.js';
-import upload from '../middleware/Upload.js';
 import { v2 as cloudinary } from 'cloudinary';
 
 class PenyakitController {
-  static uploadMiddleware = upload.array('images', 3);
-
   static async createPenyakit(req, res) {
     try {
-      const { kolam_id, tanggal_tebar, jenis_penyakit, catatan } = req.body;
+      const { kolam_id, tanggal_tebar, jenis_penyakit, catatan, gambar } = req.body;
 
-      // Upload images
-      const uploadedImages = await PenyakitController.uploadImages(req.files);
+     
+      if (!kolam_id || !tanggal_tebar || !jenis_penyakit) {
+        return res.status(400).json({
+          message: 'Kolam ID, tanggal tebar, dan jenis penyakit wajib diisi.',
+        });
+      }
 
+      const uploadedImages = gambar && gambar.length > 0 ? gambar : [];
+
+      
       const dataPenyakit = {
         kolam_id,
         tanggal_tebar,
         jenis_penyakit,
-        catatan,
-        images: uploadedImages,
+        catatan: catatan || '', 
+        images: uploadedImages, 
       };
 
-      // Pastikan menggunakan Penyakit.create dan bukan Penyakit.save
-      const result = await Penyakit.create(dataPenyakit); // Memanggil metode create
+      
+      const result = await Penyakit.create(dataPenyakit);
 
-      res.status(200).json({
-        message: "Penyakit entry created successfully",
+      return res.status(200).json({
+        message: 'Penyakit entry berhasil dibuat',
         data: result,
       });
     } catch (error) {
-      res.status(400).json({
-        message: "Failed to create Penyakit entry",
+      return res.status(500).json({
+        message: 'Gagal membuat entry penyakit',
         errors: error.message,
       });
     }
   }
 
+  /**
+   * Mengunggah gambar ke Cloudinary
+   * @param {Array} files 
+   */
   static async uploadImages(files) {
     try {
       const uploadPromises = files.map((file) => {
@@ -53,17 +61,18 @@ class PenyakitController {
       const uploadedImages = await Promise.all(uploadPromises);
       return uploadedImages;
     } catch (error) {
-      throw new Error(`Gagal mengupload gambar: ${error.message}`);
+      throw new Error(`Gagal mengunggah gambar: ${error.message}`);
     }
   }
 
+  
   static async getAllPenyakit(req, res) {
     try {
-      const result = await Penyakit.getAll(); // Menggunakan getAll() untuk mengambil data
-      res.status(200).json(result);
+      const result = await Penyakit.getAll();
+      return res.status(200).json(result);
     } catch (error) {
-      res.status(500).json({
-        message: "Failed to retrieve Penyakit entries",
+      return res.status(500).json({
+        message: 'Gagal mendapatkan data penyakit',
         errors: error.message,
       });
     }
