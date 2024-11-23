@@ -31,11 +31,19 @@ class KualitasAir {
     static async getAll() {
         try {
             const result = await db.execute('SELECT * FROM kualitas_air');
+            
+            result.forEach(row => {
+                if (row.someColumnWithBuffer) {
+                    row.someColumnWithBuffer = row.someColumnWithBuffer.toString('utf-8'); 
+                }
+            });
+            
             return result;
         } catch (err) {
             throw new Error(`Error retrieving data: ${err.message}`);
         }
     }
+    
 
     static async getById(id) {
         try {
