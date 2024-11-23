@@ -1,21 +1,31 @@
 import express from 'express';
-import PemasukanController from '../controller/PemasukanControler.js'; // Pastikan path sesuai
+import PemasukanController from '../controller/PemasukanController.js'; // Pastikan path sesuai
 
 const router = express.Router();
 
-// Route untuk menambahkan pemasukan baru
+// Middleware tambahan (opsional)
+const validateRequest = (req, res, next) => {
+    // Middleware validasi contoh (untuk autentikasi atau lainnya)
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
+    next();
+};
+
+// Grouping dan route definition
+router.use(validateRequest); // Middleware global untuk semua route di file ini
+
+// Menambahkan pemasukan baru
 router.post('/pemasukan', PemasukanController.addPemasukan);
 
-// Route untuk mendapatkan semua pemasukan
+// Mendapatkan semua pemasukan
 router.get('/pemasukan', PemasukanController.getAllPemasukan);
 
-// Route untuk mendapatkan pemasukan berdasarkan ID
+// Mendapatkan pemasukan berdasarkan ID
 router.get('/pemasukan/:id', PemasukanController.getPemasukanById);
 
-// Route untuk mengupdate pemasukan berdasarkan ID
+// Mengupdate pemasukan berdasarkan ID
 router.put('/pemasukan/:id', PemasukanController.updatePemasukan);
 
-// Route untuk menghapus pemasukan berdasarkan ID
+// Menghapus pemasukan berdasarkan ID
 router.delete('/pemasukan/:id', PemasukanController.deletePemasukan);
 
 export default router;
