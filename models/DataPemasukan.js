@@ -2,8 +2,7 @@ import db from '../database/Nusairadb.js';
 
 class Pemasukan {
     constructor(data) {
-        this.date = data.date;
-        this.kategori = data.kategori;
+        this.date = new Date(data.date).toISOString().split('T')[0]; // Format YYYY-MM-DD
         this.jumlah = data.jumlah;
         this.harga = data.harga;
         this.keterangan = data.keterangan;
