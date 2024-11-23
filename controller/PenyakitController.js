@@ -2,33 +2,29 @@ import Penyakit from '../models/DataPenyakit.js';
 import { v2 as cloudinary } from 'cloudinary';
 
 class PenyakitController {
-  /**
-   * Membuat entry penyakit baru
-   */
   static async createPenyakit(req, res) {
     try {
       const { kolam_id, tanggal_tebar, jenis_penyakit, catatan, gambar } = req.body;
 
-      // Validasi input
+     
       if (!kolam_id || !tanggal_tebar || !jenis_penyakit) {
         return res.status(400).json({
           message: 'Kolam ID, tanggal tebar, dan jenis penyakit wajib diisi.',
         });
       }
 
-      // Validasi format gambar (opsional)
       const uploadedImages = gambar && gambar.length > 0 ? gambar : [];
 
-      // Siapkan data untuk disimpan
+      
       const dataPenyakit = {
         kolam_id,
         tanggal_tebar,
         jenis_penyakit,
-        catatan: catatan || '', // Default ke string kosong jika tidak ada
-        images: uploadedImages, // Gambar sudah diunggah dari frontend
+        catatan: catatan || '', 
+        images: uploadedImages, 
       };
 
-      // Simpan ke database
+      
       const result = await Penyakit.create(dataPenyakit);
 
       return res.status(200).json({
@@ -45,7 +41,7 @@ class PenyakitController {
 
   /**
    * Mengunggah gambar ke Cloudinary
-   * @param {Array} files Array buffer file dari request
+   * @param {Array} files 
    */
   static async uploadImages(files) {
     try {
@@ -69,12 +65,10 @@ class PenyakitController {
     }
   }
 
-  /**
-   * Mendapatkan semua entry penyakit
-   */
+  
   static async getAllPenyakit(req, res) {
     try {
-      const result = await Penyakit.findAll(); // Ambil semua data dari model
+      const result = await Penyakit.findAll();
       return res.status(200).json(result);
     } catch (error) {
       return res.status(500).json({
