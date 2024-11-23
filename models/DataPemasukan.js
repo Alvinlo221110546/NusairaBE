@@ -3,11 +3,12 @@ import db from '../database/Nusairadb.js';
 class Pemasukan {
     constructor(data) {
         this.date = new Date(data.date).toISOString().split('T')[0]; // Format YYYY-MM-DD
+        this.kategori = data.kategori;
         this.jumlah = data.jumlah;
         this.harga = data.harga;
         this.keterangan = data.keterangan;
         this.total = data.total;
-        this.tambak_id = data.tambak_id;
+        this.tambak_id = data.tambak_id
     }
 
     // Menyimpan pemasukan ke database
