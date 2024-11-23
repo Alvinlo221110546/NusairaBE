@@ -8,7 +8,7 @@ class Pemasukan {
         this.harga = data.harga;
         this.keterangan = data.keterangan;
         this.total = data.total;
-        this.tambak_id = data.tambak_id
+        // this.tambak_id = data.tambak_id
     }
 
     // Menyimpan pemasukan ke database
@@ -17,6 +17,7 @@ class Pemasukan {
             const pemasukan = new Pemasukan(data);
             const [result] = await db.execute(
                 'INSERT INTO pemasukan (date, kategori, jumlah, harga, keterangan, total, tambak_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                // 'INSERT INTO pemasukan (date, kategori, jumlah, harga, keterangan, total, tambak_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
                 [
                     pemasukan.date,
                     pemasukan.kategori,
@@ -24,7 +25,7 @@ class Pemasukan {
                     pemasukan.harga,
                     pemasukan.keterangan,
                     pemasukan.total,
-                    pemasukan.tambak_id
+                    // pemasukan.tambak_id
                 ]
             );
             return result;
@@ -73,6 +74,16 @@ class Pemasukan {
                      tambak_id = ?, 
                      updated_at = CURRENT_TIMESTAMP 
                  WHERE id = ?`,
+                //  `UPDATE pemasukan 
+                //  SET date = ?, 
+                //      kategori = ?, 
+                //      jumlah = ?, 
+                //      harga = ?, 
+                //      keterangan = ?, 
+                //      total = ?, 
+                //      tambak_id = ?, 
+                //      updated_at = CURRENT_TIMESTAMP 
+                //  WHERE id = ?`,
                 [
                     data.date,
                     data.kategori,
@@ -80,7 +91,7 @@ class Pemasukan {
                     data.harga,
                     data.keterangan,
                     data.total,
-                    data.tambak_id,
+                    // data.tambak_id,
                     id
                 ]
             );
