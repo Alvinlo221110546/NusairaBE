@@ -1,4 +1,4 @@
-import Book from '../models/Book.js'; // Pastikan path sesuai
+import Book from '../models/DataBuku.js'; // Pastikan path sesuai
 
 class BookController {
     // Menambahkan buku baru
