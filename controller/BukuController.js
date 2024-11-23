@@ -1,16 +1,16 @@
-import Book from '../models/DataBuku.js'; 
+import Book from '../models/Book.js'; // Pastikan path sesuai
 
 class BookController {
     // Menambahkan buku baru
     async addBook(req, res) {
-        const { title, author, content, coverImage } = req.body;
+        const { title, description, image } = req.body;
 
-        if (!title || !author || !content || !coverImage) {
+        if (!title || !description || !image) {
             return res.status(400).json({ message: 'Semua kolom harus diisi!' });
         }
 
         try {
-            const book = { title, author, content, coverImage };
+            const book = { title, description, image };
             await Book.save(book);
             res.status(201).json({ message: 'Buku berhasil ditambahkan!' });
         } catch (err) {
@@ -23,9 +23,11 @@ class BookController {
     async getAllBooks(req, res) {
         try {
             const books = await Book.getAll();
+
             if (books.length === 0) {
                 return res.status(404).json({ message: 'Tidak ada buku yang ditemukan' });
             }
+
             res.status(200).json(books);
         } catch (err) {
             console.error(err);
@@ -52,14 +54,14 @@ class BookController {
     // Mengupdate buku berdasarkan ID
     async updateBook(req, res) {
         const bookId = req.params.id;
-        const { title, author, content, coverImage } = req.body;
+        const { title, description, image } = req.body;
 
-        if (!title || !author || !content || !coverImage) {
+        if (!title || !description || !image) {
             return res.status(400).json({ message: 'Semua kolom harus diisi!' });
         }
 
         try {
-            const updatedBook = { title, author, content, coverImage };
+            const updatedBook = { title, description, image };
             await Book.update(bookId, updatedBook);
             res.status(200).json({ message: 'Buku berhasil diperbarui!' });
         } catch (err) {

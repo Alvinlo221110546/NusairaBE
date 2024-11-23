@@ -1,12 +1,12 @@
 import express from 'express';
-import BookController from '../controller/BookController.js'; // Pastikan path sesuai
+import BookController from '../controllers/BookController.js';
 
 const router = express.Router();
 
-router.post('/books', BookController.addBook);         // Menambahkan buku baru
-router.get('/books', BookController.getAllBooks);      // Mendapatkan semua buku
-router.get('/books/:id', BookController.getBookById);  // Mendapatkan buku berdasarkan ID
-router.put('/books/:id', BookController.updateBook);   // Mengupdate buku berdasarkan ID
-router.delete('/books/:id', BookController.deleteBook); // Menghapus buku berdasarkan ID
+router.post('/book', BookController.addBook);
+router.get('/book', BookController.getAllBooks);
+router.get('/book/:id', BookController.getBookById);
+router.put('/book/:id', BookController.updateBook);
+router.delete('/book/:id', BookController.deleteBook);
 
 export default router;
