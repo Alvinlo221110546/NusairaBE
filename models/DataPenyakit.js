@@ -55,7 +55,7 @@ class Penyakit {
 
   static async getAll() {
     try {
-      const query = 'SELECT * FROM penyakit';
+      const query = 'SELECT * FROM penyakit';//revisi
       const [results] = await db.execute(query);
 
       results.forEach(result => {
