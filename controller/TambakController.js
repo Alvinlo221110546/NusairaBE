@@ -10,7 +10,6 @@ class TambakController {
         }
     
         try {
-            // Create and save Tambak
             const tambak = await Tambak.save({
                 nama,
                 negara,
@@ -19,14 +18,11 @@ class TambakController {
                 alamat,
                 jumlahKolam
             });
-    
-            // Add Kolam details using the provided kolamDetails array
+
             for (let i = 0; i < jumlahKolam; i++) {
-                const kolamData = kolamDetails[i];  // Get kolam data from request body
-    
-                // Create a Kolam object
+                const kolamData = kolamDetails[i];  
                 const kolam = {
-                    tambak_id: tambak.id, // Link kolam to the tambak's id
+                    tambak_id: tambak.id,
                     nama_kolam: kolamData.NamaKolam,
                     tipe_kolam: kolamData.tipeKolam,
                     panjang: kolamData.panjang,
