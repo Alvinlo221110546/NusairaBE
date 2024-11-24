@@ -1,4 +1,4 @@
-import PenyakitLele from '../models/DataPenyakitLele';
+import PenyakitLele from '../models/DataPenyakitLele.js';
 
 class PenyakitLeleController {
   static async getAll(req, res) {
