@@ -63,48 +63,56 @@ class PredictionService {
     const connection = await db.getConnection();
     
     try {
+      console.log('=== Debug Info ===');
+      console.log('Monthly Predictions:', monthly_predictions);
+      console.log('Yearly Averages:', yearly_averages);
+      console.log('Province:', province);
+      console.log('City:', city);
+  
       await connection.beginTransaction();
-
       const predictionYear = new Date().getFullYear();
-      console.log('Saving predictions for year:', predictionYear);
-
-      // Hapus prediksi lama untuk provinsi dan kota yang sama
+  
+      // Log sebelum delete
+      console.log('Deleting old predictions...');
       const deleteQuery = `
         DELETE FROM predictions 
         WHERE province = ? AND city = ? AND prediction_year = ?
       `;
       await connection.execute(deleteQuery, [province, city, predictionYear]);
-
+  
       // Simpan prediksi bulanan
       for (let i = 0; i < monthly_predictions.length; i++) {
         const month = new Date(2024, i).toLocaleString('id-ID', { month: 'long' });
         const prediction = monthly_predictions[i];
-
+  
+        console.log(`Saving prediction for ${month}: ${prediction}`);
+        
         const query = `
           INSERT INTO predictions (month, prediction, prediction_year, province, city)
           VALUES (?, ?, ?, ?, ?)
         `;
         
-        console.log('Executing query:', query, [month, prediction, predictionYear, province, city]);
         await connection.execute(query, [month, prediction, predictionYear, province, city]);
       }
-
+  
       // Simpan rata-rata tahunan
-      const yearlyAverage = yearly_averages[0];
+      console.log('Saving yearly average:', yearly_averages[0]);
       const yearlyQuery = `
         INSERT INTO predictions (month, prediction, prediction_year, province, city)
         VALUES ('Yearly Average', ?, ?, ?, ?)
       `;
       
-      await connection.execute(yearlyQuery, [yearlyAverage, predictionYear, province, city]);
-
+      await connection.execute(yearlyQuery, [yearly_averages[0], predictionYear, province, city]);
+  
       await connection.commit();
-      console.log('All predictions saved successfully');
-
+      console.log('Transaction committed successfully');
+  
     } catch (error) {
+      console.error('=== Error Details ===');
+      console.error('Error message:', error.message);
+      console.error('Error stack:', error.stack);
       await connection.rollback();
-      console.error('Error in savePredictionsToDB:', error);
-      throw new Error(`Failed to save predictions: ${error.message}`);
+      throw error;
     } finally {
       connection.release();
     }

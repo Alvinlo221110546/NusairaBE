@@ -63,6 +63,7 @@ app.use('/api', predictionRoutes);
 app.use('/uploads', express.static('uploads'));
 
 
+
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
