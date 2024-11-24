@@ -14,7 +14,7 @@ class PenyakitLele {
   static async save(data) {
     const penyakitLele = new PenyakitLele(data);
     const query = `
-      INSERT INTO PENYAKIT_LELE (title, content, image, date, created_at, updated_at)
+      INSERT INTO penyakit_lele (title, content, image, date, created_at, updated_at)
       VALUES (?, ?, ?, ?, ?, ?)
     `;
     try {
@@ -35,7 +35,7 @@ class PenyakitLele {
   }
 
   static async getAll() {
-    const query = 'SELECT * FROM PENYAKIT_LELE';
+    const query = 'SELECT * FROM penyakit_lele';
     try {
       const [results] = await db.execute(query);
       return results;
@@ -46,7 +46,7 @@ class PenyakitLele {
   }
 
   static async getById(id) {
-    const query = 'SELECT * FROM PENYAKIT_LELE WHERE id = ?';
+    const query = 'SELECT * FROM penyakit_lele WHERE id = ?';
     try {
       const [results] = await db.execute(query, [id]);
       if (results.length === 0) {
@@ -62,7 +62,7 @@ class PenyakitLele {
  
   static async update(id, data) {
     const query = `
-      UPDATE PENYAKIT_LELE 
+      UPDATE penyakit_lele 
       SET title = ?, content = ?, image = ?, date = ?, updated_at = ? 
       WHERE id = ?
     `;
@@ -86,7 +86,7 @@ class PenyakitLele {
   }
 
   static async delete(id) {
-    const query = 'DELETE FROM PENYAKIT_LELE WHERE id = ?';
+    const query = 'DELETE FROM penyakit_lele WHERE id = ?';
     try {
       const [result] = await db.execute(query, [id]);
       if (result.affectedRows === 0) {
