@@ -3,28 +3,34 @@ import db from '../database/Nusairadb.js';
 class PenyakitLele {
   constructor(data) {
     this.id = data.id || null;
-    this.title = data.title;
-    this.content = data.content;
-    this.image = data.image;
-    this.date = data.date;
-    this.created_at = data.created_at || new Date();
-    this.updated_at = data.updated_at || new Date();
+    this.title = data.title || '';
+    this.date = data.date || null; 
+    this.image = data.image || '';
+    this.indikasi = data.indikasi || null;
+    this.penyebab = data.penyebab || null;
+    this.penanganan = data.penanganan || null;
+    this.pencegahan = data.pencegahan || null;
+    this.gejalaTambahan = data.gejalaTambahan || null;
+    this.referensi = data.referensi || null;
   }
 
   static async save(data) {
     const penyakitLele = new PenyakitLele(data);
     const query = `
-      INSERT INTO penyakit_lele (title, content, image, date, created_at, updated_at)
-      VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO penyakit_lele (title, date, image, indikasi, penyebab, penanganan, pencegahan, gejalaTambahan, referensi)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     try {
       const [result] = await db.execute(query, [
         penyakitLele.title,
-        penyakitLele.content,
-        penyakitLele.image,
         penyakitLele.date,
-        penyakitLele.created_at,
-        penyakitLele.updated_at,
+        penyakitLele.image,
+        penyakitLele.indikasi,
+        penyakitLele.penyebab,
+        penyakitLele.penanganan,
+        penyakitLele.pencegahan,
+        penyakitLele.gejalaTambahan,
+        penyakitLele.referensi,
       ]);
       penyakitLele.id = result.insertId;
       return penyakitLele;
@@ -59,20 +65,23 @@ class PenyakitLele {
     }
   }
 
- 
   static async update(id, data) {
     const query = `
-      UPDATE penyakit_lele 
-      SET title = ?, content = ?, image = ?, date = ?, updated_at = ? 
+      UPDATE penyakit_lele
+      SET title = ?, date = ?, image = ?, indikasi = ?, penyebab = ?, penanganan = ?, pencegahan = ?, gejalaTambahan = ?, referensi = ?
       WHERE id = ?
     `;
     try {
       const [result] = await db.execute(query, [
         data.title,
-        data.content,
-        data.image,
         data.date,
-        new Date(),
+        data.image,
+        data.indikasi,
+        data.penyebab,
+        data.penanganan,
+        data.pencegahan,
+        data.gejalaTambahan,
+        data.referensi,
         id,
       ]);
       if (result.affectedRows === 0) {
