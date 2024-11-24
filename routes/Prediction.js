@@ -1,9 +1,9 @@
 import express from 'express';
-import { getPredictions  } from '../controller/PredictionController.js';
+import PredictionController from '../controller/PredictionController.js';
 
 const router = express.Router();
 
-router.get('/predictions', getPredictions);
+
+router.get('/predictions', PredictionController.getPredictionsByProvince);
 
 export default router;
-

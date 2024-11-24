@@ -18,6 +18,7 @@ import kualitasAirRoutes from './routes/Air.js';
 import tagihanRoutes from './routes/Tagihan.js';
 import penggunaRoutes from './routes/Pengguna.js';
 import predictionRoutes from './routes/Prediction.js';
+// import { predictionService } from './models/PredictionService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -59,11 +60,15 @@ app.use('/api', pemasukanRoutes);
 app.use('/api', kualitasAirRoutes);
 app.use('/api', tagihanRoutes);
 app.use('/api', penggunaRoutes);
-app.use('/api', predictionRoutes);
+app.use('/api', predictionRoutes); 
 app.use('/uploads', express.static('uploads'));
 
 
+//ini akan dipakai untuk prediksi
+// predictionService.startScheduler();
 
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+
+
+app.listen(port, async () => {
+  console.log(`Server berjalan di http://localhost:${port}`);
 });

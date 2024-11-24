@@ -1,9 +1,9 @@
-import mysql from 'mysql2/promise'; // Gunakan versi promise dari mysql2
+import mysql from 'mysql2/promise'; 
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Konfigurasi koneksi database
+
 const dbConfig = {
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -15,18 +15,20 @@ const dbConfig = {
   queueLimit: 0,
 };
 
-// Buat pool koneksi database
+
 const db = mysql.createPool(dbConfig);
 
-// Tes koneksi saat aplikasi mulai
+
 (async () => {
   try {
     const connection = await db.getConnection();
     console.log('Connected to the database');
-    connection.release(); // Kembalikan koneksi ke pool
+    connection.release();
   } catch (err) {
     console.error('Error connecting to the database:', err.message);
   }
 })();
 
 export default db;
+
+
