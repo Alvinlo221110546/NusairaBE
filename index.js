@@ -19,6 +19,7 @@ import tagihanRoutes from './routes/Tagihan.js';
 import penggunaRoutes from './routes/Pengguna.js';
 import predictionRoutes from './routes/Prediction.js';
 // import { predictionService } from './models/PredictionService.js';
+import contactRoutes from './routes/Contact.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -62,6 +63,7 @@ app.use('/api', tagihanRoutes);
 app.use('/api', penggunaRoutes);
 app.use('/api', predictionRoutes); 
 app.use('/uploads', express.static('uploads'));
+app.use('/api/contact', contactRoutes);
 
 
 //ini akan dipakai untuk prediksi
