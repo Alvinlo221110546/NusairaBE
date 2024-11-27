@@ -57,13 +57,19 @@ class Penyakit {
     try {
       const query = 'SELECT * FROM penyakit';
       const [results] = await db.execute(query);
-
+  
       results.forEach(result => {
-        if (result.images) {
-          result.images = result.images.split(',');
+        try {
+          if (result.images) {
+            result.images = JSON.parse(result.images);
+          }
+        } catch (error) {
+          if (result.images) {
+            result.images = result.images.split(',');
+          }
         }
       });
-
+  
       return results;
     } catch (error) {
       throw new Error(`Gagal mengambil data penyakit: ${error.message}`);
