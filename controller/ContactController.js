@@ -97,6 +97,41 @@ class ContactController {
       });
     }
   }
+
+
+  static async deleteMessage(req, res) {
+    try {
+      const { id } = req.params; 
+      if (!id) {
+        return res.status(400).json({
+          status: 'error',
+          message: 'ID pesan diperlukan untuk menghapus pesan',
+        });
+      }
+
+      const result = await Contact.delete(id);
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({
+          status: 'error',
+          message: `Pesan dengan ID ${id} tidak ditemukan`,
+        });
+      }
+
+      res.status(200).json({
+        status: 'success',
+        message: `Pesan dengan ID ${id} berhasil dihapus`,
+      });
+    } catch (error) {
+      console.error('Error deleting message:', error);
+      res.status(500).json({
+        status: 'error',
+        message: 'Gagal menghapus pesan',
+        error: error.message,
+      });
+    }
+  }
+
 }
 
 export default ContactController;

@@ -93,6 +93,20 @@ class Contact {
       throw error;
     }
   }
+
+  static async delete(messageId) {
+    try {
+      const query = 'DELETE FROM contact_messages WHERE id = ?';
+      const [result] = await db.execute(query, [messageId]);
+      if (result.affectedRows === 0) {
+        throw new Error('Pesan tidak ditemukan atau sudah dihapus.');
+      }
+      return result;
+    } catch (error) {
+      console.error("Error deleting message:", error.message);
+      throw error;
+    }
+  }
 }
 
 export default Contact;

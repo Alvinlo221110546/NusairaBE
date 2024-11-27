@@ -1,7 +1,5 @@
-import Notifikasi from '../models/DataNotifikasi.js'; // Pastikan path sesuai
-
+import Notifikasi from '../models/DataNotifikasi.js'; 
 class NotifikasiController {
-    // Menambahkan notifikasi baru
     async addNotifikasi(req, res) {
         const { type, date, title, description, image, user_id } = req.body;
 
@@ -19,7 +17,6 @@ class NotifikasiController {
         }
     }
 
-    // Mendapatkan semua notifikasi
     async getAllNotifikasi(req, res) {
         try {
             const notifikasiData = await Notifikasi.getAll();
@@ -35,7 +32,6 @@ class NotifikasiController {
         }
     }
 
-    // Mendapatkan notifikasi berdasarkan ID
     async getNotifikasiById(req, res) {
         const notifikasiId = req.params.id;
 
@@ -51,7 +47,6 @@ class NotifikasiController {
         }
     }
 
-    // Mengupdate notifikasi berdasarkan ID
     async updateNotifikasi(req, res) {
         const notifikasiId = req.params.id;
         const { type, date, title, description, image, user_id } = req.body;
@@ -70,7 +65,6 @@ class NotifikasiController {
         }
     }
 
-    // Menghapus notifikasi berdasarkan ID
     async deleteNotifikasi(req, res) {
         const notifikasiId = req.params.id;
 

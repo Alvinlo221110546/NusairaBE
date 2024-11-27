@@ -6,15 +6,14 @@ class Notifikasi {
         this.date = data.date;
         this.title = data.title;
         this.description = data.description;
-        this.image = data.image;
         this.user_id = data.user_id;
     }
 
     static async save(data) {
         try {
             const query = `
-                INSERT INTO notifikasi (type, date, title, description, image, user_id)
-                VALUES (?, ?, ?, ?, ?, ?)
+                INSERT INTO notifikasi (type, date, title, description, user_id)
+                VALUES (?, ?, ?, ?, ?)
             `;
             const [result] = await db.execute(query, [
                 data.type,
@@ -57,7 +56,7 @@ class Notifikasi {
         try {
             const query = `
                 UPDATE notifikasi
-                SET type = ?, date = ?, title = ?, description = ?, image = ?, user_id = ?, updated_at = ?
+                SET type = ?, date = ?, title = ?, description = ?, user_id = ?, updated_at = ?
                 WHERE id = ?
             `;
             const [result] = await db.execute(query, [
