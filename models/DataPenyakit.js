@@ -60,13 +60,22 @@ class Penyakit {
   
       results.forEach(result => {
         try {
+          // Handle null or undefined images
           if (result.images) {
-            result.images = JSON.parse(result.images);
+            // First try JSON parsing
+            if (typeof result.images === 'string') {
+              try {
+                result.images = JSON.parse(result.images);
+              } catch {
+                // If JSON parsing fails, try splitting
+                result.images = result.images.split(',').filter(img => img.trim() !== '');
+              }
+            }
+          } else {
+            result.images = [];
           }
         } catch (error) {
-          if (result.images) {
-            result.images = result.images.split(',');
-          }
+          result.images = [];
         }
       });
   
