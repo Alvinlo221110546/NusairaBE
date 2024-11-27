@@ -31,11 +31,11 @@ const port = 3020;
 app.use(express.json());  
 app.use(express.urlencoded({ extended: false })); 
 
-app.use(cors({
-  origin: 'http://localhost:5173', 
-  methods: 'GET,POST,PUT,DELETE',
-  credentials: true
-}));
+// app.use(cors({
+//   origin: 'http://localhost:5173', 
+//   methods: 'GET,POST,PUT,DELETE',
+//   credentials: true
+// }));
 
 // const corsOptions = {
 //   origin: '*',  
@@ -44,6 +44,18 @@ app.use(cors({
 //   credentials: true
 // };
 // app.use(cors(corsOptions));
+
+
+const allowedOrigins = ['https://nusaira.vercel.app', 'http://localhost:5173'];
+app.use(cors({
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routing
