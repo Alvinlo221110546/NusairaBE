@@ -39,7 +39,7 @@ class Penyakit {
         data.tanggal_tebar,
         data.jenis_penyakit,
         data.catatan,
-        JSON.stringify(data.images),
+        data.images ? data.images.join(',') : null, 
       ];
 
       const [result] = await db.execute(query, values);
@@ -55,12 +55,12 @@ class Penyakit {
 
   static async getAll() {
     try {
-      const query = 'SELECT * FROM penyakit';//revisi
+      const query = 'SELECT * FROM penyakit';
       const [results] = await db.execute(query);
 
       results.forEach(result => {
         if (result.images) {
-          result.images = JSON.parse(result.images); 
+          result.images = result.images.split(',');
         }
       });
 
