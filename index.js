@@ -37,13 +37,13 @@ app.use(cors({
   credentials: true
 }));
 
-const corsOptions = {
-  origin: '*',  
-  methods: 'GET, POST, PUT, DELETE',
-  allowedHeaders: 'Content-Type, Authorization',
-  credentials: true
-};
-app.use(cors(corsOptions));
+// const corsOptions = {
+//   origin: '*',  
+//   methods: 'GET, POST, PUT, DELETE',
+//   allowedHeaders: 'Content-Type, Authorization',
+//   credentials: true
+// };
+// app.use(cors(corsOptions));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routing
