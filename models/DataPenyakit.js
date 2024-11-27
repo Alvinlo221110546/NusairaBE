@@ -52,33 +52,15 @@ class Penyakit {
   static async create(data) {
     return await Penyakit.save(data); 
   }
-
   static async getAll() {
     try {
       const query = 'SELECT * FROM penyakit';
       const [results] = await db.execute(query);
-  
+    
       results.forEach(result => {
-        try {
-          // Handle null or undefined images
-          if (result.images) {
-            // First try JSON parsing
-            if (typeof result.images === 'string') {
-              try {
-                result.images = JSON.parse(result.images);
-              } catch {
-                // If JSON parsing fails, try splitting
-                result.images = result.images.split(',').filter(img => img.trim() !== '');
-              }
-            }
-          } else {
-            result.images = [];
-          }
-        } catch (error) {
-          result.images = [];
-        }
+        result.images = result.images ? result.images.split(',').filter(img => img.trim() !== '') : [];
       });
-  
+    
       return results;
     } catch (error) {
       throw new Error(`Gagal mengambil data penyakit: ${error.message}`);
