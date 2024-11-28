@@ -13,23 +13,24 @@ class NotifikasiController {
             await Notifikasi.save(notifikasi);
             res.status(201).json({ message: 'Notifikasi berhasil ditambahkan!' });
         } catch (err) {
-            console.error(err);
-            res.status(500).json({ message: 'Terjadi kesalahan dalam menambahkan notifikasi', error: err.message });
+            console.error('Error saat menambahkan notifikasi:', err);
+            res.status(500).json({
+                message: 'Terjadi kesalahan dalam menambahkan notifikasi',
+                error: err.message,
+            });
         }
     }
 
     async getAllNotifikasi(req, res) {
         try {
             const notifikasiData = await Notifikasi.getAll();
-
-            if (notifikasiData.length === 0) {
-                return res.status(404).json({ message: 'Tidak ada notifikasi yang ditemukan' });
-            }
-
-            res.status(200).json(notifikasiData);
+            res.status(200).json(notifikasiData); // Tetap return array kosong jika data tidak ada
         } catch (err) {
-            console.error(err);
-            res.status(500).json({ message: 'Terjadi kesalahan dalam mengambil data notifikasi', error: err.message });
+            console.error('Error saat mengambil semua notifikasi:', err);
+            res.status(500).json({
+                message: 'Terjadi kesalahan dalam mengambil data notifikasi',
+                error: err.message,
+            });
         }
     }
 
@@ -43,8 +44,11 @@ class NotifikasiController {
             }
             res.status(200).json(notifikasi);
         } catch (err) {
-            console.error(err);
-            res.status(500).json({ message: 'Terjadi kesalahan dalam mengambil data notifikasi', error: err.message });
+            console.error('Error saat mengambil notifikasi berdasarkan ID:', err);
+            res.status(500).json({
+                message: 'Terjadi kesalahan dalam mengambil data notifikasi',
+                error: err.message,
+            });
         }
     }
 
@@ -61,8 +65,11 @@ class NotifikasiController {
             await Notifikasi.update(notifikasiId, updatedNotifikasi);
             res.status(200).json({ message: 'Notifikasi berhasil diperbarui!' });
         } catch (err) {
-            console.error(err);
-            res.status(500).json({ message: 'Terjadi kesalahan dalam mengupdate notifikasi', error: err.message });
+            console.error('Error saat mengupdate notifikasi:', err);
+            res.status(500).json({
+                message: 'Terjadi kesalahan dalam mengupdate notifikasi',
+                error: err.message,
+            });
         }
     }
 
@@ -73,8 +80,11 @@ class NotifikasiController {
             await Notifikasi.delete(notifikasiId);
             res.status(200).json({ message: 'Notifikasi berhasil dihapus!' });
         } catch (err) {
-            console.error(err);
-            res.status(500).json({ message: 'Terjadi kesalahan dalam menghapus notifikasi', error: err.message });
+            console.error('Error saat menghapus notifikasi:', err);
+            res.status(500).json({
+                message: 'Terjadi kesalahan dalam menghapus notifikasi',
+                error: err.message,
+            });
         }
     }
 }
