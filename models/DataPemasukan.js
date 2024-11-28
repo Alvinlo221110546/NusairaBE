@@ -12,7 +12,7 @@ class Pemasukan {
     }
 
     static validate(data) {
-        if (!data.date || !data.kategori || !data.jumlah || !data.harga || !data.keterangan || !data.tambak_id) {
+        if (!data.date || !data.kategori || !data.jumlah || !data.harga || !data.keterangan || !data.tambak_id || !data.total) {
             throw new Error('Semua kolom harus diisi!');
         }
         if (isNaN(data.jumlah) || isNaN(data.harga)) {
