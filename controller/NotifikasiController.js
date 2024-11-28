@@ -1,14 +1,15 @@
-import Notifikasi from '../models/DataNotifikasi.js'; 
+import Notifikasi from '../models/DataNotifikasi.js';
+
 class NotifikasiController {
     async addNotifikasi(req, res) {
-        const { type, date, title, description, image, user_id } = req.body;
+        const { type, date, title, description } = req.body;
 
-        if (!type || !date || !title || !description || !image || !user_id) {
+        if (!type || !date || !title || !description) {
             return res.status(400).json({ message: 'Semua kolom harus diisi!' });
         }
 
         try {
-            const notifikasi = { type, date, title, description, image, user_id };
+            const notifikasi = { type, date, title, description };
             await Notifikasi.save(notifikasi);
             res.status(201).json({ message: 'Notifikasi berhasil ditambahkan!' });
         } catch (err) {
@@ -49,14 +50,14 @@ class NotifikasiController {
 
     async updateNotifikasi(req, res) {
         const notifikasiId = req.params.id;
-        const { type, date, title, description, image, user_id } = req.body;
+        const { type, date, title, description } = req.body;
 
-        if (!type || !date || !title || !description || !image || !user_id) {
+        if (!type || !date || !title || !description) {
             return res.status(400).json({ message: 'Semua kolom harus diisi!' });
         }
 
         try {
-            const updatedNotifikasi = { type, date, title, description, image, user_id };
+            const updatedNotifikasi = { type, date, title, description };
             await Notifikasi.update(notifikasiId, updatedNotifikasi);
             res.status(200).json({ message: 'Notifikasi berhasil diperbarui!' });
         } catch (err) {

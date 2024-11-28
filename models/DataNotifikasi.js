@@ -6,22 +6,19 @@ class Notifikasi {
         this.date = data.date;
         this.title = data.title;
         this.description = data.description;
-        this.user_id = data.user_id;
     }
 
     static async save(data) {
         try {
             const query = `
-                INSERT INTO notifikasi (type, date, title, description, user_id)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO notifikasi (type, date, title, description)
+                VALUES (?, ?, ?, ?)
             `;
             const [result] = await db.execute(query, [
                 data.type,
                 data.date,
                 data.title,
                 data.description,
-                data.image,
-                data.user_id,
             ]);
             return result;
         } catch (error) {
@@ -56,7 +53,7 @@ class Notifikasi {
         try {
             const query = `
                 UPDATE notifikasi
-                SET type = ?, date = ?, title = ?, description = ?, user_id = ?, updated_at = ?
+                SET type = ?, date = ?, title = ?, description = ?, updated_at = ?
                 WHERE id = ?
             `;
             const [result] = await db.execute(query, [
@@ -64,8 +61,6 @@ class Notifikasi {
                 data.date,
                 data.title,
                 data.description,
-                data.image,
-                data.user_id,
                 new Date(),
                 id,
             ]);
