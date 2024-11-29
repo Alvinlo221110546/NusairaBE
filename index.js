@@ -33,11 +33,15 @@ app.use(express.urlencoded({ extended: false }));
 
 
 const corsOptions = {
+  // Allow all origins - use cautiously in production
   origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    // and any origin you want to explicitly allow
     const allowedOrigins = [
       'https://nusaira.vercel.app', 
       'http://localhost:5173', 
-      'https://nusaira-be.vercel.app'
+      'https://nusaira-be.vercel.app',
+      'https://www.nusaira.vercel.app'
     ];
 
     if (!origin || allowedOrigins.includes(origin)) {
@@ -46,36 +50,58 @@ const corsOptions = {
       callback(new Error('Not allowed by CORS'));
     }
   },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept', 'x-requested-with'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD'],
+  allowedHeaders: [
+    'Content-Type', 
+    'Authorization', 
+    'Origin', 
+    'X-Requested-With', 
+    'Accept', 
+    'x-requested-with',
+    'Access-Control-Allow-Origin',
+    'Access-Control-Allow-Headers',
+    'Access-Control-Allow-Methods'
+  ],
   credentials: true,
   optionsSuccessStatus: 200
 };
 
-// Apply CORS middleware before routes
+// Apply CORS middleware before any routes
 app.use(cors(corsOptions));
 
-// Preflight request handler for all routes
-app.options('*', cors(corsOptions));
-
-// Middleware to add CORS headers manually for additional safety
+// Global middleware to ensure CORS headers
 app.use((req, res, next) => {
-  const origin = req.get('origin');
+  const origin = req.headers.origin || req.get('origin');
   const allowedOrigins = [
     'https://nusaira.vercel.app', 
     'http://localhost:5173', 
-    'https://nusaira-be.vercel.app'
+    'https://nusaira-be.vercel.app',
+    'https://www.nusaira.vercel.app'
   ];
 
-  if (allowedOrigins.includes(origin)) {
+  // Set CORS headers for allowed origins
+  if (origin && allowedOrigins.includes(origin)) {
     res.header('Access-Control-Allow-Origin', origin);
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Origin, X-Requested-With, Accept, x-requested-with');
-    res.header('Access-Control-Allow-Credentials', 'true');
+  } else {
+    // Fallback to wildcard (use cautiously)
+    res.header('Access-Control-Allow-Origin', '*');
   }
-  
+
+  res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Access-Control-Allow-Methods');
+  res.header('Access-Control-Allow-Credentials', 'true');
+
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+
   next();
 });
+
+// Preflight handler for all routes
+app.options('*', cors(corsOptions));
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routing
