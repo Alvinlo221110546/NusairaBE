@@ -1,11 +1,9 @@
 import PenyakitLele from "../models/DataPenyakitLele.js";
 
-// Menangani request untuk menambahkan data penyakit lele baru
 export const createPenyakitLele = async (req, res) => {
   try {
     const { title, date, image, indikasi, penyebab, penanganan, pencegahan, gejalaTambahan, referensi } = req.body;
 
-    // Validasi data yang diterima
     const penyakitLeleData = {
       title,
       date,
@@ -18,7 +16,6 @@ export const createPenyakitLele = async (req, res) => {
       referensi
     };
 
-    // Simpan data penyakit lele menggunakan model
     const penyakitLele = await PenyakitLele.save(penyakitLeleData);
 
     res.status(200).json({
@@ -31,7 +28,7 @@ export const createPenyakitLele = async (req, res) => {
   }
 };
 
-// Menangani request untuk mengambil semua data penyakit lele
+
 export const getAllPenyakitLele = async (req, res) => {
   try {
     const penyakitLeleList = await PenyakitLele.getAll();
@@ -45,7 +42,7 @@ export const getAllPenyakitLele = async (req, res) => {
   }
 };
 
-// Menangani request untuk mengambil data penyakit lele berdasarkan ID
+
 export const getPenyakitLeleById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -60,13 +57,11 @@ export const getPenyakitLeleById = async (req, res) => {
   }
 };
 
-// Menangani request untuk memperbarui data penyakit lele berdasarkan ID
 export const updatePenyakitLele = async (req, res) => {
   try {
     const { id } = req.params;
     const { title, date, image, indikasi, penyebab, penanganan, pencegahan, gejalaTambahan, referensi } = req.body;
 
-    // Validasi dan persiapkan data untuk update
     const penyakitLeleData = {
       title,
       date,
@@ -79,7 +74,6 @@ export const updatePenyakitLele = async (req, res) => {
       referensi
     };
 
-    // Perbarui data penyakit lele menggunakan model
     const result = await PenyakitLele.update(id, penyakitLeleData);
 
     res.status(200).json({
@@ -92,7 +86,7 @@ export const updatePenyakitLele = async (req, res) => {
   }
 };
 
-// Menangani request untuk menghapus data penyakit lele berdasarkan ID
+
 export const deletePenyakitLele = async (req, res) => {
   try {
     const { id } = req.params;

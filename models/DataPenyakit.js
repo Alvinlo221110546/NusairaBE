@@ -3,7 +3,7 @@ class PenyakitLele {
     this.id = data.id || null;
     this.title = data.title || '';
     this.date = data.date || null; 
-    this.image = data.image || []; // Menampung baik URL atau path gambar
+    this.image = data.image || []; 
     this.indikasi = data.indikasi || null;
     this.penyebab = data.penyebab || null;
     this.penanganan = data.penanganan || null;
@@ -18,17 +18,16 @@ class PenyakitLele {
     if (!data.title) errors.push("Judul (title) harus diisi.");
     if (!data.date) errors.push("Tanggal (date) harus diisi.");
     
-    // Validasi gambar: bisa berupa URL atau path lokal
+
     if (!data.image || (Array.isArray(data.image) && data.image.length === 0)) {
       errors.push("Minimal satu gambar harus diunggah.");
     } else {
       data.image.forEach(image => {
-        // Jika URL, pastikan format URL valid (contoh dengan regex untuk URL sederhana)
         const urlPattern = /^(https?:\/\/[^\s$.?#].[^\s]*)$/;
         if (urlPattern.test(image)) {
-          // URL eksternal seperti Cloudinary
+          
         } else {
-          // Path lokal bisa disimpan, misalnya di server
+          console.log("done");
         }
       });
     }
@@ -45,15 +44,12 @@ class PenyakitLele {
 
       const penyakitLele = new PenyakitLele(data);
 
-      // Pastikan untuk menangani URL dan path lokal dengan baik
       const images = penyakitLele.image.map(img => {
         const urlPattern = /^(https?:\/\/[^\s$.?#].[^\s]*)$/;
         if (urlPattern.test(img)) {
-          // Jika gambar berupa URL, simpan langsung URL-nya
           return img;
         } else {
-          // Jika gambar adalah path lokal, simpan path sesuai kebutuhan
-          return img;  // Misalnya bisa simpan path lokal di server Anda
+          return img; 
         }
       });
 
@@ -64,7 +60,7 @@ class PenyakitLele {
       const [result] = await db.execute(query, [
         penyakitLele.title,
         penyakitLele.date,
-        images.join(','), // Gabungkan gambar menjadi satu string jika ada banyak
+        images.join(','),
         penyakitLele.indikasi,
         penyakitLele.penyebab,
         penyakitLele.penanganan,
@@ -86,7 +82,6 @@ class PenyakitLele {
     try {
       const [results] = await db.execute(query);
 
-      // Pisahkan URL dan path lokal di frontend jika perlu
       results.forEach(result => {
         result.image = result.image ? result.image.split(',').filter(img => img.trim() !== '') : [];
       });

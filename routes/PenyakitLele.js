@@ -3,11 +3,10 @@ import { createPenyakitLele, getAllPenyakitLele, getPenyakitLeleById, updatePeny
 
 const router = express.Router();
 
-// Route untuk menangani penyakit lele
-router.post('/penyakit-lele', createPenyakitLele); // Untuk menambahkan data penyakit lele
-router.get('/penyakit-lele', getAllPenyakitLele); // Untuk mengambil semua data penyakit lele
-router.get('/penyakit-lele/:id', getPenyakitLeleById); // Untuk mengambil data penyakit lele berdasarkan ID
-router.put('/penyakit-lele/:id', updatePenyakitLele); // Untuk memperbarui data penyakit lele
-router.delete('/penyakit-lele/:id', deletePenyakitLele); // Untuk menghapus data penyakit lele berdasarkan ID
+router.post('/penyakit-lele', createPenyakitLele); 
+router.get('/penyakit-lele', getAllPenyakitLele); 
+router.get('/penyakit-lele/:id', getPenyakitLeleById); 
+router.put('/penyakit-lele/:id', updatePenyakitLele); 
+router.delete('/penyakit-lele/:id', deletePenyakitLele); 
 
 export default router;
