@@ -37,6 +37,7 @@ app.use(cors({
   credentials: true
 }));
 
+//sementara
 const corsOptions = {
   origin: '*',  
   methods: 'GET, POST, PUT, DELETE',
