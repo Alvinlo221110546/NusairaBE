@@ -9,7 +9,7 @@
   "routes": [
       {
           "src": "/api/(.*)",
-          "dest": "api/index.js",
+          "dest": "/",
           "headers": {
               "Access-Control-Allow-Origin": "https://nusaira.vercel.app",
               "Access-Control-Allow-Methods": "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
