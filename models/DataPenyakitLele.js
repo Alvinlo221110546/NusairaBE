@@ -16,7 +16,6 @@ class PenyakitLele {
 
   static async save(data) {
     try {
-      // Validasi manual
       const requiredFields = ['title', 'date', 'image', 'indikasi', 'penyebab', 'penanganan', 'pencegahan', 'gejalaTambahan', 'referensi'];
       const missingFields = requiredFields.filter(field => !data[field]);
       
@@ -24,7 +23,7 @@ class PenyakitLele {
         throw new Error(`Field yang hilang: ${missingFields.join(', ')}`);
       }
   
-      // Jika ada validasi lainnya (misalnya format image atau date), bisa ditambahkan di sini
+     
   
       const penyakitLele = new PenyakitLele(data);
       const query = `
