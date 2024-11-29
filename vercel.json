@@ -1,21 +1,15 @@
 {
-  "version": 2,
-  "builds": [
+    "version": 2,
+    "builds": [
       {
-          "src": "api/index.js",
-          "use": "@vercel/node"
+        "src": "./index.js",
+        "use": "@vercel/node"
       }
-  ],
-  "routes": [
+    ],
+    "routes": [
       {
-          "src": "/api/(.*)",
-          "dest": "/",
-          "headers": {
-              "Access-Control-Allow-Origin": "https://nusaira.vercel.app",
-              "Access-Control-Allow-Methods": "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
-              "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, Authorization",
-              "Access-Control-Allow-Credentials": "true"
-          }
+        "src": "/(.*)",
+        "dest": "/"
       }
-  ]
+    ]
 }

@@ -31,77 +31,31 @@ const port = 3020;
 app.use(express.json());  
 app.use(express.urlencoded({ extended: false })); 
 
+app.use(cors({
+  origin: 'http://localhost:5173', 
+  methods: 'GET,POST,PUT,DELETE',
+  credentials: true
+}));
 
 const corsOptions = {
-  // Allow all origins - use cautiously in production
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    // and any origin you want to explicitly allow
-    const allowedOrigins = [
-      'https://nusaira.vercel.app', 
-      'http://localhost:5173', 
-      'https://nusaira-be.vercel.app',
-      'https://www.nusaira.vercel.app'
-    ];
-
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD'],
-  allowedHeaders: [
-    'Content-Type', 
-    'Authorization', 
-    'Origin', 
-    'X-Requested-With', 
-    'Accept', 
-    'x-requested-with',
-    'Access-Control-Allow-Origin',
-    'Access-Control-Allow-Headers',
-    'Access-Control-Allow-Methods'
-  ],
-  credentials: true,
-  optionsSuccessStatus: 200
+  origin: '*',  
+  methods: 'GET, POST, PUT, DELETE',
+  allowedHeaders: 'Content-Type, Authorization',
+  credentials: true
 };
-
-// Apply CORS middleware before any routes
 app.use(cors(corsOptions));
 
-// Global middleware to ensure CORS headers
-app.use((req, res, next) => {
-  const origin = req.headers.origin || req.get('origin');
-  const allowedOrigins = [
-    'https://nusaira.vercel.app', 
-    'http://localhost:5173', 
-    'https://nusaira-be.vercel.app',
-    'https://www.nusaira.vercel.app'
-  ];
 
-  // Set CORS headers for allowed origins
-  if (origin && allowedOrigins.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);
-  } else {
-    // Fallback to wildcard (use cautiously)
-    res.header('Access-Control-Allow-Origin', '*');
-  }
-
-  res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Access-Control-Allow-Methods');
-  res.header('Access-Control-Allow-Credentials', 'true');
-
-  // Handle preflight requests
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);
-  }
-
-  next();
-});
-
-// Preflight handler for all routes
-app.options('*', cors(corsOptions));
-
+// const allowedOrigins = ['https://nusaira.vercel.app', 'http://localhost:5173'];
+// app.use(cors({
+//   origin: (origin, callback) => {
+//     if (allowedOrigins.includes(origin)) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error('Not allowed by CORS'));
+//     }
+//   }
+// }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routing
