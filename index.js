@@ -31,31 +31,29 @@ const port = 3020;
 app.use(express.json());  
 app.use(express.urlencoded({ extended: false })); 
 
-app.use(cors({
-  origin: 'http://localhost:5173', 
-  methods: 'GET,POST,PUT,DELETE',
-  credentials: true
-}));
+
+const allowedOrigins = [
+  'https://nusaira.vercel.app', 
+  'http://localhost:5173', 
+  'https://nusaira-be.vercel.app'
+];
 
 const corsOptions = {
-  origin: 'https://nusaira.vercel.app',  
-  methods: 'GET, POST, PUT, DELETE',
-  allowedHeaders: 'Content-Type, Authorization',
-  credentials: true
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
+  credentials: true,
+  optionsSuccessStatus: 200
 };
+
 app.use(cors(corsOptions));
-
-
-// const allowedOrigins = ['https://nusaira.vercel.app', 'http://localhost:5173'];
-// app.use(cors({
-//   origin: (origin, callback) => {
-//     if (allowedOrigins.includes(origin)) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   }
-// }));
+app.options('*', cors(corsOptions));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routing
