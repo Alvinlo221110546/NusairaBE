@@ -1,53 +1,121 @@
 import PenyakitLele from '../models/DataPenyakitLele.js';
+import { v2 as cloudinary } from 'cloudinary';
 
 class PenyakitLeleController {
-  static async getAll(req, res) {
+  static async createPenyakitLele(req, res) {
     try {
-      const data = await PenyakitLele.getAll();
-      res.status(200).json({
-        success: true,
-        message: 'Data berhasil diambil.',
-        data,
+      const {
+        title,
+        date,
+        indikasi,
+        penyebab,
+        penanganan,
+        pencegahan,
+        gejalaTambahan,
+        referensi,
+      } = req.body;
+
+      if (!title || !date) {
+        return res.status(400).json({
+          message: 'Title dan date wajib diisi.',
+        });
+      }
+
+      const image = req.file ? await PenyakitLeleController.uploadImage(req.file) : '';
+
+      const dataPenyakitLele = {
+        title,
+        date,
+        image,
+        indikasi: indikasi || '',
+        penyebab: penyebab || '',
+        penanganan: penanganan || '',
+        pencegahan: pencegahan || '',
+        gejalaTambahan: gejalaTambahan || '',
+        referensi: referensi || '',
+      };
+
+      const result = await PenyakitLele.save(dataPenyakitLele);
+
+      return res.status(200).json({
+        message: 'Penyakit Lele berhasil dibuat',
+        data: result,
       });
     } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: 'Gagal mengambil data Penyakit Lele.',
-        error: error.message,
+      return res.status(500).json({
+        message: 'Gagal membuat Penyakit Lele',
+        errors: error.message,
       });
     }
   }
 
-  static async getById(req, res) {
-    const { id } = req.params;
+  /**
+   * Mengunggah gambar ke Cloudinary
+   * @param {Object} file 
+   */
+  static async uploadImage(file) {
     try {
-      const data = await PenyakitLele.getById(id);
-      res.status(200).json({
-        success: true,
-        message: `Data dengan ID ${id} berhasil diambil.`,
-        data,
+      return new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          { folder: 'penyakit_lele' },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result.secure_url);
+          }
+        );
+        uploadStream.end(file.buffer);
       });
     } catch (error) {
-      res.status(404).json({
-        success: false,
-        message: `Gagal mengambil data dengan ID ${id}.`,
-        error: error.message,
+      throw new Error(`Gagal mengunggah gambar: ${error.message}`);
+    }
+  }
+
+
+  static async getAllPenyakitLele(req, res) {
+    try {
+      const result = await PenyakitLele.getAll();
+      return res.status(200).json(result);
+    } catch (error) {
+      return res.status(500).json({
+        message: 'Gagal mendapatkan data Penyakit Lele',
+        errors: error.message,
       });
     }
   }
 
-  static async save(req, res) {
-    const { title, date, image, indikasi, penyebab, penanganan, pencegahan, gejalaTambahan, referensi } = req.body;
+  
+  static async getPenyakitLeleById(req, res) {
+    try {
+      const { id } = req.params;
+      const result = await PenyakitLele.getById(id);
 
-    if (!title || !date || !image) {
-      return res.status(400).json({
-        success: false,
-        message: 'Kolom title, date, dan image wajib diisi.',
+      return res.status(200).json(result);
+    } catch (error) {
+      return res.status(500).json({
+        message: `Gagal mendapatkan Penyakit Lele dengan ID ${req.params.id}`,
+        errors: error.message,
       });
     }
+  }
 
+ 
+  static async updatePenyakitLele(req, res) {
     try {
-      const data = await PenyakitLele.save({
+      const { id } = req.params;
+      const {
+        title,
+        date,
+        indikasi,
+        penyebab,
+        penanganan,
+        pencegahan,
+        gejalaTambahan,
+        referensi,
+      } = req.body;
+
+      const image = req.file ? await PenyakitLeleController.uploadImage(req.file) : undefined;
+
+      const dataPenyakitLele = {
         title,
         date,
         image,
@@ -57,75 +125,35 @@ class PenyakitLeleController {
         pencegahan,
         gejalaTambahan,
         referensi,
-      });
+      };
 
-      res.status(201).json({
-        success: true,
-        message: 'Data berhasil disimpan.',
-        data,
+      const result = await PenyakitLele.update(id, dataPenyakitLele);
+
+      return res.status(200).json({
+        message: 'Penyakit Lele berhasil diperbarui',
+        data: result,
       });
     } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: 'Gagal menyimpan data Penyakit Lele.',
-        error: error.message,
+      return res.status(500).json({
+        message: `Gagal memperbarui Penyakit Lele dengan ID ${req.params.id}`,
+        errors: error.message,
       });
     }
   }
 
-  static async update(req, res) {
-    const { id } = req.params;
-    const { title, date, image, indikasi, penyebab, penanganan, pencegahan, gejalaTambahan, referensi } = req.body;
-
-    if (!title || !date || !image) {
-      return res.status(400).json({
-        success: false,
-        message: 'Kolom title, date, dan image wajib diisi.',
-      });
-    }
-
+  
+  static async deletePenyakitLele(req, res) {
     try {
-      const result = await PenyakitLele.update(id, {
-        title,
-        date,
-        image,
-        indikasi,
-        penyebab,
-        penanganan,
-        pencegahan,
-        gejalaTambahan,
-        referensi,
-      });
+      const { id } = req.params;
+      await PenyakitLele.delete(id);
 
-      res.status(200).json({
-        success: true,
-        message: `Data dengan ID ${id} berhasil diperbarui.`,
-        result,
+      return res.status(200).json({
+        message: 'Penyakit Lele berhasil dihapus',
       });
     } catch (error) {
-      res.status(404).json({
-        success: false,
-        message: `Gagal memperbarui data dengan ID ${id}.`,
-        error: error.message,
-      });
-    }
-  }
-
-  static async delete(req, res) {
-    const { id } = req.params;
-
-    try {
-      const result = await PenyakitLele.delete(id);
-      res.status(200).json({
-        success: true,
-        message: `Data dengan ID ${id} berhasil dihapus.`,
-        result,
-      });
-    } catch (error) {
-      res.status(404).json({
-        success: false,
-        message: `Gagal menghapus data dengan ID ${id}.`,
-        error: error.message,
+      return res.status(500).json({
+        message: `Gagal menghapus Penyakit Lele dengan ID ${req.params.id}`,
+        errors: error.message,
       });
     }
   }

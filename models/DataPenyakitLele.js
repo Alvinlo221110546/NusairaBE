@@ -5,7 +5,7 @@ class PenyakitLele {
     this.id = data.id || null;
     this.title = data.title || '';
     this.date = data.date || null; 
-    this.image = data.image || '';
+    this.image = data.image || []; 
     this.indikasi = data.indikasi || null;
     this.penyebab = data.penyebab || null;
     this.penanganan = data.penanganan || null;
@@ -14,17 +14,34 @@ class PenyakitLele {
     this.referensi = data.referensi || null;
   }
 
+  static async validate(data) {
+    const errors = [];
+
+    if (!data.title) errors.push("Judul (title) harus diisi.");
+    if (!data.date) errors.push("Tanggal (date) harus diisi.");
+    if (!data.image || !Array.isArray(data.image) || data.image.length === 0) {
+      errors.push("Minimal satu gambar harus diunggah.");
+    }
+
+    return errors;
+  }
+
   static async save(data) {
-    const penyakitLele = new PenyakitLele(data);
-    const query = `
-      INSERT INTO penyakit_lele (title, date, image, indikasi, penyebab, penanganan, pencegahan, gejalaTambahan, referensi)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `;
     try {
+      const validationErrors = await PenyakitLele.validate(data);
+      if (validationErrors.length > 0) {
+        throw new Error(validationErrors.join(", "));
+      }
+
+      const penyakitLele = new PenyakitLele(data);
+      const query = `
+        INSERT INTO penyakit_lele (title, date, image, indikasi, penyebab, penanganan, pencegahan, gejalaTambahan, referensi)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `;
       const [result] = await db.execute(query, [
         penyakitLele.title,
         penyakitLele.date,
-        penyakitLele.image,
+        penyakitLele.image.join(','), 
         penyakitLele.indikasi,
         penyakitLele.penyebab,
         penyakitLele.penanganan,
@@ -44,6 +61,11 @@ class PenyakitLele {
     const query = 'SELECT * FROM penyakit_lele';
     try {
       const [results] = await db.execute(query);
+
+      results.forEach(result => {
+        result.image = result.image ? result.image.split(',').filter(img => img.trim() !== '') : [];
+      });
+
       return results;
     } catch (error) {
       console.error('Error saat mengambil semua data Penyakit Lele:', error.message);
@@ -58,7 +80,11 @@ class PenyakitLele {
       if (results.length === 0) {
         throw new Error(`Data dengan ID ${id} tidak ditemukan.`);
       }
-      return results[0];
+
+      const result = results[0];
+      result.image = result.image ? result.image.split(',').filter(img => img.trim() !== '') : [];
+
+      return result;
     } catch (error) {
       console.error('Error saat mengambil data Penyakit Lele berdasarkan ID:', error.message);
       throw new Error(`Gagal mengambil data Penyakit Lele dengan ID ${id}.`);
@@ -66,16 +92,21 @@ class PenyakitLele {
   }
 
   static async update(id, data) {
-    const query = `
-      UPDATE penyakit_lele
-      SET title = ?, date = ?, image = ?, indikasi = ?, penyebab = ?, penanganan = ?, pencegahan = ?, gejalaTambahan = ?, referensi = ?
-      WHERE id = ?
-    `;
     try {
+      const validationErrors = await PenyakitLele.validate(data);
+      if (validationErrors.length > 0) {
+        throw new Error(validationErrors.join(", "));
+      }
+
+      const query = `
+        UPDATE penyakit_lele
+        SET title = ?, date = ?, image = ?, indikasi = ?, penyebab = ?, penanganan = ?, pencegahan = ?, gejalaTambahan = ?, referensi = ?
+        WHERE id = ?
+      `;
       const [result] = await db.execute(query, [
         data.title,
         data.date,
-        data.image,
+        data.image.join(','), 
         data.indikasi,
         data.penyebab,
         data.penanganan,
