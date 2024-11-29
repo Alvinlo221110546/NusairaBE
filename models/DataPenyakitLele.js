@@ -16,10 +16,15 @@ class PenyakitLele {
 
   static async save(data) {
     try {
-      const validationErrors = await PenyakitLele.validate(data);
-      if (validationErrors.length > 0) {
-        throw new Error(validationErrors.join(", "));
+      // Validasi manual
+      const requiredFields = ['title', 'date', 'image', 'indikasi', 'penyebab', 'penanganan', 'pencegahan', 'gejalaTambahan', 'referensi'];
+      const missingFields = requiredFields.filter(field => !data[field]);
+      
+      if (missingFields.length > 0) {
+        throw new Error(`Field yang hilang: ${missingFields.join(', ')}`);
       }
+  
+      // Jika ada validasi lainnya (misalnya format image atau date), bisa ditambahkan di sini
   
       const penyakitLele = new PenyakitLele(data);
       const query = `
@@ -29,7 +34,7 @@ class PenyakitLele {
       const [result] = await db.execute(query, [
         penyakitLele.title,
         penyakitLele.date,
-        penyakitLele.image.join(','), 
+        penyakitLele.image.join(','), // Pastikan formatnya sesuai dengan database (misalnya, jika image adalah array, gabungkan dengan koma)
         penyakitLele.indikasi,
         penyakitLele.penyebab,
         penyakitLele.penanganan,
@@ -40,10 +45,11 @@ class PenyakitLele {
       penyakitLele.id = result.insertId;
       return penyakitLele;
     } catch (error) {
-      console.error('Error saat menyimpan Penyakit Lele:', error.message); // Log error di sini
+      console.error('Error saat menyimpan Penyakit Lele:', error.message);
       throw new Error('Gagal menyimpan data Penyakit Lele.');
     }
   }
+  
   
   static async getAll() {
     const query = 'SELECT * FROM penyakit_lele';
