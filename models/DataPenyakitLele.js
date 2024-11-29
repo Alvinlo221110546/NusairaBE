@@ -34,7 +34,7 @@ class PenyakitLele {
       const [result] = await db.execute(query, [
         penyakitLele.title,
         penyakitLele.date,
-        penyakitLele.image.join(','), // Pastikan formatnya sesuai dengan database (misalnya, jika image adalah array, gabungkan dengan koma)
+        penyakitLele.image,
         penyakitLele.indikasi,
         penyakitLele.penyebab,
         penyakitLele.penanganan,
