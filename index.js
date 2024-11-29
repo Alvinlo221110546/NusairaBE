@@ -38,7 +38,7 @@ app.use(cors({
 }));
 
 const corsOptions = {
-  origin: '*',  
+  origin: 'https://nusaira.vercel.app',  
   methods: 'GET, POST, PUT, DELETE',
   allowedHeaders: 'Content-Type, Authorization',
   credentials: true
