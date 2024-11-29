@@ -15,16 +15,21 @@ class PenyakitLele {
   }
 
   static async save(data) {
-    const penyakitLele = new PenyakitLele(data);
-    const query = `
-      INSERT INTO penyakit_lele (title, date, image, indikasi, penyebab, penanganan, pencegahan, gejalaTambahan, referensi)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `;
     try {
+      const validationErrors = await PenyakitLele.validate(data);
+      if (validationErrors.length > 0) {
+        throw new Error(validationErrors.join(", "));
+      }
+  
+      const penyakitLele = new PenyakitLele(data);
+      const query = `
+        INSERT INTO penyakit_lele (title, date, image, indikasi, penyebab, penanganan, pencegahan, gejalaTambahan, referensi)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `;
       const [result] = await db.execute(query, [
         penyakitLele.title,
         penyakitLele.date,
-        penyakitLele.image,
+        penyakitLele.image.join(','), 
         penyakitLele.indikasi,
         penyakitLele.penyebab,
         penyakitLele.penanganan,
@@ -35,11 +40,11 @@ class PenyakitLele {
       penyakitLele.id = result.insertId;
       return penyakitLele;
     } catch (error) {
-      console.error('Error saat menyimpan Penyakit Lele:', error.message);
+      console.error('Error saat menyimpan Penyakit Lele:', error.message); // Log error di sini
       throw new Error('Gagal menyimpan data Penyakit Lele.');
     }
   }
-
+  
   static async getAll() {
     const query = 'SELECT * FROM penyakit_lele';
     try {

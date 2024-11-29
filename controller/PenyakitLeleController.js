@@ -21,7 +21,7 @@ export const createPenyakitLele = async (req, res) => {
     // Simpan data penyakit lele menggunakan model
     const penyakitLele = await PenyakitLele.save(penyakitLeleData);
 
-    res.status(201).json({
+    res.status(200).json({
       message: "Penyakit Lele berhasil ditambahkan.",
       data: penyakitLele
     });
