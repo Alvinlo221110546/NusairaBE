@@ -2,10 +2,10 @@ import Berita from '../models/DataBerita.js';
 
 class BeritaController {
     async addBerita(req, res) {
-        const { writer, title, description, content, image, date } = req.body;
+        const { writer, title, excerpt, content, image, date } = req.body;
 
         try {
-            const berita = { writer, title, description, content, image, date };
+            const berita = { writer, title, excerpt, content, image, date };
             const savedBerita = await Berita.save(berita);
             res.status(201).json({ 
                 message: 'Berita berhasil ditambahkan!', 
@@ -53,10 +53,10 @@ class BeritaController {
    
     async updateBerita(req, res) {
         const beritaId = req.params.id;
-        const { writer, title, description, content, image, date } = req.body;
+        const { writer, title, excerpt, content, image, date } = req.body;
 
         try {
-            const updatedBerita = { writer, title, description, content, image, date };
+            const updatedBerita = { writer, title, excerpt, content, image, date };
             const result = await Berita.update(beritaId, updatedBerita);
             res.status(200).json({ 
                 message: 'Berita berhasil diperbarui!', 
