@@ -8,7 +8,7 @@ class Pengeluaran {
         this.catatan = data.catatan;
         this.status = data.status;
         this.sisa_tagihan = data.sisa_tagihan;
-        this.user_id = data.user_id;
+        this.tambak_id = data.tambak_id; // Ganti user_id menjadi tambak_id
     }
 
     // Menyimpan pengeluaran ke dalam database
@@ -17,7 +17,7 @@ class Pengeluaran {
             const pengeluaran = new Pengeluaran(data);
             const query = `
                 INSERT INTO pengeluaran 
-                (date, jenis_pengeluaran, nama_barang, catatan, status, sisa_tagihan, user_id) 
+                (date, jenis_pengeluaran, nama_barang, catatan, status, sisa_tagihan, tambak_id) 
                 VALUES (?, ?, ?, ?, ?, ?, ?)
             `;
             const [result] = await db.execute(query, [
@@ -27,7 +27,7 @@ class Pengeluaran {
                 pengeluaran.catatan,
                 pengeluaran.status,
                 pengeluaran.sisa_tagihan,
-                pengeluaran.user_id
+                pengeluaran.tambak_id // Ganti user_id menjadi tambak_id
             ]);
             return result;
         } catch (err) {
@@ -72,7 +72,7 @@ class Pengeluaran {
                     catatan = ?, 
                     status = ?, 
                     sisa_tagihan = ?, 
-                    user_id = ?, 
+                    tambak_id = ?,  // Ganti user_id menjadi tambak_id
                     updated_at = CURRENT_TIMESTAMP 
                 WHERE id = ?
             `;
@@ -83,7 +83,7 @@ class Pengeluaran {
                 data.catatan,
                 data.status,
                 data.sisa_tagihan,
-                data.user_id,
+                data.tambak_id, // Ganti user_id menjadi tambak_id
                 id
             ]);
             return result;
