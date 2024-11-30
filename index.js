@@ -86,5 +86,5 @@ app.use('/api/contact', contactRoutes);
 
 
 app.listen(port, async () => {
-  console.log(`Server berjalan di http://localhost:${port}`);
+  console.log(`Server berjalan di http://localhost:${port}`); // eslint-disable-line no-console
 });
