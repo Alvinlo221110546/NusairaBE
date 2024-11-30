@@ -6,7 +6,7 @@ class Berita {
     this.writer = 'admin';  
     this.image_writer = 'assets/img/assets_foto/f2.png';  
     this.title = data.title || '';
-    this.description = data.description || '';
+    this.excerpt = data.excerpt || '';
     this.content = data.content || '';
     this.image = data.image || '';  
     this.date = data.date || null;
@@ -14,7 +14,7 @@ class Berita {
 
   static async save(data) {
     try {
-      const requiredFields = ['title', 'description', 'content', 'image', 'date'];
+      const requiredFields = ['title', 'excerpt', 'content', 'image', 'date'];
       const missingFields = requiredFields.filter(field => !data[field]);
       
       if (missingFields.length > 0) {
@@ -23,14 +23,14 @@ class Berita {
 
       const berita = new Berita(data);
       const query = `
-        INSERT INTO berita (writer, image_writer, title, description, content, image, date)
+        INSERT INTO berita (writer, image_writer, title, excerpt, content, image, date)
         VALUES (?, ?, ?, ?, ?, ?, ?)
       `;
       const [result] = await db.execute(query, [
         berita.writer,
         berita.image_writer,
         berita.title,
-        berita.description,
+        berita.excerpt,
         berita.content,
         berita.image,
         berita.date
@@ -71,7 +71,7 @@ class Berita {
   static async update(id, data) {
     const query = `
       UPDATE berita
-      SET writer = ?, image_writer = ?, title = ?, description = ?, content = ?, image = ?, date = ?
+      SET writer = ?, image_writer = ?, title = ?, excerpt = ?, content = ?, image = ?, date = ?
       WHERE id = ?
     `;
     try {
@@ -79,7 +79,7 @@ class Berita {
         data.writer,
         data.image_writer,
         data.title,
-        data.description,
+        data.excerpt,
         data.content,
         data.image,
         data.date,
