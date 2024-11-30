@@ -1,4 +1,6 @@
 import Pengguna from '../models/DataPengguna.js'; // Pastikan path sesuai
+import bcrypt from 'bcrypt'; 
+import jwt from 'jsonwebtoken'; 
 
 class PenggunaController {
     // Menambahkan pengguna baru
@@ -10,7 +12,9 @@ class PenggunaController {
         }
 
         try {
-            const pengguna = { name, email, role, password, pekerjaan, jenis_kelamin, no_hp, lokasi, foto_profile };
+            // Hash password sebelum menyimpannya
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const pengguna = { name, email, role, password: hashedPassword, pekerjaan, jenis_kelamin, no_hp, lokasi, foto_profile };
             await Pengguna.save(pengguna);
             res.status(201).json({ message: 'Pengguna berhasil ditambahkan!' });
         } catch (err) {
@@ -56,12 +60,18 @@ class PenggunaController {
         const penggunaId = req.params.id;
         const { name, email, role, password, pekerjaan, jenis_kelamin, no_hp, lokasi, foto_profile } = req.body;
 
-        if (!name || !email || !role || !password || !pekerjaan || !jenis_kelamin || !no_hp || !lokasi || !foto_profile) {
+        if (!name || !email || !role || !pekerjaan || !jenis_kelamin || !no_hp || !lokasi || !foto_profile) {
             return res.status(400).json({ message: 'Semua kolom harus diisi!' });
         }
 
         try {
-            const updatedPengguna = { name, email, role, password, pekerjaan, jenis_kelamin, no_hp, lokasi, foto_profile };
+            const updatedPengguna = { name, email, role, pekerjaan, jenis_kelamin, no_hp, lokasi, foto_profile };
+
+            // Jika password diisi, hash password baru
+            if (password) {
+                updatedPengguna.password = await bcrypt.hash(password, 10);
+            }
+
             await Pengguna.update(penggunaId, updatedPengguna);
             res.status(200).json({ message: 'Pengguna berhasil diperbarui!' });
         } catch (err) {
@@ -80,6 +90,40 @@ class PenggunaController {
         } catch (err) {
             console.error(err);
             res.status(500).json({ message: 'Terjadi kesalahan dalam menghapus pengguna', error: err.message });
+        }
+    }
+
+    // Autentikasi pengguna
+    async login(req, res) {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ message: 'Email dan kata sandi harus diisi!' });
+        }
+
+        try {
+            // Mencari pengguna berdasarkan email
+            const pengguna = await Pengguna.getByEmail(email);
+            if (!pengguna) {
+                return res.status(404).json({ message: 'Pengguna tidak ditemukan' });
+            }
+
+            // Memverifikasi kata sandi
+            const isMatch = await bcrypt.compare(password, pengguna.password);
+            if (!isMatch) {
+                return res.status(401).json({ message: 'Kata sandi salah' });
+            }
+
+            // Membuat token JWT
+            const token = jwt.sign({ id: pengguna.id, email: pengguna.email }, process.env.JWT_SECRET || 'secret_key', { expiresIn: '1h' });
+
+            res.status(200).json({
+                message: 'Login berhasil',
+                token, // Kirimkan token kepada klien
+            });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Terjadi kesalahan saat autentikasi', error: err.message });
         }
     }
 }

@@ -113,6 +113,21 @@ class Pengguna {
             throw new Error('Error deleting pengguna: ' + err.message);
         }
     }
+
+    // Metode untuk mendapatkan pengguna berdasarkan email
+    static async getByEmail(email) {
+        try {
+            const query = 'SELECT * FROM pengguna WHERE email = ?';
+            const [result] = await db.execute(query, [email]);
+
+            if (result.length === 0) {
+                return null; // Tidak ditemukan
+            }
+            return result[0]; // Mengembalikan pengguna
+        } catch (err) {
+            throw new Error('Error fetching pengguna by email: ' + err.message);
+        }
+    }
 }
 
 export default Pengguna;
