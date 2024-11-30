@@ -22,7 +22,7 @@ import predictionRoutes from './routes/Prediction.js';
 import contactRoutes from './routes/Contact.js';
 
 const __filename = fileURLToPath(import.meta.url);
-const _dirname = dirname(_filename);
+const __dirname = dirname(__filename);
 
 const app = express();
 const port = 3020;
@@ -86,5 +86,5 @@ app.use('/api/contact', contactRoutes);
 
 
 app.listen(port, async () => {
-  console.log(Server berjalan di http://localhost:${port});
+  console.log(`Server berjalan di http://localhost:${port}`);
 });
