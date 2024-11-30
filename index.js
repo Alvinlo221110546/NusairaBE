@@ -20,6 +20,7 @@ import penggunaRoutes from './routes/Pengguna.js';
 import predictionRoutes from './routes/Prediction.js';
 // import { predictionService } from './models/PredictionService.js';
 import contactRoutes from './routes/Contact.js';
+// import authRoutes from './routes/AuthRoutes.js'; 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -78,6 +79,7 @@ app.use('/api', penggunaRoutes);
 app.use('/api', predictionRoutes); 
 app.use('/uploads', express.static('uploads'));
 app.use('/api/contact', contactRoutes);
+// app.use('/api/auth', authRoutes);
 
 
 //ini akan dipakai untuk prediksi
