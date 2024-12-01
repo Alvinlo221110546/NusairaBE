@@ -3,14 +3,15 @@ import Pengeluaran from '../models/DataPengeluaran.js'; // Pastikan path sesuai
 class PengeluaranController {
     // Menambahkan pengeluaran baru
     async addPengeluaran(req, res) {
-        const { date, jenis_pengeluaran, nama_barang, catatan, status, sisa_tagihan, user_id } = req.body;
+        const { date, jenis_pengeluaran, nama_barang, catatan, status, sisa_tagihan } = req.body;
+        console.log(req.body);
 
-        if (!date || !jenis_pengeluaran || !nama_barang || !catatan || !status || sisa_tagihan === undefined || !user_id) {
+        if (!date || !jenis_pengeluaran || !nama_barang || !catatan || !status || sisa_tagihan === undefined  ) {
             return res.status(400).json({ message: 'Semua kolom harus diisi!' });
         }
 
         try {
-            const pengeluaran = { date, jenis_pengeluaran, nama_barang, catatan, status, sisa_tagihan, user_id };
+            const pengeluaran = { date, jenis_pengeluaran, nama_barang, catatan, status, sisa_tagihan };
             await Pengeluaran.save(pengeluaran);
             res.status(201).json({ message: 'Pengeluaran berhasil ditambahkan!' });
         } catch (err) {
@@ -54,7 +55,7 @@ class PengeluaranController {
     // Mengupdate pengeluaran berdasarkan ID
     async updatePengeluaran(req, res) {
         const pengeluaranId = req.params.id;
-        const { date, jenis_pengeluaran, nama_barang, catatan, status, sisa_tagihan, user_id } = req.body;
+        const { date, jenis_pengeluaran, nama_barang, catatan, status, sisa_tagihan } = req.body;
 
         if (!date || !jenis_pengeluaran || !nama_barang || !catatan || !status || sisa_tagihan === undefined || !user_id) {
             return res.status(400).json({ message: 'Semua kolom harus diisi!' });
