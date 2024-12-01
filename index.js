@@ -19,7 +19,10 @@ import tagihanRoutes from './routes/Tagihan.js';
 import penggunaRoutes from './routes/Pengguna.js';
 import predictionRoutes from './routes/Prediction.js';
 // import { predictionService } from './models/PredictionService.js';
+// import { catfishProductionService } from './models/DataHargaPasar.js';
 import contactRoutes from './routes/Contact.js';
+import budidayaIkanRoutes from './routes/Budidaya.js';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -78,10 +81,14 @@ app.use('/api', penggunaRoutes);
 app.use('/api', predictionRoutes); 
 app.use('/uploads', express.static('uploads'));
 app.use('/api/contact', contactRoutes);
+app.use('/api', budidayaIkanRoutes);
 
 
-//ini akan dipakai untuk prediksi
+// ini akan dipakai untuk prediksi
 // predictionService.startScheduler();
+
+//ini akan dipakai untuk memasukan harga pasar
+// catfishProductionService.startScheduler();
 
 
 
