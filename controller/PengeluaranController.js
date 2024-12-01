@@ -4,6 +4,7 @@ class PengeluaranController {
     // Menambahkan pengeluaran baru
     async addPengeluaran(req, res) {
         const { date, jenis_pengeluaran, nama_barang, catatan, status, sisa_tagihan } = req.body;
+        console.log(req.body);
 
         if (!date || !jenis_pengeluaran || !nama_barang || !catatan || !status || sisa_tagihan === undefined  ) {
             return res.status(400).json({ message: 'Semua kolom harus diisi!' });
