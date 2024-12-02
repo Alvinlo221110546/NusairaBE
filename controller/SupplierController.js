@@ -10,7 +10,7 @@ class SupplierController {
       }
 
       const newSupplier = await Supplier.save(supplierData);
-      res.status(201).json({
+      res.status(200).json({
         status: 'success',
         message: 'Supplier berhasil dibuat',
         data: newSupplier
