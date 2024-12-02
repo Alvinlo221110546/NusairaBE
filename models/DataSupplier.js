@@ -8,16 +8,15 @@ class Supplier {
     this.location = data.location || [];
     this.description = data.description || '';
     this.image = data.image || '';
-    this.rating = data.rating || 0;
+    this.rating = data.rating || 0; 
     this.availability = data.availability || 'Stok Tersedia';
     this.whatsapp = data.whatsapp || '';
     this.products = data.products || [];
-    this.reviews = data.reviews || [];
   }
 
   static async save(data) {
     try {
-      const requiredFields = ['supplier', 'description', 'image', 'rating', 'whatsapp'];
+      const requiredFields = ['supplier', 'description', 'image', 'whatsapp'];
       const missingFields = requiredFields.filter(field => !data[field]);
       
       if (missingFields.length > 0) {
@@ -27,8 +26,8 @@ class Supplier {
       const supplier = new Supplier(data);
       const query = `
         INSERT INTO suppliers 
-        (supplier, province, location, description, image, rating, availability, whatsapp, products, reviews)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        (supplier, province, location, description, image, rating, availability, whatsapp, products)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
       
       const [result] = await db.execute(query, [
@@ -40,8 +39,7 @@ class Supplier {
         supplier.rating,
         supplier.availability,
         supplier.whatsapp,
-        JSON.stringify(supplier.products),
-        JSON.stringify(supplier.reviews)
+        JSON.stringify(supplier.products)
       ]);
 
       supplier.id = result.insertId;
@@ -61,7 +59,6 @@ class Supplier {
         province: JSON.parse(result.province),
         location: JSON.parse(result.location),
         products: JSON.parse(result.products),
-        reviews: JSON.parse(result.reviews)
       }));
     } catch (error) {
       console.error('Error saat mengambil semua data Supplier:', error.message);
@@ -83,7 +80,6 @@ class Supplier {
         province: JSON.parse(result.province),
         location: JSON.parse(result.location),
         products: JSON.parse(result.products),
-        reviews: JSON.parse(result.reviews)
       };
     } catch (error) {
       console.error('Error saat mengambil data Supplier berdasarkan ID:', error.message);
@@ -96,7 +92,7 @@ class Supplier {
       UPDATE suppliers
       SET supplier = ?, province = ?, location = ?, description = ?, 
           image = ?, rating = ?, availability = ?, whatsapp = ?, 
-          products = ?, reviews = ?
+          products = ?
       WHERE id = ?
     `;
     try {
@@ -110,7 +106,6 @@ class Supplier {
         data.availability,
         data.whatsapp,
         JSON.stringify(data.products),
-        JSON.stringify(data.reviews),
         id
       ]);
 
@@ -138,37 +133,38 @@ class Supplier {
     }
   }
 
-  static async getByProvince(province) {
-    const query = 'SELECT * FROM suppliers WHERE JSON_CONTAINS(province, ?)';
+  // Metode baru untuk reviews
+  static async getReviews(supplierId) {
+    const query = `
+      SELECT * FROM supplier_reviews
+      WHERE supplier_id = ?
+    `;
     try {
-      const [results] = await db.execute(query, [JSON.stringify(province)]);
-      return results.map(result => ({
-        ...result,
-        province: JSON.parse(result.province),
-        location: JSON.parse(result.location),
-        products: JSON.parse(result.products),
-        reviews: JSON.parse(result.reviews)
-      }));
+      const [results] = await db.execute(query, [supplierId]);
+      return results;
     } catch (error) {
-      console.error('Error saat mengambil Supplier berdasarkan Provinsi:', error.message);
-      throw new Error(`Gagal mengambil data Supplier dari Provinsi ${province}.`);
+      console.error('Error saat mengambil ulasan:', error.message);
+      throw new Error(`Gagal mengambil ulasan untuk Supplier dengan ID ${supplierId}.`);
     }
   }
 
-  static async getByLocation(location) {
-    const query = 'SELECT * FROM suppliers WHERE JSON_CONTAINS(location, ?)';
+  static async addReview(supplierId, reviewerName, reviewText, rating) {
+    const query = `
+      INSERT INTO supplier_reviews 
+      (supplier_id, reviewer_name, review_text, rating) 
+      VALUES (?, ?, ?, ?)
+    `;
     try {
-      const [results] = await db.execute(query, [JSON.stringify(location)]);
-      return results.map(result => ({
-        ...result,
-        province: JSON.parse(result.province),
-        location: JSON.parse(result.location),
-        products: JSON.parse(result.products),
-        reviews: JSON.parse(result.reviews)
-      }));
+      const [result] = await db.execute(query, [
+        supplierId,
+        reviewerName,
+        reviewText,
+        rating
+      ]);
+      return result;
     } catch (error) {
-      console.error('Error saat mengambil Supplier berdasarkan Lokasi:', error.message);
-      throw new Error(`Gagal mengambil data Supplier dari Lokasi ${location}.`);
+      console.error('Error saat menambahkan ulasan:', error.message);
+      throw new Error(`Gagal menambahkan ulasan untuk Supplier dengan ID ${supplierId}.`);
     }
   }
 }
