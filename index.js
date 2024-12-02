@@ -22,7 +22,8 @@ import predictionRoutes from './routes/Prediction.js';
 // import { catfishProductionService } from './models/DataHargaPasar.js';
 import contactRoutes from './routes/Contact.js';
 import budidayaIkanRoutes from './routes/Budidaya.js';
-
+import supplierRoutes from './routes/Supplier.js';
+import productRoutes from './routes/Product.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -82,6 +83,8 @@ app.use('/api', predictionRoutes);
 app.use('/uploads', express.static('uploads'));
 app.use('/api/contact', contactRoutes);
 app.use('/api', budidayaIkanRoutes);
+app.use('/api/suppliers', supplierRoutes);
+app.use('/api/products', productRoutes);
 
 
 // ini akan dipakai untuk prediksi
