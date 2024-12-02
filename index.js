@@ -24,6 +24,7 @@ import contactRoutes from './routes/Contact.js';
 import budidayaIkanRoutes from './routes/Budidaya.js';
 import supplierRoutes from './routes/Supplier.js';
 import productRoutes from './routes/Product.js';
+import reviewRoutes from './routes/Review.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -81,10 +82,11 @@ app.use('/api', tagihanRoutes);
 app.use('/api', penggunaRoutes);
 app.use('/api', predictionRoutes); 
 app.use('/uploads', express.static('uploads'));
-app.use('/api/contact', contactRoutes);
 app.use('/api', budidayaIkanRoutes);
+app.use('/api/contact', contactRoutes);
 app.use('/api/suppliers', supplierRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 
 // ini akan dipakai untuk prediksi
