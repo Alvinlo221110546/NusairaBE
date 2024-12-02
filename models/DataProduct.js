@@ -2,17 +2,17 @@ import db from '../database/Nusairadb.js';
 
 class Product {
   constructor(data) {
-    this.id = data.id || null;
-    this.supplier_id = data.supplier_id || null;
-    this.title = data.title || '';
-    this.description = data.description || '';
-    this.price = data.price || 0;
-    this.image = data.image || '';
+    this.product_id = data.product_id || null;
+    this.product_supplier_id = data.product_supplier_id || null;
+    this.product_title = data.product_title || '';
+    this.product_description = data.product_description || '';
+    this.product_price = data.product_price || 0;
+    this.product_image = data.product_image || '';
   }
 
   static async save(supplierId, data) {
     try {
-      const requiredFields = ['title', 'description', 'price'];
+      const requiredFields = ['product_title', 'product_description', 'product_price'];
       const missingFields = requiredFields.filter(field => !data[field]);
       
       if (missingFields.length > 0) {
@@ -21,7 +21,7 @@ class Product {
 
       const product = new Product({
         ...data,
-        supplier_id: supplierId
+        product_supplier_id: supplierId
       });
 
       const query = `
@@ -31,14 +31,14 @@ class Product {
       `;
       
       const [result] = await db.execute(query, [
-        product.supplier_id,
-        product.title,
-        product.description,
-        product.price,
-        product.image
+        product.product_supplier_id,
+        product.product_title,
+        product.product_description,
+        product.product_price,
+        product.product_image
       ]);
 
-      product.id = result.insertId;
+      product.product_id = result.insertId;
       return product;
     } catch (error) {
       console.error('Error saat menyimpan Product:', error.message);
@@ -47,7 +47,17 @@ class Product {
   }
 
   static async getProductsBySupplierId(supplierId) {
-    const query = 'SELECT * FROM products WHERE supplier_id = ?';
+    const query = `
+      SELECT 
+        id AS product_id, 
+        supplier_id AS product_supplier_id, 
+        title AS product_title, 
+        description AS product_description, 
+        price AS product_price, 
+        image AS product_image 
+      FROM products 
+      WHERE supplier_id = ?;
+    `;
     try {
       const [results] = await db.execute(query, [supplierId]);
       return results;
@@ -65,10 +75,10 @@ class Product {
     `;
     try {
       const [result] = await db.execute(query, [
-        data.title,
-        data.description,
-        data.price,
-        data.image,
+        data.product_title,
+        data.product_description,
+        data.product_price,
+        data.product_image,
         id
       ]);
 

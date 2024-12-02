@@ -50,21 +50,21 @@ class Supplier {
   static async getAll(includeProducts = true) {
     const query = includeProducts
       ? `
-        SELECT s.*, p.id as product_id, p.title, p.description, p.price, p.image
+        SELECT s.*, p.product_id, p.product_title, p.product_description, p.product_price, p.product_image
         FROM suppliers s
-        LEFT JOIN products p ON s.id = p.supplier_id;
+        LEFT JOIN products p ON s.id = p.product_supplier_id;
       `
       : `
         SELECT * FROM suppliers;
       `;
-
+  
     try {
       const [results] = await db.execute(query);
       console.log("Results from database:", results);
-
+  
       if (includeProducts) {
         const suppliersMap = new Map();
-
+  
         results.forEach(row => {
           if (!suppliersMap.has(row.id)) {
             suppliersMap.set(row.id, {
@@ -79,18 +79,18 @@ class Supplier {
               products: [],
             });
           }
-
+  
           if (row.product_id) {
             suppliersMap.get(row.id).products.push({
               id: row.product_id,
-              title: row.title,
-              description: row.description,
-              price: row.price,
-              image: row.image,
+              title: row.product_title,
+              description: row.product_description,
+              price: row.product_price,
+              image: row.product_image,
             });
           }
         });
-
+  
         return Array.from(suppliersMap.values());
       } else {
         return results.map(result => ({
@@ -105,26 +105,27 @@ class Supplier {
       throw new Error('Gagal mengambil data Supplier.');
     }
   }
+  
 
   static async getById(id, includeProducts = true) {
     const query = includeProducts
       ? `
-        SELECT s.*, p.id as product_id, p.title, p.description, p.price, p.image
+        SELECT s.*, p.product_id, p.product_title, p.product_description, p.product_price, p.product_image
         FROM suppliers s
-        LEFT JOIN products p ON s.id = p.supplier_id
+        LEFT JOIN products p ON s.id = p.product_supplier_id
         WHERE s.id = ?;
       `
       : `
         SELECT * FROM suppliers WHERE id = ?;
       `;
-
+  
     try {
       const [results] = await db.execute(query, [id]);
-
+  
       if (results.length === 0) {
         throw new Error(`Data Supplier dengan ID ${id} tidak ditemukan.`);
       }
-
+  
       if (includeProducts) {
         const supplier = {
           id: results[0].id,
@@ -138,10 +139,10 @@ class Supplier {
           products: results[0].product_id
             ? results.map(row => ({
                 id: row.product_id,
-                title: row.title,
-                description: row.description,
-                price: row.price,
-                image: row.image,
+                title: row.product_title,
+                description: row.product_description,
+                price: row.product_price,
+                image: row.product_image,
               }))
             : [],
         };
@@ -160,6 +161,7 @@ class Supplier {
       throw new Error(`Gagal mengambil data Supplier dengan ID ${id}.`);
     }
   }
+  
 
   static async update(id, data) {
     const query = `
