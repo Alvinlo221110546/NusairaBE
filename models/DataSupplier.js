@@ -8,7 +8,6 @@ class Supplier {
     this.location = data.location || [];
     this.description = data.description || '';
     this.image = data.image || '';
-    this.rating = data.rating || 0; 
     this.availability = data.availability || 'Stok Tersedia';
     this.whatsapp = data.whatsapp || '';
     this.products = data.products || [];
@@ -18,7 +17,7 @@ class Supplier {
     try {
       const requiredFields = ['supplier', 'description', 'image', 'whatsapp'];
       const missingFields = requiredFields.filter(field => !data[field]);
-      
+
       if (missingFields.length > 0) {
         throw new Error(`Field yang hilang: ${missingFields.join(', ')}`);
       }
@@ -26,20 +25,19 @@ class Supplier {
       const supplier = new Supplier(data);
       const query = `
         INSERT INTO suppliers 
-        (supplier, province, location, description, image, rating, availability, whatsapp, products)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        (supplier, province, location, description, image, availability, whatsapp, products)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       `;
-      
+
       const [result] = await db.execute(query, [
         supplier.supplier,
         JSON.stringify(supplier.province),
         JSON.stringify(supplier.location),
         supplier.description,
         supplier.image,
-        supplier.rating,
         supplier.availability,
         supplier.whatsapp,
-        JSON.stringify(supplier.products)
+        JSON.stringify(supplier.products),
       ]);
 
       supplier.id = result.insertId;
@@ -73,7 +71,7 @@ class Supplier {
       if (results.length === 0) {
         throw new Error(`Data Supplier dengan ID ${id} tidak ditemukan.`);
       }
-      
+
       const result = results[0];
       return {
         ...result,
@@ -91,7 +89,7 @@ class Supplier {
     const query = `
       UPDATE suppliers
       SET supplier = ?, province = ?, location = ?, description = ?, 
-          image = ?, rating = ?, availability = ?, whatsapp = ?, 
+          image = ?, availability = ?, whatsapp = ?, 
           products = ?
       WHERE id = ?
     `;
@@ -102,11 +100,10 @@ class Supplier {
         JSON.stringify(data.location),
         data.description,
         data.image,
-        data.rating,
         data.availability,
         data.whatsapp,
         JSON.stringify(data.products),
-        id
+        id,
       ]);
 
       if (result.affectedRows === 0) {
@@ -130,41 +127,6 @@ class Supplier {
     } catch (error) {
       console.error('Error saat menghapus Supplier:', error.message);
       throw new Error(`Gagal menghapus data Supplier dengan ID ${id}.`);
-    }
-  }
-
-  // Metode baru untuk reviews
-  static async getReviews(supplierId) {
-    const query = `
-      SELECT * FROM supplier_reviews
-      WHERE supplier_id = ?
-    `;
-    try {
-      const [results] = await db.execute(query, [supplierId]);
-      return results;
-    } catch (error) {
-      console.error('Error saat mengambil ulasan:', error.message);
-      throw new Error(`Gagal mengambil ulasan untuk Supplier dengan ID ${supplierId}.`);
-    }
-  }
-
-  static async addReview(supplierId, reviewerName, reviewText, rating) {
-    const query = `
-      INSERT INTO supplier_reviews 
-      (supplier_id, reviewer_name, review_text, rating) 
-      VALUES (?, ?, ?, ?)
-    `;
-    try {
-      const [result] = await db.execute(query, [
-        supplierId,
-        reviewerName,
-        reviewText,
-        rating
-      ]);
-      return result;
-    } catch (error) {
-      console.error('Error saat menambahkan ulasan:', error.message);
-      throw new Error(`Gagal menambahkan ulasan untuk Supplier dengan ID ${supplierId}.`);
     }
   }
 }
