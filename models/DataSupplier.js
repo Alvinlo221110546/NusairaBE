@@ -48,40 +48,88 @@ class Supplier {
     }
   }
 
-  static async getAll() {
-    const query = 'SELECT * FROM suppliers';
-    try {
-      const [results] = await db.execute(query);
-      return results.map(result => ({
-        ...result,
-        province: result.province || [], 
-        location: result.location || [], 
-        products: result.products || [], 
-      }));
-    } catch (error) {
-      console.error('Error saat mengambil semua data Supplier:', error.message);
-      throw new Error('Gagal mengambil data Supplier.');
-    }
-  }
-
   static async getById(id) {
-    const query = 'SELECT * FROM suppliers WHERE id = ?';
+    const query = `
+      SELECT s.*, p.id as product_id, p.title, p.description, p.price, p.image
+      FROM suppliers s
+      LEFT JOIN products p ON s.id = p.supplier_id
+      WHERE s.id = ?
+    `;
+    
     try {
       const [results] = await db.execute(query, [id]);
+      
       if (results.length === 0) {
         throw new Error(`Data Supplier dengan ID ${id} tidak ditemukan.`);
       }
-
-      const result = results[0];
-      return {
-        ...result,
-        province: result.province || [], 
-        location: result.location || [], 
-        products: result.products || [], 
+  
+      const supplier = {
+        id: results[0].id,
+        supplier: results[0].supplier,
+        province: results[0].province || [],
+        location: results[0].location || [],
+        description: results[0].description,
+        image: results[0].image,
+        availability: results[0].availability,
+        whatsapp: results[0].whatsapp,
+        products: results[0].product_id ? results.map(row => ({
+          id: row.product_id,
+          title: row.title,
+          description: row.description,
+          price: row.price,
+          image: row.image
+        })) : []
       };
+  
+      return supplier;
     } catch (error) {
       console.error('Error saat mengambil data Supplier berdasarkan ID:', error.message);
       throw new Error(`Gagal mengambil data Supplier dengan ID ${id}.`);
+    }
+  }
+  
+  static async getAll() {
+    const query = `
+      SELECT s.*, p.id as product_id, p.title, p.description, p.price, p.image
+      FROM suppliers s
+      LEFT JOIN products p ON s.id = p.supplier_id
+    `;
+    
+    try {
+      const [results] = await db.execute(query);
+      
+      const suppliersMap = new Map();
+      
+      results.forEach(row => {
+        if (!suppliersMap.has(row.id)) {
+          suppliersMap.set(row.id, {
+            id: row.id,
+            supplier: row.supplier,
+            province: row.province || [],
+            location: row.location || [],
+            description: row.description,
+            image: row.image,
+            availability: row.availability,
+            whatsapp: row.whatsapp,
+            products: []
+          });
+        }
+        
+        if (row.product_id) {
+          suppliersMap.get(row.id).products.push({
+            id: row.product_id,
+            title: row.title,
+            description: row.description,
+            price: row.price,
+            image: row.image
+          });
+        }
+      });
+  
+      return Array.from(suppliersMap.values());
+    } catch (error) {
+      console.error('Error saat mengambil semua data Supplier:', error.message);
+      throw new Error('Gagal mengambil data Supplier.');
     }
   }
 
