@@ -31,13 +31,13 @@ class Supplier {
 
       const [result] = await db.execute(query, [
         supplier.supplier,
-        JSON.stringify(supplier.province),
-        JSON.stringify(supplier.location),
+        supplier.province, // No JSON.stringify here
+        supplier.location, // No JSON.stringify here
         supplier.description,
         supplier.image,
         supplier.availability,
         supplier.whatsapp,
-        JSON.stringify(supplier.products),
+        JSON.stringify(supplier.products), // Only JSON.stringify for products
       ]);
 
       supplier.id = result.insertId;
@@ -54,9 +54,9 @@ class Supplier {
       const [results] = await db.execute(query);
       return results.map(result => ({
         ...result,
-        province: JSON.parse(result.province),
-        location: JSON.parse(result.location),
-        products: JSON.parse(result.products),
+        province: result.province, 
+        location: result.location, 
+        products: JSON.parse(result.products), 
       }));
     } catch (error) {
       console.error('Error saat mengambil semua data Supplier:', error.message);
@@ -75,9 +75,9 @@ class Supplier {
       const result = results[0];
       return {
         ...result,
-        province: JSON.parse(result.province),
-        location: JSON.parse(result.location),
-        products: JSON.parse(result.products),
+        province: result.province, 
+        location: result.location, 
+        products: JSON.parse(result.products), 
       };
     } catch (error) {
       console.error('Error saat mengambil data Supplier berdasarkan ID:', error.message);
@@ -96,13 +96,13 @@ class Supplier {
     try {
       const [result] = await db.execute(query, [
         data.supplier,
-        JSON.stringify(data.province),
-        JSON.stringify(data.location),
+        data.province, 
+        data.location, 
         data.description,
         data.image,
         data.availability,
         data.whatsapp,
-        JSON.stringify(data.products),
+        JSON.stringify(data.products), 
         id,
       ]);
 
