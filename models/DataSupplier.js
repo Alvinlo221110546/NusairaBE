@@ -10,7 +10,7 @@ class Supplier {
     this.image = data.image || '';
     this.availability = data.availability || 'Stok Tersedia';
     this.whatsapp = data.whatsapp || '';
-    this.products = data.products || [];
+    this.products = data.products || []; 
   }
 
   static async save(data) {
@@ -37,7 +37,7 @@ class Supplier {
         supplier.image,
         supplier.availability,
         supplier.whatsapp,
-        JSON.stringify(supplier.products),
+        supplier.products, 
       ]);
 
       supplier.id = result.insertId;
@@ -56,7 +56,7 @@ class Supplier {
         ...result,
         province: result.province || [], 
         location: result.location || [], 
-        products: result.products ? JSON.parse(result.products) : [],
+        products: result.products || [], 
       }));
     } catch (error) {
       console.error('Error saat mengambil semua data Supplier:', error.message);
@@ -77,7 +77,7 @@ class Supplier {
         ...result,
         province: result.province || [], 
         location: result.location || [], 
-        products: result.products ? JSON.parse(result.products) : [],
+        products: result.products || [], 
       };
     } catch (error) {
       console.error('Error saat mengambil data Supplier berdasarkan ID:', error.message);
@@ -102,7 +102,7 @@ class Supplier {
         data.image,
         data.availability,
         data.whatsapp,
-        JSON.stringify(data.products),
+        data.products || [], 
         id,
       ]);
 
