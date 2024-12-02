@@ -60,6 +60,7 @@ class Supplier {
 
     try {
       const [results] = await db.execute(query);
+      console.log("Results from database:", results);
 
       if (includeProducts) {
         const suppliersMap = new Map();
