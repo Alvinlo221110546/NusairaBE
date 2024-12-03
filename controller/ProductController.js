@@ -3,7 +3,6 @@ import Product from '../models/DataProduct.js';
 class ProductController {
   static async createProduct(req, res) {
     try {
-      const { supplierId } = req.params;
       const productData = req.body;
       
       if (req.file) {
