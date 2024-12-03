@@ -83,10 +83,10 @@ app.use('/api', penggunaRoutes);
 app.use('/api', predictionRoutes); 
 app.use('/uploads', express.static('uploads'));
 app.use('/api', budidayaIkanRoutes);
+app.use('/api', reviewRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/suppliers', supplierRoutes);
 app.use('/api/products', productRoutes);
-app.use('/api/reviews', reviewRoutes);
 
 
 // ini akan dipakai untuk prediksi
