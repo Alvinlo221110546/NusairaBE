@@ -10,11 +10,12 @@ class Supplier {
     this.image = data.image || '';
     this.availability = data.availability || 'Stok Tersedia';
     this.whatsapp = data.whatsapp || '';
+    this.email = data.email || '';
   }
 
   static async save(data) {
     try {
-      const requiredFields = ['supplier', 'description', 'image', 'whatsapp'];
+      const requiredFields = ['supplier', 'description', 'image', 'whatsapp', 'email']; 
       const missingFields = requiredFields.filter(field => !data[field]);
 
       if (missingFields.length > 0) {
@@ -24,8 +25,8 @@ class Supplier {
       const supplier = new Supplier(data);
       const query = `
         INSERT INTO suppliers 
-        (supplier, province, location, description, image, availability, whatsapp)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        (supplier, province, location, description, image, availability, whatsapp, email)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       `;
 
       const [result] = await db.execute(query, [
@@ -36,6 +37,7 @@ class Supplier {
         supplier.image,
         supplier.availability,
         supplier.whatsapp,
+        supplier.email,
       ]);
 
       supplier.id = result.insertId;
@@ -88,7 +90,7 @@ class Supplier {
     const query = `
       UPDATE suppliers
       SET supplier = ?, province = ?, location = ?, description = ?, 
-          image = ?, availability = ?, whatsapp = ?
+          image = ?, availability = ?, whatsapp = ?, email = ? -- Tambahkan email
       WHERE id = ?
     `;
 
@@ -101,6 +103,7 @@ class Supplier {
         data.image,
         data.availability,
         data.whatsapp,
+        data.email, 
         id,
       ]);
 
