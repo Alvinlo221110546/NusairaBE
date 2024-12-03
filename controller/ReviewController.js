@@ -41,6 +41,22 @@ class ReviewController {
     }
   }
 
+  static async getAllReviews(req, res) {
+    try {
+      const reviews = await Review.getAll();
+      res.status(200).json({
+        status: 'success',
+        total: reviews.length,
+        data: reviews,
+      });
+    } catch (error) {
+      res.status(500).json({
+        status: 'error',
+        message: 'Gagal mengambil semua review.',
+      });
+    }
+  }
+
   static async deleteReview(req, res) {
     try {
       const { id } = req.params;

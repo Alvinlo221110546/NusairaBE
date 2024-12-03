@@ -49,6 +49,17 @@ class Review {
     }
   }
 
+  static async getAll() {
+    const query = 'SELECT * FROM supplier_reviews';
+    try {
+      const [results] = await db.execute(query);
+      return results;
+    } catch (error) {
+      console.error('Error saat mengambil semua Review:', error.message);
+      throw new Error('Gagal mengambil semua Review.');
+    }
+  }
+
   static async delete(id) {
     const query = 'DELETE FROM supplier_reviews WHERE id = ?';
     try {
