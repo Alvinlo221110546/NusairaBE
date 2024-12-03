@@ -6,12 +6,11 @@ class ProductController {
       const { supplierId } = req.params;
       const productData = req.body;
       
-    
       if (req.file) {
         productData.image = req.file.path;
       }
 
-      const newProduct = await Product.save(supplierId, productData);
+      const newProduct = await Product.save(productData);
       res.status(201).json({
         status: 'success',
         message: 'Produk berhasil dibuat',
@@ -29,6 +28,22 @@ class ProductController {
     try {
       const { supplierId } = req.params;
       const products = await Product.getProductsBySupplierId(supplierId);
+      res.status(200).json({
+        status: 'success',
+        total: products.length,
+        data: products
+      });
+    } catch (error) {
+      res.status(500).json({
+        status: 'error',
+        message: error.message
+      });
+    }
+  }
+
+  static async getAllProducts(req, res) {
+    try {
+      const products = await Product.getAll();
       res.status(200).json({
         status: 'success',
         total: products.length,

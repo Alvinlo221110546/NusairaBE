@@ -3,27 +3,28 @@ import db from '../database/Nusairadb.js';
 class Product {
   constructor(data) {
     this.product_id = data.product_id || null;
-    this.product_supplier_id = data.product_supplier_id || null;
+    this.product_supplier_id = data.product_supplier_id; // Remove the fallback to null
     this.product_title = data.product_title || '';
     this.product_description = data.product_description || '';
     this.product_price = data.product_price || 0;
     this.product_image = data.product_image || '';
   }
 
-  static async save(supplierId, data) {
+  static async save(data) {
     try {
-      const requiredFields = ['product_title', 'product_description', 'product_price'];
+      // Ensure product_supplier_id is passed in the data
+      if (!data.product_supplier_id) {
+        throw new Error('Product supplier ID is required');
+      }
+
+      const requiredFields = ['product_title', 'product_description', 'product_price', 'product_supplier_id'];
       const missingFields = requiredFields.filter(field => !data[field]);
 
       if (missingFields.length > 0) {
         throw new Error(`Field yang hilang: ${missingFields.join(', ')}`);
       }
 
-     
-      const product = new Product({
-        ...data,
-        product_supplier_id: supplierId
-      });
+      const product = new Product(data);
 
       const query = `
         INSERT INTO products 
@@ -31,7 +32,6 @@ class Product {
         VALUES (?, ?, ?, ?, ?)
       `;
 
-      
       const [result] = await db.execute(query, [
         product.product_supplier_id,
         product.product_title,
@@ -40,7 +40,7 @@ class Product {
         product.product_image
       ]);
 
-      product.product_id = result.insertId; 
+      product.product_id = result.insertId;
       return product;
     } catch (error) {
       console.error('Error saat menyimpan Produk:', error.message);
@@ -48,7 +48,7 @@ class Product {
     }
   }
 
- 
+  // Get products by supplier ID
   static async getProductsBySupplierId(supplierId) {
     const query = `
       SELECT 
@@ -67,6 +67,26 @@ class Product {
     } catch (error) {
       console.error('Error saat mengambil Produk berdasarkan Supplier ID:', error.message);
       throw new Error(`Gagal mengambil data Produk untuk Supplier ID ${supplierId}.`);
+    }
+  }
+
+  static async getAll() {
+    const query = `
+      SELECT 
+        product_id, 
+        product_supplier_id, 
+        product_title, 
+        product_description, 
+        product_price, 
+        product_image 
+      FROM products;
+    `;
+    try {
+      const [results] = await db.execute(query);
+      return results.map(result => new Product(result));
+    } catch (error) {
+      console.error('Error saat mengambil semua Produk:', error.message);
+      throw new Error('Gagal mengambil data Produk.');
     }
   }
 
@@ -94,7 +114,6 @@ class Product {
       throw new Error(`Gagal memperbarui data Produk dengan ID ${id}.`);
     }
   }
-
 
   static async deleteProduct(id) {
     const query = 'DELETE FROM products WHERE product_id = ?';
