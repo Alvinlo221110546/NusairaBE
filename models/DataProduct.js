@@ -14,11 +14,12 @@ class Product {
     try {
       const requiredFields = ['product_title', 'product_description', 'product_price'];
       const missingFields = requiredFields.filter(field => !data[field]);
-      
+
       if (missingFields.length > 0) {
         throw new Error(`Field yang hilang: ${missingFields.join(', ')}`);
       }
 
+     
       const product = new Product({
         ...data,
         product_supplier_id: supplierId
@@ -26,9 +27,10 @@ class Product {
 
       const query = `
         INSERT INTO products 
-        (supplier_id, title, description, price, image)
+        (product_supplier_id, product_title, product_description, product_price, product_image)
         VALUES (?, ?, ?, ?, ?)
       `;
+
       
       const [result] = await db.execute(query, [
         product.product_supplier_id,
@@ -38,29 +40,30 @@ class Product {
         product.product_image
       ]);
 
-      product.product_id = result.insertId;
+      product.product_id = result.insertId; 
       return product;
     } catch (error) {
-      console.error('Error saat menyimpan Product:', error.message);
-      throw new Error('Gagal menyimpan data Product.');
+      console.error('Error saat menyimpan Produk:', error.message);
+      throw new Error('Gagal menyimpan data Produk.');
     }
   }
 
+ 
   static async getProductsBySupplierId(supplierId) {
     const query = `
       SELECT 
-        id AS product_id, 
-        supplier_id AS product_supplier_id, 
-        title AS product_title, 
-        description AS product_description, 
-        price AS product_price, 
-        image AS product_image 
+        product_id, 
+        product_supplier_id, 
+        product_title, 
+        product_description, 
+        product_price, 
+        product_image 
       FROM products 
-      WHERE supplier_id = ?;
+      WHERE product_supplier_id = ?;
     `;
     try {
       const [results] = await db.execute(query, [supplierId]);
-      return results;
+      return results.map(result => new Product(result));
     } catch (error) {
       console.error('Error saat mengambil Produk berdasarkan Supplier ID:', error.message);
       throw new Error(`Gagal mengambil data Produk untuk Supplier ID ${supplierId}.`);
@@ -70,8 +73,8 @@ class Product {
   static async updateProduct(id, data) {
     const query = `
       UPDATE products
-      SET title = ?, description = ?, price = ?, image = ?
-      WHERE id = ?
+      SET product_title = ?, product_description = ?, product_price = ?, product_image = ?
+      WHERE product_id = ?
     `;
     try {
       const [result] = await db.execute(query, [
@@ -92,8 +95,9 @@ class Product {
     }
   }
 
+
   static async deleteProduct(id) {
-    const query = 'DELETE FROM products WHERE id = ?';
+    const query = 'DELETE FROM products WHERE product_id = ?';
     try {
       const [result] = await db.execute(query, [id]);
       if (result.affectedRows === 0) {
