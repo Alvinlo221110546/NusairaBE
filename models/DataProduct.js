@@ -12,7 +12,6 @@ class Product {
 
   static async save(data) {
     try {
-      // Ensure product_supplier_id is passed in the data
       if (!data.product_supplier_id) {
         throw new Error('Product supplier ID is required');
       }
@@ -48,7 +47,7 @@ class Product {
     }
   }
 
-  // Get products by supplier ID
+ 
   static async getProductsBySupplierId(supplierId) {
     const query = `
       SELECT 
