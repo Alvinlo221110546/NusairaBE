@@ -3,7 +3,7 @@ import db from '../database/Nusairadb.js';
 class Product {
   constructor(data) {
     this.product_id = data.product_id || null;
-    this.product_supplier_id = data.product_supplier_id; // Remove the fallback to null
+    this.product_supplier_id = data.product_supplier_id; 
     this.product_title = data.product_title || '';
     this.product_description = data.product_description || '';
     this.product_price = data.product_price || 0;
