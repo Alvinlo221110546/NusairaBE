@@ -26,6 +26,7 @@ import supplierRoutes from './routes/Supplier.js';
 import productRoutes from './routes/Product.js';
 import reviewRoutes from './routes/Review.js';
 
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -50,6 +51,7 @@ const corsOptions = {
   credentials: true
 };
 app.use(cors(corsOptions));
+app.use(bodyParser.json());
 
 
 // const allowedOrigins = ['https://nusaira.vercel.app', 'http://localhost:5173'];
@@ -87,6 +89,7 @@ app.use('/api', reviewRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/suppliers', supplierRoutes);
 app.use('/api/products', productRoutes);
+app.post('/api/pengguna/login', PenggunaController.login);
 
 
 // ini akan dipakai untuk prediksi
