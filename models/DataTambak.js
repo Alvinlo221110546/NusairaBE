@@ -52,7 +52,6 @@ class Tambak {
         }
     }
 
-    // Menyimpan data kolam terkait dengan tambak
     async saveKolam() {
         try {
             await Promise.all(this.kolamDetails.map((kolam) => kolam.save(this.id)));
@@ -61,7 +60,6 @@ class Tambak {
         }
     }
 
-    // Mengambil detail tambak berdasarkan ID
     static async getDetailById(id) {
         try {
             const [tambakResult] = await db.execute('SELECT * FROM tambak WHERE id = ?', [id]);
@@ -87,15 +85,13 @@ class Tambak {
         }
     }
 
-    // Mengambil semua data tambak beserta kolam
+
     static async getAllTambak() {
         try {
             const [tambakResult] = await db.execute('SELECT * FROM tambak');
             if (tambakResult.length === 0) {
                 return [];
             }
-
-            // Menambahkan detail kolam untuk setiap tambak
             await Promise.all(
                 tambakResult.map(async (tambak) => {
                     const [kolamResult] = await db.execute('SELECT * FROM kolam WHERE tambak_id = ?', [tambak.id]);
@@ -116,6 +112,41 @@ class Tambak {
             throw new Error('Gagal mengambil data Tambak dan Kolam: ' + error.message);
         }
     }
+
+    static async update(id, data) {
+        try {
+            const query = `
+                UPDATE tambak 
+                SET nama = ?, negara = ?, provinsi = ?, kabupaten = ?, alamat = ?, jumlah_kolam = ?
+                WHERE id = ?
+            `;
+            const values = [
+                data.nama,
+                data.negara,
+                data.provinsi,
+                data.kabupaten,
+                data.alamat,
+                data.jumlahKolam,
+                id
+            ];
+    
+            const [result] = await db.execute(query, values);
+            return result;
+        } catch (error) {
+            throw new Error('Gagal memperbarui data Tambak: ' + error.message);
+        }
+    }
+    static async delete(id) {
+        try {
+            await Kolam.delete(id);
+            const query = 'DELETE FROM tambak WHERE id = ?';
+            const [result] = await db.execute(query, [id]);
+            return result;
+        } catch (error) {
+            throw new Error('Gagal menghapus data Tambak: ' + error.message);
+        }
+    }
+        
 }
 
 export { Tambak };

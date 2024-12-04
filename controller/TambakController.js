@@ -32,7 +32,6 @@ class TambakController {
                     jumlah_anco: kolamData.jumlahAnco, 
                 };
     
-               
                 await Kolam.save(kolam); 
             }
     
@@ -44,8 +43,6 @@ class TambakController {
         }
     }
     
-    
-   
     async getTambakById(req, res) {
         const tambakId = req.params.id;
 
@@ -57,6 +54,7 @@ class TambakController {
             res.status(500).json({ message: 'Terjadi kesalahan dalam mengambil data tambak', error: err.message });
         }
     }
+
 
     async getAllTambak(req, res) {
         try {
@@ -72,6 +70,37 @@ class TambakController {
             res.status(500).json({ message: 'Terjadi kesalahan dalam mengambil data tambak dan kolam', error: err.message });
         }
     }
+
+    async updateTambak(req, res) {
+        const tambakId = req.params.id;
+        const data = req.body;
+    
+        if (!data.nama || !data.negara || !data.provinsi || !data.kabupaten || !data.alamat || data.jumlahKolam === undefined) {
+            return res.status(400).json({ message: 'Semua kolom harus diisi!' });
+        }
+    
+        try {
+            const result = await Tambak.update(tambakId, data);
+            res.status(200).json({ message: 'Tambak berhasil diperbarui', result });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Terjadi kesalahan saat memperbarui Tambak', error: err.message });
+        }
+    }
+    
+
+    async deleteTambak(req, res) {
+        const tambakId = req.params.id;
+    
+        try {
+            await Tambak.delete(tambakId);
+            res.status(200).json({ message: 'Tambak berhasil dihapus' });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Terjadi kesalahan saat menghapus Tambak', error: err.message });
+        }
+    }
+    
 }
 
 export default new TambakController();
