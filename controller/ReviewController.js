@@ -5,7 +5,7 @@ class ReviewController {
     try {
       const reviewData = req.body;
       const newReview = await Review.save(reviewData);
-      res.status(201).json({
+      res.status(200).json({
         status: 'success',
         message: 'Review berhasil disimpan',
         data: newReview,

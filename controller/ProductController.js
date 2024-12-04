@@ -10,7 +10,7 @@ class ProductController {
       }
 
       const newProduct = await Product.save(productData);
-      res.status(201).json({
+      res.status(200).json({
         status: 'success',
         message: 'Produk berhasil dibuat',
         data: newProduct
