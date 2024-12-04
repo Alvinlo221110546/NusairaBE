@@ -1,14 +1,13 @@
 import express from 'express';
-import PenggunaController from '../controller/PenggunaController.js';
+import PenggunaController from '../controller/PenggunaController.js'; // Pastikan path sesuai
 
 const router = express.Router();
 
 // Rute untuk operasi pada Pengguna
-router.post('/', PenggunaController.addPengguna); 
-router.get('/', PenggunaController.getAllPengguna); 
-router.get('/:id', PenggunaController.getPenggunaById); 
-router.put('/:id', PenggunaController.updatePengguna); 
-router.delete('/:id', PenggunaController.deletePengguna); 
-router.post('/login', PenggunaController.login); // Endpoint login
+router.post('/pengguna', PenggunaController.addPengguna); 
+router.get('/pengguna', PenggunaController.getAllPengguna); 
+router.get('/pengguna/:id', PenggunaController.getPenggunaById); 
+router.put('/pengguna/:id', PenggunaController.updatePengguna); 
+router.delete('/pengguna/:id', PenggunaController.deletePengguna); 
 
 export default router;

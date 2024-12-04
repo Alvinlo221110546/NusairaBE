@@ -36,6 +36,6 @@ class Pengguna {
       const [rows] = await db.query('SELECT * FROM pengguna WHERE email = ?', [email]);
       return rows[0];
     }
-}
+  }
   
-export default Pengguna;
+  export default Pengguna;
