@@ -75,10 +75,6 @@ class TambakController {
         const tambakId = req.params.id;
         const data = req.body;
     
-        if (!data.nama || !data.negara || !data.provinsi || !data.kabupaten || !data.alamat || data.jumlahKolam === undefined) {
-            return res.status(400).json({ message: 'Semua kolom harus diisi!' });
-        }
-    
         try {
             const result = await Tambak.update(tambakId, data);
             res.status(200).json({ message: 'Tambak berhasil diperbarui', result });
