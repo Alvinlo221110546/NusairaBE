@@ -117,7 +117,7 @@ class Tambak {
         try {
             const query = `
                 UPDATE tambak 
-                SET nama = ?, negara = ?, provinsi = ?, kabupaten = ?, alamat = ?, jumlah_kolam = ?
+                SET nama = ?, negara = ?, provinsi = ?, kabupaten = ?, alamat = ?
                 WHERE id = ?
             `;
             const values = [
@@ -126,7 +126,6 @@ class Tambak {
                 data.provinsi,
                 data.kabupaten,
                 data.alamat,
-                data.jumlahKolam,
                 id
             ];
     
@@ -136,6 +135,7 @@ class Tambak {
             throw new Error('Gagal memperbarui data Tambak: ' + error.message);
         }
     }
+    
     static async delete(id) {
         try {
             await Kolam.delete(id);
