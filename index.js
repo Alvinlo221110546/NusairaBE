@@ -16,7 +16,6 @@ import pengeluaranRoutes from './routes/Pengeluaran.js';
 import pemasukanRoutes from './routes/Pemasukan.js';
 import kualitasAirRoutes from './routes/Air.js';
 import tagihanRoutes from './routes/Tagihan.js';
-import penggunaRoutes from './routes/Pengguna.js';
 import predictionRoutes from './routes/Prediction.js';
 // import { predictionService } from './models/PredictionService.js';
 // import { catfishProductionService } from './models/DataHargaPasar.js';
@@ -25,6 +24,7 @@ import budidayaIkanRoutes from './routes/Budidaya.js';
 import supplierRoutes from './routes/Supplier.js';
 import productRoutes from './routes/Product.js';
 import reviewRoutes from './routes/Review.js';
+import loginRoutes from './routes/Login.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -79,7 +79,6 @@ app.use('/api', pengeluaranRoutes);
 app.use('/api', pemasukanRoutes);
 app.use('/api', kualitasAirRoutes);
 app.use('/api', tagihanRoutes);
-app.use('/api', penggunaRoutes);
 app.use('/api', predictionRoutes); 
 app.use('/uploads', express.static('uploads'));
 app.use('/api', budidayaIkanRoutes);
@@ -87,6 +86,7 @@ app.use('/api', reviewRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/suppliers', supplierRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/', loginRoutes);
 
 
 // ini akan dipakai untuk prediksi
