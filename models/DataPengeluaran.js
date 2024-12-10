@@ -1,4 +1,4 @@
-import db from '../database/Nusairadb.js'; // Pastikan sesuai dengan konfigurasi koneksi database Anda
+import db from '../database/Nusairadb.js'; 
 
 class Pengeluaran {
     constructor(data) {
@@ -8,10 +8,10 @@ class Pengeluaran {
         this.catatan = data.catatan;
         this.status = data.status;
         this.sisa_tagihan = data.sisa_tagihan;
-        this.tambak_id = data.tambak_id; // Ganti user_id menjadi tambak_id
+        this.tambak_id = data.tambak_id; 
     }
 
-    // Menyimpan pengeluaran ke dalam database
+  
     static async save(data) {
         try {
             const pengeluaran = new Pengeluaran(data);
@@ -27,7 +27,7 @@ class Pengeluaran {
                 pengeluaran.catatan,
                 pengeluaran.status,
                 pengeluaran.sisa_tagihan,
-                pengeluaran.tambak_id // Ganti user_id menjadi tambak_id
+                pengeluaran.tambak_id 
             ]);
             return result;
         } catch (err) {
@@ -36,7 +36,6 @@ class Pengeluaran {
         }
     }
 
-    // Mengambil semua pengeluaran
     static async getAll() {
         try {
             const query = 'SELECT * FROM pengeluaran';
@@ -48,7 +47,6 @@ class Pengeluaran {
         }
     }
 
-    // Mengambil pengeluaran berdasarkan ID
     static async getById(id) {
         try {
             const query = 'SELECT * FROM pengeluaran WHERE id = ?';
@@ -60,7 +58,7 @@ class Pengeluaran {
         }
     }
 
-    // Mengupdate pengeluaran berdasarkan ID
+   
     static async update(id, data) {
         try {
             const query = `
@@ -83,7 +81,7 @@ class Pengeluaran {
                 data.catatan,
                 data.status,
                 data.sisa_tagihan,
-                data.tambak_id, // Ganti user_id menjadi tambak_id
+                data.tambak_id, 
                 id
             ]);
             return result;
@@ -93,7 +91,6 @@ class Pengeluaran {
         }
     }
 
-    // Menghapus pengeluaran berdasarkan ID
     static async delete(id) {
         try {
             const query = 'DELETE FROM pengeluaran WHERE id = ?';

@@ -1,7 +1,6 @@
 import Tagihan from '../models/DataTagihan.js';
 
 class TagihanController {
-    // Menambahkan tagihan baru
     async addTagihan(req, res) {
         const { id, invoiceNumber, dueDate, amount, total, user_id } = req.body;
 
@@ -19,7 +18,6 @@ class TagihanController {
         }
     }
 
-    // Mendapatkan semua data tagihan
     async getAllTagihan(req, res) {
         try {
             const tagihan = await Tagihan.getAll();
@@ -34,7 +32,6 @@ class TagihanController {
     }
     
 
-    // Mendapatkan tagihan berdasarkan ID
     async getTagihanById(req, res) {
         const tagihanId = req.params.id;
 
@@ -50,7 +47,6 @@ class TagihanController {
         }
     }
 
-    // Mengupdate tagihan berdasarkan ID
     async updateTagihan(req, res) {
         const tagihanId = req.params.id;
         const { invoiceNumber, dueDate, amount, total, user_id } = req.body;
@@ -69,7 +65,6 @@ class TagihanController {
         }
     }
 
-    // Menghapus tagihan berdasarkan ID
     async deleteTagihan(req, res) {
         const tagihanId = req.params.id;
 
