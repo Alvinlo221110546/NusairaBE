@@ -2,7 +2,7 @@ import db from '../database/Nusairadb.js';
 
 class Pemasukan {
     constructor(data) {
-        this.date = new Date(data.date).toISOString().split('T')[0]; // Format YYYY-MM-DD
+        this.date = new Date(data.date).toISOString().split('T')[0]; 
         this.kategori = data.kategori;
         this.jumlah = data.jumlah;
         this.harga = data.harga;
@@ -22,7 +22,7 @@ class Pemasukan {
 
     static async save(data) {
         try {
-            this.validate(data); // Validate before processing
+            this.validate(data); 
             const pemasukan = new Pemasukan(data);
             const [result] = await db.execute(
                 'INSERT INTO pemasukan (date, kategori, jumlah, harga, keterangan, total, tambak_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)',
@@ -65,7 +65,7 @@ class Pemasukan {
 
     static async update(id, data) {
         try {
-            this.validate(data); // Validate before processing
+            this.validate(data); 
             const [result] = await db.execute(
                 `UPDATE pemasukan 
                  SET date = ?, 
