@@ -10,14 +10,13 @@ class Tagihan {
         this.total = data.total;
         this.user_id = data.user_id;
         this.paket_id = data.paket_id;
-        this.status = data.status; // Pastikan data.status bernilai 0 (belum bayar) atau 1 (sudah bayar)
+        this.status = data.status; 
         this.created_at = data.created_at || new Date();
         this.updated_at = data.updated_at || new Date();
     }
 
     static async save(data) {
         try {
-            // Validasi status
             if (data.status !== 0 && data.status !== 1) {
                 throw new Error('Invalid status value. Allowed values are 0 (belum_bayar) or 1 (sudah_bayar).');
             }
@@ -98,7 +97,6 @@ class Tagihan {
 
     static async update(id, data) {
         try {
-            // Validasi status
             if (data.status !== 0 && data.status !== 1) {
                 throw new Error('Invalid status value. Allowed values are 0 (belum_bayar) or 1 (sudah_bayar).');
             }

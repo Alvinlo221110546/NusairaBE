@@ -1,7 +1,5 @@
-import Pemasukan from '../models/DataPemasukan.js'; // Pastikan path sesuai
-
+import Pemasukan from '../models/DataPemasukan.js';
 class PemasukanController {
-    // Menambahkan pemasukan baru
     async addPemasukan(req, res) {
         const { date, kategori, jumlah, harga, keterangan, total, tambak_id } = req.body;
 
@@ -19,7 +17,6 @@ class PemasukanController {
         }
     }
 
-    // Mendapatkan semua pemasukan
     async getAllPemasukan(req, res) {
         try {
             const pemasukanData = await Pemasukan.getAll();
@@ -35,7 +32,6 @@ class PemasukanController {
         }
     }
 
-    // Mendapatkan pemasukan berdasarkan ID
     async getPemasukanById(req, res) {
         const pemasukanId = req.params.id;
 
@@ -51,7 +47,6 @@ class PemasukanController {
         }
     }
 
-    // Mengupdate pemasukan berdasarkan ID
     async updatePemasukan(req, res) {
         const pemasukanId = req.params.id;
         const { date, kategori, jumlah, harga, keterangan, total, tambak_id } = req.body;
@@ -70,7 +65,6 @@ class PemasukanController {
         }
     }
 
-    // Menghapus pemasukan berdasarkan ID
     async deletePemasukan(req, res) {
         const pemasukanId = req.params.id;
 

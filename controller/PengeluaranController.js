@@ -1,12 +1,9 @@
-import Pengeluaran from '../models/DataPengeluaran.js'; // Pastikan path sesuai
-
+import Pengeluaran from '../models/DataPengeluaran.js'; 
 class PengeluaranController {
-    // Menambahkan pengeluaran baru
     async addPengeluaran(req, res) {
         const { date, jenis_pengeluaran, nama_barang, catatan, status, sisa_tagihan, tambak_id } = req.body;
         console.log(req.body);
 
-        // Validasi input
         if (!date || !jenis_pengeluaran || !nama_barang || !catatan || !status || sisa_tagihan === undefined || !tambak_id) {
             return res.status(400).json({ message: 'Semua kolom harus diisi!' });
         }
@@ -21,7 +18,6 @@ class PengeluaranController {
         }
     }
 
-    // Mendapatkan semua pengeluaran
     async getAllPengeluaran(req, res) {
         try {
             const pengeluaranData = await Pengeluaran.getAll();
@@ -37,7 +33,6 @@ class PengeluaranController {
         }
     }
 
-    // Mendapatkan pengeluaran berdasarkan ID
     async getPengeluaranById(req, res) {
         const pengeluaranId = req.params.id;
 
@@ -53,12 +48,10 @@ class PengeluaranController {
         }
     }
 
-    // Mengupdate pengeluaran berdasarkan ID
     async updatePengeluaran(req, res) {
         const pengeluaranId = req.params.id;
         const { date, jenis_pengeluaran, nama_barang, catatan, status, sisa_tagihan, tambak_id } = req.body;
 
-        // Validasi input
         if (!date || !jenis_pengeluaran || !nama_barang || !catatan || !status || sisa_tagihan === undefined || !tambak_id) {
             return res.status(400).json({ message: 'Semua kolom harus diisi!' });
         }
@@ -73,7 +66,6 @@ class PengeluaranController {
         }
     }
 
-    // Menghapus pengeluaran berdasarkan ID
     async deletePengeluaran(req, res) {
         const pengeluaranId = req.params.id;
 

@@ -1,5 +1,5 @@
 import express from 'express';
-import TagihanController from '../controller/TagihanController.js'; // Sesuaikan path sesuai struktur project Anda
+import TagihanController from '../controller/TagihanController.js'; 
 
 const router = express.Router();
 
