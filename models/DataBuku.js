@@ -5,14 +5,14 @@ class Buku {
     this.id = data.id || null;
     this.judul = data.judul || '';
     this.deskripsi = data.deskripsi || '';
-    this.tanggalTerbit = data.tanggalTerbit || null;
-    this.linkPdf = data.linkPdf || '';
+    this.tanggal_terbit = data.tanggal_terbit || null;
+    this.link_pdf = data.link_pdf || '';
     this.image = data.image || ''; 
   }
 
   static async save(data) {
     try {
-      const requiredFields = ['judul', 'deskripsi', 'tanggalTerbit', 'linkPdf', 'image'];
+      const requiredFields = ['judul', 'deskripsi', 'tanggal_terbit', 'link_pdf', 'image'];
       const missingFields = requiredFields.filter(field => !data[field]);
       
       if (missingFields.length > 0) {
@@ -21,14 +21,14 @@ class Buku {
   
       const buku = new Buku(data);
       const query = `
-        INSERT INTO perpustakaan (judul, deskripsi, tanggalTerbit, linkPdf, image)
+        INSERT INTO perpustakaan (judul, deskripsi, tanggal_terbit, link_pdf, image)
         VALUES (?, ?, ?, ?, ?)
       `;
       const [result] = await db.execute(query, [
         buku.judul,
         buku.deskripsi,
-        buku.tanggalTerbit,
-        buku.linkPdf,
+        buku.tanggal_terbit,
+        buku.link_pdf,
         buku.image
       ]);
       buku.id = result.insertId;
@@ -67,15 +67,15 @@ class Buku {
   static async update(id, data) {
     const query = `
       UPDATE perpustakaan
-      SET judul = ?, deskripsi = ?, tanggalTerbit = ?, linkPdf = ?, image = ?
+      SET judul = ?, deskripsi = ?, tanggal_terbit = ?, link_pdf = ?, image = ?
       WHERE id = ?
     `;
     try {
       const [result] = await db.execute(query, [
         data.judul,
         data.deskripsi,
-        data.tanggalTerbit,
-        data.linkPdf,
+        data.tanggal_terbit,
+        data.link_pdf,
         data.image,
         id
       ]);
