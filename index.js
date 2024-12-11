@@ -25,6 +25,7 @@ import supplierRoutes from './routes/Supplier.js';
 import productRoutes from './routes/Product.js';
 import reviewRoutes from './routes/Review.js';
 import loginRoutes from './routes/Login.js';
+import profileRoutes from './routes/Profile.js';
 import BukuRoutes from './routes/Buku.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -86,6 +87,7 @@ app.use('/api', budidayaIkanRoutes);
 app.use('/api', reviewRoutes);
 app.use('/api', BukuRoutes);
 app.use('/api/', loginRoutes);
+app.use('/api/', profileRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/suppliers', supplierRoutes);
 app.use('/api/products', productRoutes);
