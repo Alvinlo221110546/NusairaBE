@@ -1,9 +1,9 @@
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Pengguna from "../models/DataLogin.js";
 
 
-//saya mau tes
+
 
 /**
  * Fungsi untuk login pengguna
@@ -38,10 +38,16 @@ export const loginUser = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
+    
+
+    res.cookie("token", token, {
+      httpOnly: true, 
+      secure: process.env.NODE_ENV === "production", 
+      maxAge: 3600 * 1000, 
+    });
 
     res.status(200).json({
       message: "Login berhasil",
-      token,
       profile: { id: pengguna.id, name: pengguna.name, email: pengguna.email },
     });
   } 
@@ -50,5 +56,3 @@ export const loginUser = async (req, res) => {
     res.status(500).json({ message: "Terjadi kesalahan saat login", error: error.message });
   }
 };
-
-
