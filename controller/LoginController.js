@@ -1,12 +1,7 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Pengguna from "../models/DataLogin.js";
 
-/**
- * Fungsi untuk login pengguna
- * @param {Request} req - Request dari client
- * @param {Response} res - Response dari server
- */
 export const loginUser = async (req, res) => {
   const email = req.body.email || null; 
   const password = req.body.password || null; 

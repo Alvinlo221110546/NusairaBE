@@ -25,8 +25,10 @@ import supplierRoutes from './routes/Supplier.js';
 import productRoutes from './routes/Product.js';
 import reviewRoutes from './routes/Review.js';
 import loginRoutes from './routes/Login.js';
+import registerRoutes from './routes/Register.js';
 import profileRoutes from './routes/Profile.js';
 import BukuRoutes from './routes/Buku.js';
+import cookieParser from "cookie-parser";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -34,7 +36,7 @@ const __dirname = dirname(__filename);
 const app = express();
 const port = 3020;
 
-
+app.use(cookieParser());
 app.use(express.json());  
 app.use(express.urlencoded({ extended: false })); 
 
@@ -87,6 +89,7 @@ app.use('/api', budidayaIkanRoutes);
 app.use('/api', reviewRoutes);
 app.use('/api', BukuRoutes);
 app.use('/api/', loginRoutes);
+app.use('/api/', registerRoutes);
 app.use('/api/', profileRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/suppliers', supplierRoutes);
