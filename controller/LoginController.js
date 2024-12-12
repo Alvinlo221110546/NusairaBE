@@ -39,9 +39,10 @@ export const loginUser = async (req, res) => {
     
     res.status(200).json({
       message: "Login berhasil",
-      token,
       profile: { id: pengguna.id, name: pengguna.name, email: pengguna.email },
+      token: token  // Token disertakan di sini
     });
+    
   } 
   catch (error) {
     console.error("Error saat login:", error.message);
