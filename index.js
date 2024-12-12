@@ -28,6 +28,7 @@ import loginRoutes from './routes/Login.js';
 import registerRoutes from './routes/Register.js';
 import profileRoutes from './routes/Profile.js';
 import BukuRoutes from './routes/Buku.js';
+import cookieParser from "cookie-parser";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -35,7 +36,7 @@ const __dirname = dirname(__filename);
 const app = express();
 const port = 3020;
 
-
+app.use(cookieParser());
 app.use(express.json());  
 app.use(express.urlencoded({ extended: false })); 
 
