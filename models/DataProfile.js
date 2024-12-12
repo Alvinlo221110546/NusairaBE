@@ -1,13 +1,12 @@
 import db from '../database/Nusairadb.js';
-import bcrypt from 'bcryptjs'; // Tambahkan bcrypt untuk hashing password
-
+import bcrypt from 'bcryptjs';
 class UserProfile {
 
     constructor(data) {
         this.name = data.name;
         this.email = data.email;
-        this.password = data.password; // Password baru
-        this.foto_profile = data.foto_profile || null; // Ganti profilePicture dengan foto_profile
+        this.password = data.password; 
+        this.foto_profile = data.foto_profile || ''; 
         this.pekerjaan = data.pekerjaan || null;
         this.jenis_kelamin = data.jenis_kelamin || null;
         this.lokasi = data.lokasi || null;
@@ -25,7 +24,6 @@ class UserProfile {
         return errors;
     }
 
-    // Fungsi untuk hash password sebelum disimpan
     static async hashPassword(password) {
         const salt = await bcrypt.genSalt(10);
         return await bcrypt.hash(password, salt);
@@ -38,7 +36,6 @@ class UserProfile {
         }
 
         try {
-            // Hash password jika ada
             const hashedPassword = await this.hashPassword(data.password);
 
             const query = `
@@ -48,8 +45,8 @@ class UserProfile {
             const [result] = await db.execute(query, [
                 data.name,  
                 data.email,
-                hashedPassword, // Menyimpan hashed password
-                data.foto_profile, // Ganti profilePicture dengan foto_profile
+                hashedPassword,
+                data.foto_profile, 
                 data.pekerjaan,
                 data.jenis_kelamin,
                 data.lokasi,
@@ -84,7 +81,7 @@ class UserProfile {
         }
     }
 
-    // Metode untuk mengupdate profil pengguna
+   
     static async updateUserProfile(userId, data) {
         try {
             const updateData = [
@@ -94,14 +91,13 @@ class UserProfile {
                 data.jenis_kelamin,
                 data.lokasi,
                 data.no_hp,
-                data.foto_profile, // Ganti profilePicture dengan foto_profile
+                data.foto_profile, 
                 userId
             ];
 
-            // Jika ada password baru, hash passwordnya
             if (data.password) {
                 const hashedPassword = await this.hashPassword(data.password);
-                updateData[2] = hashedPassword; // Ganti password dengan hashed password
+                updateData[2] = hashedPassword; 
             }
 
             const query = `
@@ -110,7 +106,7 @@ class UserProfile {
                 WHERE id = ?
             `;
             const [result] = await db.execute(query, updateData);
-            return result.affectedRows > 0; // Jika ada perubahan, return true
+            return result.affectedRows > 0; 
         } catch (error) {
             console.error("Error updating user profile:", error.message);
             throw error;
