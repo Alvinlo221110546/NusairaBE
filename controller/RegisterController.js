@@ -18,7 +18,7 @@ export const registerUser = async (req, res) => {
 
     const userId = await Register.create(name, username, email, hashedPassword, "user", no_hp, pekerjaan, jenis_kelamin);
 
-    res.status(201).json({ message: "Registrasi berhasil", userId });
+    res.status(200).json({ message: "Registrasi berhasil", userId });
   } catch (error) {
     res.status(500).json({ message: "Terjadi kesalahan saat registrasi", error: error.message });
   }
