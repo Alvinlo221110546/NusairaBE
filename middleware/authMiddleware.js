@@ -1,6 +1,8 @@
 import jwt from 'jsonwebtoken';
 import db from '../database/Nusairadb.js'; 
 
+//saya mau pakai ini
+
 const authMiddleware = async (req, res, next) => {
     try {
         const token = req.cookies.token; 
