@@ -1,13 +1,7 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Pengguna from "../models/DataLogin.js";
 
-
-/**
- * Fungsi untuk login pengguna
- * @param {Request} req - Request dari client
- * @param {Response} res - Response dari server
- */
 export const loginUser = async (req, res) => {
   const email = req.body.email || null; 
   const password = req.body.password || null; 
@@ -37,14 +31,9 @@ export const loginUser = async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    res.cookie("token", token, {
-      httpOnly: true, 
-      secure: process.env.NODE_ENV === "production", 
-      maxAge: 3600 * 1000, 
-    });
-
     res.status(200).json({
       message: "Login berhasil",
+      token,
       profile: { id: pengguna.id, name: pengguna.name, email: pengguna.email },
     });
   } 
@@ -53,3 +42,5 @@ export const loginUser = async (req, res) => {
     res.status(500).json({ message: "Terjadi kesalahan saat login", error: error.message });
   }
 };
+
+
