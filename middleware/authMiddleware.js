@@ -1,59 +1,28 @@
-import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
+import jwt from 'jsonwebtoken';
+import db from '../database/Nusairadb.js'; 
 
-dotenv.config();
+const authMiddleware = async (req, res, next) => {
+    try {
+        const token = req.headers.authorization?.split(' ')[1]; 
+        if (!token) {
+            return res.status(401).json({ message: 'Token tidak tersedia. Akses ditolak!' });
+        }
 
-/**
- * Middleware untuk otentikasi pengguna
- * @param {Request} req - Request dari client
- * @param {Response} res - Response dari server
- * @param {Function} next - Melanjutkan ke middleware berikutnya
- */
-const authMiddleware = (req, res, next) => {
-  try {
-    // Ambil token dari header Authorization
-    const authHeader = req.headers.authorization;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
 
-    // Validasi keberadaan token
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({
-        message: "Akses ditolak, token tidak tersedia atau format salah",
-      });
+        const [user] = await db.execute('SELECT * FROM pengguna WHERE id = ?', [userId]);
+        if (!user.length) {
+            return res.status(401).json({ message: 'Pengguna tidak valid!' });
+        }
+
+        req.user = { id: userId, ...user[0] };
+
+        next();
+    } catch (error) {
+        console.error(error);
+        res.status(403).json({ message: 'Token tidak valid!', error: error.message });
     }
-
-    // Ekstraksi token
-    const token = authHeader.split(" ")[1];
-
-    // Validasi keberadaan secret key
-    if (!process.env.JWT_SECRET) {
-      return res.status(500).json({
-        message: "Server error: JWT_SECRET tidak ditemukan di environment variables",
-      });
-    }
-
-    // Verifikasi token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    // Menyimpan data pengguna ke request untuk digunakan di middleware/route berikutnya
-    req.user = decoded;
-
-    // Melanjutkan ke middleware berikutnya
-    next();
-  } catch (err) {
-    // Menangani error saat token tidak valid atau kadaluarsa
-    let errorMessage = "Token tidak valid atau kadaluarsa";
-
-    if (err.name === "TokenExpiredError") {
-      errorMessage = "Token sudah kadaluarsa";
-    } else if (err.name === "JsonWebTokenError") {
-      errorMessage = "Token tidak valid";
-    }
-
-    return res.status(403).json({
-      message: errorMessage,
-      error: err.message,
-    });
-  }
 };
 
 export default authMiddleware;

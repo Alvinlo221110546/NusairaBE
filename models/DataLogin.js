@@ -22,13 +22,14 @@ const Pengguna = {
    * @param {string} [role="user"] 
    * @returns {Promise<Object>} 
    */
-  async create(name, email, password, role = "user") {
+  async create(name, email, password, role = "user", no_hp, occupation) {
     const [result] = await db.execute(
-      "INSERT INTO pengguna (name, email, password, role) VALUES (?, ?, ?, ?)",
-      [name, email, password, role]
+      "INSERT INTO pengguna (name, email, password, role, no_hp, occupation) VALUES (?, ?, ?, ?, ?, ?)",
+      [name, email, password, role, no_hp, occupation]
     );
-    return result; 
+    return result;
   }
+  
 };
 
 export default Pengguna;
