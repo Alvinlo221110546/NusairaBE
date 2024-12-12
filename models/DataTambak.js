@@ -35,8 +35,6 @@ class Tambak {
                 tambak.jumlahKolam,
             ]);
             tambak.id = result.insertId;
-
-            await tambak.saveKolam();
             return tambak;
         } catch (error) {
             throw new Error('Gagal menyimpan data Tambak: ' + error.message);
