@@ -17,7 +17,7 @@ class TambakController {
                 kabupaten,
                 alamat,
                 jumlahKolam
-            });
+            }, req.user.id);  
 
             for (let i = 0; i < jumlahKolam; i++) {
                 const kolamData = kolamDetails[i];  
@@ -47,7 +47,7 @@ class TambakController {
         const tambakId = req.params.id;
 
         try {
-            const tambak = await Tambak.getDetailById(tambakId);
+            const tambak = await Tambak.getDetailById(tambakId, req.user.id);
             res.status(200).json(tambak);
         } catch (err) {
             console.error(err);
@@ -55,10 +55,9 @@ class TambakController {
         }
     }
 
-
     async getAllTambak(req, res) {
         try {
-            const tambakData = await Tambak.getAllTambak();
+            const tambakData = await Tambak.getAllTambak(req.user.id);
 
             if (tambakData.length === 0) {
                 return res.status(404).json({ message: 'Tidak ada tambak yang ditemukan' });
@@ -76,7 +75,7 @@ class TambakController {
         const data = req.body;
     
         try {
-            const result = await Tambak.update(tambakId, data);
+            const result = await Tambak.update(tambakId, data, req.user.id);
             res.status(200).json({ message: 'Tambak berhasil diperbarui', result });
         } catch (err) {
             console.error(err);
@@ -84,19 +83,17 @@ class TambakController {
         }
     }
     
-
     async deleteTambak(req, res) {
         const tambakId = req.params.id;
     
         try {
-            await Tambak.delete(tambakId);
+            await Tambak.delete(tambakId, req.user.id);
             res.status(200).json({ message: 'Tambak berhasil dihapus' });
         } catch (err) {
             console.error(err);
             res.status(500).json({ message: 'Terjadi kesalahan saat menghapus Tambak', error: err.message });
         }
     }
-    
 }
 
 export default new TambakController();

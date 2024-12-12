@@ -4,6 +4,7 @@ import { Kolam } from './DataKolam.js';
 class Tambak {
     constructor(data) {
         this.id = data.id || null;
+        this.userId = data.userId;
         this.nama = data.nama;
         this.negara = data.negara;
         this.provinsi = data.provinsi;
@@ -13,29 +14,19 @@ class Tambak {
         this.kolamDetails = [];
     }
 
-
-    tambahKolam(tipeKolam) {
-        for (let i = 0; i < this.jumlahKolam; i++) {
-            const kolam = new Kolam(
-                this.id, 
-                `Kolam ${i + 1}`, 
-                tipeKolam, 
-                10, // Panjang (contoh nilai)
-                5,  // Lebar (contoh nilai)
-                2   // Kedalaman (contoh nilai)
-            );
-            this.kolamDetails.push(kolam);
-        }
-    }
-
-    static async save(data) {
+    static async save(data, userId) { 
         try {
-            const tambak = new Tambak(data);
+            const tambak = new Tambak({
+                ...data,
+                userId 
+            });
+            
             const query = `
-                INSERT INTO tambak (nama, negara, provinsi, kabupaten, alamat, jumlah_kolam) 
-                VALUES (?, ?, ?, ?, ?, ?)
+                INSERT INTO tambak (user_id, nama, negara, provinsi, kabupaten, alamat, jumlah_kolam) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)
             `;
             const [result] = await db.execute(query, [
+                tambak.userId,
                 tambak.nama,
                 tambak.negara,
                 tambak.provinsi,
@@ -52,23 +43,21 @@ class Tambak {
         }
     }
 
-    async saveKolam() {
+    static async getDetailById(id, userId) { 
         try {
-            await Promise.all(this.kolamDetails.map((kolam) => kolam.save(this.id)));
-        } catch (error) {
-            throw new Error('Gagal menyimpan kolam: ' + error.message);
-        }
-    }
-
-    static async getDetailById(id) {
-        try {
-            const [tambakResult] = await db.execute('SELECT * FROM tambak WHERE id = ?', [id]);
+            const [tambakResult] = await db.execute(
+                'SELECT * FROM tambak WHERE id = ? AND user_id = ?', 
+                [id, userId]
+            );
             if (tambakResult.length === 0) {
-                throw new Error('Tambak tidak ditemukan');
+                throw new Error('Tambak tidak ditemukan atau tidak memiliki akses');
             }
 
             const tambak = tambakResult[0];
-            const [kolamResult] = await db.execute('SELECT * FROM kolam WHERE tambak_id = ?', [id]);
+            const [kolamResult] = await db.execute(
+                'SELECT * FROM kolam WHERE tambak_id = ?', 
+                [id]
+            );
 
             tambak.kolamDetails = kolamResult.map((kolam) => ({
                 namaKolam: kolam.nama_kolam,
@@ -85,16 +74,21 @@ class Tambak {
         }
     }
 
-
-    static async getAllTambak() {
+    static async getAllTambak(userId) { 
         try {
-            const [tambakResult] = await db.execute('SELECT * FROM tambak');
+            const [tambakResult] = await db.execute(
+                'SELECT * FROM tambak WHERE user_id = ?', 
+                [userId]
+            );
             if (tambakResult.length === 0) {
                 return [];
             }
             await Promise.all(
                 tambakResult.map(async (tambak) => {
-                    const [kolamResult] = await db.execute('SELECT * FROM kolam WHERE tambak_id = ?', [tambak.id]);
+                    const [kolamResult] = await db.execute(
+                        'SELECT * FROM kolam WHERE tambak_id = ?', 
+                        [tambak.id]
+                    );
                     tambak.kolamDetails = kolamResult.map((kolam) => ({
                         id: kolam.id,
                         namaKolam: kolam.nama_kolam,
@@ -113,12 +107,12 @@ class Tambak {
         }
     }
 
-    static async update(id, data) {
+    static async update(id, data, userId) {
         try {
             const query = `
                 UPDATE tambak 
                 SET nama = ?, negara = ?, provinsi = ?, kabupaten = ?, alamat = ?
-                WHERE id = ?
+                WHERE id = ? AND user_id = ?
             `;
             const values = [
                 data.nama,
@@ -126,27 +120,38 @@ class Tambak {
                 data.provinsi,
                 data.kabupaten,
                 data.alamat,
-                id
+                id,
+                userId
             ];
     
             const [result] = await db.execute(query, values);
+            
+            if (result.affectedRows === 0) {
+                throw new Error('Tambak tidak ditemukan atau tidak memiliki akses');
+            }
+            
             return result;
         } catch (error) {
             throw new Error('Gagal memperbarui data Tambak: ' + error.message);
         }
     }
     
-    static async delete(id) {
+    static async delete(id, userId) { 
         try {
             await Kolam.delete(id);
-            const query = 'DELETE FROM tambak WHERE id = ?';
-            const [result] = await db.execute(query, [id]);
+            
+            const query = 'DELETE FROM tambak WHERE id = ? AND user_id = ?';
+            const [result] = await db.execute(query, [id, userId]);
+            
+            if (result.affectedRows === 0) {
+                throw new Error('Tambak tidak ditemukan atau tidak memiliki akses');
+            }
+            
             return result;
         } catch (error) {
             throw new Error('Gagal menghapus data Tambak: ' + error.message);
         }
     }
-        
 }
 
 export { Tambak };
