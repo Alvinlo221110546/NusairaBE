@@ -16,7 +16,20 @@ export const registerUser = async (req, res) => {
     
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const userId = await Register.create(name, username, email, hashedPassword, "user", no_hp, pekerjaan, jenis_kelamin, lokasi);
+    const defaultProfilePicUrl = 'https://res.cloudinary.com/dgl701jmj/image/upload/v1734105852/zkr6m2hltzowtzjlwnnt.jpg';
+    
+    const userId = await Register.create(
+      name, 
+      username, 
+      email, 
+      hashedPassword, 
+      "user", 
+      no_hp, 
+      pekerjaan, 
+      jenis_kelamin, 
+      lokasi, 
+      defaultProfilePicUrl 
+    );
 
     res.status(200).json({ message: "Registrasi berhasil", userId });
   } catch (error) {
