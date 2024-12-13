@@ -4,7 +4,7 @@ class FavoriteController {
   static async addToFavorites(req, res) {
     try {
       const { buku_id } = req.body;
-      const user_id = req.user && req.user.id ? req.user.id : null; 
+      const user_id = req.user?.id; 
       
       console.log("Parameter diterima:", { user_id, buku_id });
     

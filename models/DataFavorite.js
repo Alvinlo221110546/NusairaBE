@@ -18,6 +18,8 @@ class Favorite {
       if (existingFavorite) {
         throw new Error('Buku sudah ada di daftar favorit');
       }
+      const createdAt = data.created_at || new Date();
+
 
       const query = `
         INSERT INTO favorites (buku_id, user_id, created_at)
@@ -26,7 +28,7 @@ class Favorite {
       const [result] = await db.execute(query, [
         data.buku_id,
         data.user_id,
-        this.created_at
+        createdAt
       ]);
 
       return {
