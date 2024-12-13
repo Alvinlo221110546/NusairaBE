@@ -4,11 +4,16 @@ class FavoriteController {
   static async addToFavorites(req, res) {
     try {
       const { buku_id } = req.body;
-      const user_id = req.user.id; 
+      const user_id = req.user.id;
+      console.log("Parameter diterima:", { user_id, buku_id });
+
+      if (!buku_id || !user_id) {
+        console.error("Buku ID atau User ID tidak valid:", { buku_id, user_id });
+        return res.status(400).json({ message: "Buku ID atau User ID tidak valid" });
+      }
 
       const favorite = await Favorite.create({ buku_id, user_id });
-      console.log("Parameter diterima:", { user_id, buku_id })
-      
+
       res.status(200).json({
         message: 'Buku berhasil ditambahkan ke favorit',
         favorite
@@ -17,6 +22,7 @@ class FavoriteController {
       if (error.message.includes('sudah ada di daftar favorit')) {
         res.status(400).json({ message: error.message });
       } else {
+        console.error("Error saat menambahkan favorit:", error);
         res.status(500).json({ 
           message: 'Gagal menambahkan buku ke favorit', 
           error: error.message 
@@ -29,6 +35,10 @@ class FavoriteController {
     try {
       const user_id = req.user.id;
 
+      if (!user_id) {
+        return res.status(400).json({ message: "User ID tidak ditemukan" });
+      }
+
       const favorites = await Favorite.getFavoritesByUser(user_id);
       
       res.status(200).json({
@@ -36,6 +46,7 @@ class FavoriteController {
         favorites
       });
     } catch (error) {
+      console.error("Error saat mengambil daftar favorit:", error);
       res.status(500).json({ 
         message: 'Gagal mengambil daftar favorit', 
         error: error.message 
@@ -48,12 +59,17 @@ class FavoriteController {
       const { buku_id } = req.params;
       const user_id = req.user.id;
 
+      if (!buku_id || !user_id) {
+        return res.status(400).json({ message: "Buku ID atau User ID tidak valid" });
+      }
+
       await Favorite.removeFavorite(buku_id, user_id);
       
       res.status(200).json({
         message: 'Buku berhasil dihapus dari favorit'
       });
     } catch (error) {
+      console.error("Error saat menghapus favorit:", error);
       res.status(500).json({ 
         message: 'Gagal menghapus buku dari favorit', 
         error: error.message 
