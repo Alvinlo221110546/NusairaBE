@@ -12,7 +12,7 @@ class UserProfileController {
                 });
             }
             res.status(200).json({
-                foto_profile: user.foto_profile || '/default-profile.png', // Ganti profilePicture dengan foto_profile
+                foto_profile: user.foto_profile || '/default-profile.png', 
                 name: user.name,
                 pekerjaan: user.pekerjaan,
                 jenis_kelamin: user.jenis_kelamin,
@@ -32,31 +32,46 @@ class UserProfileController {
 
     static async updateUserProfile(req, res) {
         const userId = req.user.id;
-        const { name, email, pekerjaan, jenis_kelamin, lokasi, no_hp, password } = req.body;
-        const foto_profile = req.file ? req.file.path : null; // Ganti profilePicture dengan foto_profile
-
+        const { name, email, pekerjaan, jenis_kelamin, lokasi, no_hp, foto_profile, password } = req.body;
+        
+        // Log data yang diterima
+        console.log("Data yang Diterima untuk Update:", req.body);
+        
+        let formattedJenisKelamin = jenis_kelamin;
+        if (jenis_kelamin === "Laki-Laki") {
+            formattedJenisKelamin = "L";
+        } else if (jenis_kelamin === "Perempuan") {
+            formattedJenisKelamin = "P";
+        }
+    
+        const updateData = { name, email, pekerjaan, jenis_kelamin: formattedJenisKelamin, lokasi, no_hp, foto_profile };
+    
+        if (password) {
+            updateData.password = password;
+        }
+        
         try {
-            const updateData = { name, email, pekerjaan, jenis_kelamin, lokasi, no_hp, foto_profile, password }; // Ganti profilePicture dengan foto_profile
             const isUpdated = await UserProfile.updateUserProfile(userId, updateData);
-
+            
             if (!isUpdated) {
                 return res.status(404).json({
-                    message: `User with ID ${userId} not found or no changes made.`
+                    message: `User with ID ${userId} not found or no changes made.`,
                 });
             }
-
+    
             res.status(200).json({
-                message: "User profile updated successfully."
+                message: "User profile updated successfully.",
             });
         } catch (error) {
             console.error(error);
             res.status(500).json({
                 message: "Failed to update user profile.",
-                errors: error.message
+                errors: error.message,
             });
         }
     }
-
+    
+    
     static async deleteUserProfile(req, res) {
         const userId = req.user.id;
         try {
