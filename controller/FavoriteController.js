@@ -1,35 +1,37 @@
 import Favorite from '../models/DataFavorite.js';
 
 class FavoriteController {
-  static async addToFavorites(req, res) {
-    try {
-      const { buku_id } = req.body;
-      const user_id = req.user.id;
-      console.log("Parameter diterima:", { user_id, buku_id });
-
-      if (!buku_id || !user_id) {
-        console.error("Buku ID atau User ID tidak valid:", { buku_id, user_id });
-        return res.status(400).json({ message: "Buku ID atau User ID tidak valid" });
+    static async addToFavorites(req, res) {
+        try {
+          const { buku_id } = req.body;
+          const user_id = req.user ? req.user.id : undefined; 
+      
+          console.log("Parameter diterima:", { user_id, buku_id });
+      
+          if (!buku_id || !user_id) {
+            console.error("Buku ID atau User ID tidak valid:", { buku_id, user_id });
+            return res.status(400).json({ message: "Buku ID atau User ID tidak valid" });
+          }
+    
+          const favorite = await Favorite.create({ buku_id, user_id });
+      
+          res.status(200).json({
+            message: 'Buku berhasil ditambahkan ke favorit',
+            favorite
+          });
+        } catch (error) {
+          if (error.message.includes('sudah ada di daftar favorit')) {
+            res.status(400).json({ message: error.message });
+          } else {
+            console.error("Error saat menambahkan favorit:", error);
+            res.status(500).json({ 
+              message: 'Gagal menambahkan buku ke favorit', 
+              error: error.message 
+            });
+          }
+        }
       }
-
-      const favorite = await Favorite.create({ buku_id, user_id });
-
-      res.status(200).json({
-        message: 'Buku berhasil ditambahkan ke favorit',
-        favorite
-      });
-    } catch (error) {
-      if (error.message.includes('sudah ada di daftar favorit')) {
-        res.status(400).json({ message: error.message });
-      } else {
-        console.error("Error saat menambahkan favorit:", error);
-        res.status(500).json({ 
-          message: 'Gagal menambahkan buku ke favorit', 
-          error: error.message 
-        });
-      }
-    }
-  }
+      
 
   static async getFavorites(req, res) {
     try {
