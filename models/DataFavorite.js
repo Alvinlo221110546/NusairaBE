@@ -2,9 +2,9 @@ import db from '../database/Nusairadb.js';
 
 class Favorite {
   constructor(data) {
-    this.id = data.id || null;
-    this.buku_id = data.buku_id || null;
-    this.user_id = data.user_id || null;
+    this.id = data.id || "";
+    this.buku_id = data.buku_id || "";
+    this.user_id = data.user_id || "";
     this.created_at = data.created_at || new Date();
   }
 
