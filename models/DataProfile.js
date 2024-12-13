@@ -1,7 +1,6 @@
 import db from '../database/Nusairadb.js';
-import bcrypt from 'bcryptjs';
-class UserProfile {
 
+class UserProfile {
     constructor(data) {
         this.name = data.name;
         this.email = data.email;
@@ -19,14 +18,8 @@ class UserProfile {
 
         if (!data.name) errors.push("Name harus diisi.");
         if (!data.email) errors.push("Email harus diisi.");
-        if (!data.password) errors.push("Password harus diisi.");
 
         return errors;
-    }
-
-    static async hashPassword(password) {
-        const salt = await bcrypt.genSalt(10);
-        return await bcrypt.hash(password, salt);
     }
 
     static async save(data) {
@@ -36,8 +29,6 @@ class UserProfile {
         }
 
         try {
-            const hashedPassword = await this.hashPassword(data.password);
-
             const query = `
                 INSERT INTO pengguna (name, email, password, foto_profile, pekerjaan, jenis_kelamin, lokasi, no_hp, created_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -45,7 +36,7 @@ class UserProfile {
             const [result] = await db.execute(query, [
                 data.name,  
                 data.email,
-                hashedPassword,
+                data.password,  // Tidak mengubah password, langsung pakai password yang diterima
                 data.foto_profile, 
                 data.pekerjaan,
                 data.jenis_kelamin,
@@ -81,37 +72,58 @@ class UserProfile {
         }
     }
 
-   
     static async updateUserProfile(userId, data) {
         try {
-            const updateData = [
-                data.name,
-                data.email,
-                data.pekerjaan,
-                data.jenis_kelamin,
-                data.lokasi,
-                data.no_hp,
-                data.foto_profile, 
-                userId
-            ];
+            const fields = [];
+            const values = [];
 
-            if (data.password) {
-                const hashedPassword = await this.hashPassword(data.password);
-                updateData[2] = hashedPassword; 
+            if (data.foto_profile) {
+                fields.push("foto_profile = ?");
+                values.push(data.foto_profile);
             }
-
-            const query = `
-                UPDATE pengguna 
-                SET name = ?, email = ?, password = ?, pekerjaan = ?, jenis_kelamin = ?, lokasi = ?, no_hp = ?, foto_profile = ?
-                WHERE id = ?
-            `;
-            const [result] = await db.execute(query, updateData);
-            return result.affectedRows > 0; 
+    
+            // Hanya tambahkan field yang valid
+            if (data.name) {
+                fields.push("name = ?");
+                values.push(data.name);
+            }
+            if (data.email) {
+                fields.push("email = ?");
+                values.push(data.email);
+            }
+            if (data.pekerjaan) {
+                fields.push("pekerjaan = ?");
+                values.push(data.pekerjaan);
+            }
+            if (data.jenis_kelamin) {
+                fields.push("jenis_kelamin = ?");
+                values.push(data.jenis_kelamin);
+            }
+            if (data.lokasi) {
+                fields.push("lokasi = ?");
+                values.push(data.lokasi);
+            }
+            if (data.no_hp) {
+                fields.push("no_hp = ?");
+                values.push(data.no_hp);
+            }
+        
+            if (fields.length === 0) {
+                throw new Error("No fields to update.");
+            }
+    
+            // Pastikan query hanya mencakup kolom yang benar, tidak menyertakan password
+            const query = `UPDATE pengguna SET ${fields.join(", ")} WHERE id = ?`;
+            values.push(userId);
+    
+            const [result] = await db.execute(query, values);
+            return result.affectedRows > 0;
         } catch (error) {
-            console.error("Error updating user profile:", error.message);
+            console.error("Error updating user profile:", error.message); // Debugging error log
             throw error;
         }
     }
+    
 }
 
 export default UserProfile;
