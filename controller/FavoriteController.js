@@ -7,8 +7,9 @@ class FavoriteController {
       const user_id = req.user.id; 
 
       const favorite = await Favorite.create({ buku_id, user_id });
+      console.log("Parameter diterima:", { user_id, buku_id })
       
-      res.status(201).json({
+      res.status(200).json({
         message: 'Buku berhasil ditambahkan ke favorit',
         favorite
       });
