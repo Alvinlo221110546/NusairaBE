@@ -8,22 +8,37 @@ class Favorite {
     this.created_at = data.created_at || new Date();
   }
 
-  static async create({ buku_id, user_id }) {
-    if (buku_id === undefined || user_id === undefined) {
-      throw new Error('Buku ID dan User ID tidak boleh kosong');
-    }
-  
+  static async create(data) {
     try {
-      const [result] = await db.execute(
-        'INSERT INTO favorites (buku_id, user_id) VALUES (?, ?)',
-        [buku_id, user_id]
-      );
-      return result;
+      if (!data.buku_id || !data.user_id) {
+        throw new Error('Buku ID dan User ID harus disediakan');
+      }
+
+      const existingFavorite = await this.findByBookAndUser(data.buku_id, data.user_id);
+      if (existingFavorite) {
+        throw new Error('Buku sudah ada di daftar favorit');
+      }
+
+      const query = `
+        INSERT INTO favorites (buku_id, user_id, created_at)
+        VALUES (?, ?, ?)
+      `;
+      const [result] = await db.execute(query, [
+        data.buku_id,
+        data.user_id,
+        this.created_at
+      ]);
+
+      return {
+        id: result.insertId,
+        ...data
+      };
     } catch (error) {
-      console.error('Error saat membuat favorit:', error);
+      console.error('Error saat membuat favorit:', error.message);
       throw error;
     }
   }
+
   static async findByBookAndUser(bukuId, userId) {
     const query = 'SELECT * FROM favorites WHERE buku_id = ? AND user_id = ?';
     try {
