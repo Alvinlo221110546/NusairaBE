@@ -1,4 +1,4 @@
-import Tagihan from "../models/Tagihan.js";
+import Tagihan from "../models/DataTagihan.js";
 
 class TagihanController {
   async addTagihan(req, res) {
