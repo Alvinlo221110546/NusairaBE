@@ -39,7 +39,7 @@ export const loginUser = async (req, res) => {
     
     res.status(200).json({
       message: "Login berhasil",
-      profile: { id: pengguna.id, name: pengguna.name, email: pengguna.email,foto_profile:pengguna.foto_profile },
+      profile: { id: pengguna.id, name: pengguna.name, email: pengguna.email,foto_profile:pengguna.foto_profile,role:pengguna.role },
       token: token  
     });
     
