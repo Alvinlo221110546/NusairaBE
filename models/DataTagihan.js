@@ -4,8 +4,8 @@ import { v4 as uuidv4 } from "uuid";
 class Tagihan {
   constructor(data) {
     this.id = data.id || uuidv4();
-    this.invoiceNumber = data.invoiceNumber;
-    this.dueDate = data.dueDate;
+    this.invoiceNumber = data.invoice_number;
+    this.dueDate = data.due_date;
     this.amount = data.amount;
     this.total = data.total;
     this.user_id = data.user_id;
@@ -26,10 +26,11 @@ class Tagihan {
       const tagihan = new Tagihan(data);
 
       const query = `
-                INSERT INTO tagihan (
-                    id, invoiceNumber, dueDate, amount, total, user_id, paket_id, status, created_at, updated_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            `;
+      INSERT INTO tagihan (
+          id, invoice_number, due_date, amount, total, user_id, paket_id, status, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+  
       const [result] = await db.execute(query, [
         tagihan.id,
         tagihan.invoiceNumber,
@@ -82,8 +83,6 @@ class Tagihan {
     }
   }
 
-  // Model Tagihan.js
-
   static async getByUserId(user_id) {
     try {
       const query = `
@@ -108,7 +107,7 @@ class Tagihan {
 
       const query = `
                 UPDATE tagihan
-                SET invoiceNumber = ?, dueDate = ?, amount = ?, total = ?, user_id = ?, paket_id = ?, status = ?, updated_at = ?
+                SET nvoice_number = ?, due_date = ?, amount = ?, total = ?, user_id = ?, paket_id = ?, status = ?, updated_at = ?
                 WHERE id = ?
             `;
       const [result] = await db.execute(query, [
