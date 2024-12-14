@@ -34,7 +34,6 @@ class UserProfileController {
         const userId = req.user.id;
         const { name, email, pekerjaan, jenis_kelamin, lokasi, no_hp, foto_profile, password } = req.body;
         
-        // Log data yang diterima
         console.log("Data yang Diterima untuk Update:", req.body);
         
         let formattedJenisKelamin = jenis_kelamin;
