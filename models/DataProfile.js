@@ -36,7 +36,7 @@ class UserProfile {
             const [result] = await db.execute(query, [
                 data.name,  
                 data.email,
-                data.password,  // Tidak mengubah password, langsung pakai password yang diterima
+                data.password,  
                 data.foto_profile, 
                 data.pekerjaan,
                 data.jenis_kelamin,
@@ -82,7 +82,6 @@ class UserProfile {
                 values.push(data.foto_profile);
             }
     
-            // Hanya tambahkan field yang valid
             if (data.name) {
                 fields.push("name = ?");
                 values.push(data.name);
@@ -112,14 +111,13 @@ class UserProfile {
                 throw new Error("No fields to update.");
             }
     
-            // Pastikan query hanya mencakup kolom yang benar, tidak menyertakan password
             const query = `UPDATE pengguna SET ${fields.join(", ")} WHERE id = ?`;
             values.push(userId);
     
             const [result] = await db.execute(query, values);
             return result.affectedRows > 0;
         } catch (error) {
-            console.error("Error updating user profile:", error.message); // Debugging error log
+            console.error("Error updating user profile:", error.message);
             throw error;
         }
     }

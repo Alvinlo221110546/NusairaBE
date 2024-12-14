@@ -29,6 +29,7 @@ import registerRoutes from './routes/Register.js';
 import profileRoutes from './routes/Profile.js';
 import BukuRoutes from './routes/Buku.js';
 import FavoriteRoutes from './routes/Favorite.js';
+import userRoutes from './routes/User.js';
 import cookieParser from "cookie-parser";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -96,6 +97,7 @@ app.use('/api/', profileRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/suppliers', supplierRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/users', userRoutes);
 
 
 // ini akan dipakai untuk prediksi
