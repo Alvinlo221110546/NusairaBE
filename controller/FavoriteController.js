@@ -32,6 +32,22 @@ class FavoriteController {
     }
   }
   
+  static async getAllFavorites(req, res) {
+    try {
+      const favorites = await Favorite.getAll(); 
+      res.status(200).json({
+        message: 'Semua daftar favorit berhasil diambil',
+        favorites
+      });
+    } catch (error) {
+      console.error("Error saat mengambil semua daftar favorit:", error);
+      res.status(500).json({ 
+        message: 'Gagal mengambil semua daftar favorit', 
+        error: error.message 
+      });
+    }
+  }
+  
 
   static async getFavorites(req, res) {
     try {

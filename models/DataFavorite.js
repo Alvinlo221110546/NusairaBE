@@ -52,6 +52,21 @@ class Favorite {
     }
   }
 
+  static async getAll() {
+    const query = `
+      SELECT * FROM favorites
+      ORDER BY created_at DESC
+    `;
+    try {
+      const [results] = await db.execute(query);
+      return results;
+    } catch (error) {
+      console.error('Error saat mengambil semua favorit:', error.message);
+      throw error;
+    }
+  }
+  
+
   static async getFavoritesByUser(userId) {
     const query = `
       SELECT f.id, f.buku_id, f.created_at, 
