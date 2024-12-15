@@ -103,10 +103,8 @@
 //     try {
 //       await connection.beginTransaction();
 
-//       // Hapus data lama
 //       await connection.execute('TRUNCATE TABLE catfish_production');
 
-//       // Proses dan simpan data
 //       for (const item of CatfishProductionService.staticData) {
 //         const marketPrice = this.calculateMarketPrice(item.volume, item.totalRevenue);
 
@@ -174,10 +172,8 @@
 //   }
 
 //   startScheduler() {
-//     // Jalankan sekali saat service dimulai
 //     this.processAndSaveProduction();
-
-//     // Jadwalkan pengolahan data setiap hari pukul 00:00
+    
 //     cron.schedule('0 0 * * *', () => {
 //       console.log('Memproses ulang data produksi...');
 //       this.processAndSaveProduction();

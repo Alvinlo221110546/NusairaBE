@@ -21,7 +21,7 @@ class ContactController {
         pesan
       });
 
-      res.status(201).json({
+      res.status(200).json({
         status: 'success',
         message: 'Pesan berhasil dikirim',
         data: result

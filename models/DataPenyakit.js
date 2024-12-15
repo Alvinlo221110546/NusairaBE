@@ -126,7 +126,7 @@ class PenyakitLele {
       const [result] = await db.execute(query, [
         data.title,
         data.date,
-        data.image.join(','), // Gabungkan gambar menjadi satu string
+        data.image.join(','),
         data.indikasi,
         data.penyebab,
         data.penanganan,
