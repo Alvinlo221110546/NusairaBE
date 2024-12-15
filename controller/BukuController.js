@@ -5,7 +5,7 @@ class BukuController {
     try {
       const data = req.body;
       const buku = await Buku.save(data);
-      res.status(201).json({
+      res.status(200).json({
         message: 'Buku berhasil dibuat.',
         data: buku,
       });

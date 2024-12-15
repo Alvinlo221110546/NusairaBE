@@ -7,7 +7,7 @@ class BeritaController {
         try {
             const berita = { writer, title, excerpt, content, image, date };
             const savedBerita = await Berita.save(berita);
-            res.status(201).json({ 
+            res.status(200).json({ 
                 message: 'Berita berhasil ditambahkan!', 
                 berita: savedBerita 
             });

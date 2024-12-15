@@ -10,7 +10,7 @@ class PemasukanController {
         try {
             const pemasukan = { date, kategori, jumlah, harga, keterangan, total, tambak_id };
             await Pemasukan.save(pemasukan);
-            res.status(201).json({ message: 'Pemasukan berhasil ditambahkan!' });
+            res.status(200).json({ message: 'Pemasukan berhasil ditambahkan!' });
         } catch (err) {
             console.error(err);
             res.status(500).json({ message: 'Terjadi kesalahan dalam menambahkan pemasukan', error: err.message });
