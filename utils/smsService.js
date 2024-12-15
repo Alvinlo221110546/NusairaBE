@@ -1,12 +1,11 @@
-// utils/smsService.js
+//Masih Tahap Pengembangan
 import axios from "axios";
 
-// Contoh pengiriman SMS menggunakan API eksternal
 export const sendVerificationCode = async (phone, otp) => {
   try {
     const message = `Kode verifikasi Anda adalah: ${otp}`;
     
-    // Kirim SMS menggunakan API pengirim SMS (misalnya Twilio, Nexmo, atau API SMS lainnya)
+
     await axios.post("https://api.twillo.com/send", {
       phone,
       message,

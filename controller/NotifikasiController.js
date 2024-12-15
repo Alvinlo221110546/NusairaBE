@@ -11,7 +11,7 @@ class NotifikasiController {
         try {
             const notifikasi = { type, date, title, description };
             await Notifikasi.save(notifikasi);
-            res.status(201).json({ message: 'Notifikasi berhasil ditambahkan!' });
+            res.status(200).json({ message: 'Notifikasi berhasil ditambahkan!' });
         } catch (err) {
             console.error('Error saat menambahkan notifikasi:', err);
             res.status(500).json({
@@ -24,7 +24,7 @@ class NotifikasiController {
     async getAllNotifikasi(req, res) {
         try {
             const notifikasiData = await Notifikasi.getAll();
-            res.status(200).json(notifikasiData); // Tetap return array kosong jika data tidak ada
+            res.status(200).json(notifikasiData);
         } catch (err) {
             console.error('Error saat mengambil semua notifikasi:', err);
             res.status(500).json({

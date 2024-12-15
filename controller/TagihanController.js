@@ -19,7 +19,7 @@ class TagihanController {
         status,
       });
 
-      res.status(201).json({
+      res.status(200).json({
         message: "Tagihan berhasil ditambahkan!",
         data: result,
       });

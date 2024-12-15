@@ -1,7 +1,6 @@
 import PredictionModel from '../models/DataPrediksi.js';
 
 class PredictionController {
-  // Get all predictions grouped by province
   static async getPredictionsGroupedByProvince(req, res) {
     try {
       const predictions = await PredictionModel.getPredictionsGroupedByProvince();
@@ -11,7 +10,7 @@ class PredictionController {
     }
   }
 
-  // Get predictions for a single city
+
   static async getPredictionsByCity(req, res) {
     try {
       const { city } = req.params;

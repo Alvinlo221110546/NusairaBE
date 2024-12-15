@@ -11,7 +11,7 @@ class PengeluaranController {
         try {
             const pengeluaran = { date, jenis_pengeluaran, nama_barang, catatan, status, sisa_tagihan, tambak_id };
             await Pengeluaran.save(pengeluaran);
-            res.status(201).json({ message: 'Pengeluaran berhasil ditambahkan!' });
+            res.status(200).json({ message: 'Pengeluaran berhasil ditambahkan!' });
         } catch (err) {
             console.error(err);
             res.status(500).json({ message: 'Terjadi kesalahan dalam menambahkan pengeluaran', error: err.message });

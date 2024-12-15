@@ -3,7 +3,6 @@ import db from '../database/Nusairadb.js';
 class PredictionModel {
   static async getPredictionsGroupedByProvince() {
     try {
-      // Define cities by province
       const citiesByProvince = {
         'JAWA BARAT': ['Bandung', 'Bekasi', 'Bogor', 'Cirebon', 'Subang'],
         'JAWA TIMUR': ['Tulungagung', 'Malang', 'Surabaya', 'Blitar', 'Kediri'],
@@ -13,7 +12,6 @@ class PredictionModel {
       const results = {};
       
       for (const [province, cities] of Object.entries(citiesByProvince)) {
-        // Using IN clause for cities in each province
         const placeholders = cities.map(() => '?').join(',');
         const query = `
           SELECT * FROM predictions 
@@ -22,11 +20,9 @@ class PredictionModel {
           ORDER BY city, month ASC
         `;
         
-        // Add province as the last parameter
         const parameters = [...cities, province];
         const [rows] = await db.execute(query, parameters);
         
-        // Group results by city within province
         const citiesData = {};
         rows.forEach(row => {
           if (!citiesData[row.city]) {
@@ -45,7 +41,6 @@ class PredictionModel {
     }
   }
 
-  // Get predictions for a specific city
   static async getPredictionsByCity(city) {
     try {
       const query = 'SELECT * FROM predictions WHERE city = ? ORDER BY month ASC';

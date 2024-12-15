@@ -7,7 +7,7 @@ class DataPakanController {
         try {
             const data = req.body;
             const result = await DataPakan.save(data);
-            res.status(201).json({
+            res.status(200).json({
                 message: "Data Pakan entry created successfully",
                 data: result
             });

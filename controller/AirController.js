@@ -1,7 +1,6 @@
-import KualitasAir from '../models/DataAir.js'; // Sesuaikan path sesuai
+import KualitasAir from '../models/DataAir.js'; 
 
 class KualitasAirController {
-    // Menambahkan kualitas air baru
     async addKualitasAir(req, res) {
         const { ph, suhu, oksigen, salinitas, tambak_id } = req.body;
 
@@ -12,14 +11,13 @@ class KualitasAirController {
         try {
             const kualitasAir = { ph, suhu, oksigen, salinitas, tambak_id };
             await KualitasAir.save(kualitasAir);
-            res.status(201).json({ message: 'Kualitas air berhasil ditambahkan!' });
+            res.status(200).json({ message: 'Kualitas air berhasil ditambahkan!' });
         } catch (err) {
             console.error(err);
             res.status(500).json({ message: 'Terjadi kesalahan dalam menambahkan kualitas air', error: err.message });
         }
     }
 
-    // Mendapatkan semua data kualitas air
     async getAllKualitasAir(req, res) {
         try {
             const kualitasAirData = await KualitasAir.getAll();
@@ -35,7 +33,6 @@ class KualitasAirController {
         }
     }
 
-    // Mendapatkan kualitas air berdasarkan ID
     async getKualitasAirById(req, res) {
         const kualitasAirId = req.params.id;
 
@@ -51,7 +48,6 @@ class KualitasAirController {
         }
     }
 
-    // Mengupdate kualitas air berdasarkan ID
     async updateKualitasAir(req, res) {
         const kualitasAirId = req.params.id;
         const { ph, suhu, oksigen, salinitas, tambak_id } = req.body;
@@ -70,7 +66,6 @@ class KualitasAirController {
         }
     }
 
-    // Menghapus kualitas air berdasarkan ID
     async deleteKualitasAir(req, res) {
         const kualitasAirId = req.params.id;
 
