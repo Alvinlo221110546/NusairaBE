@@ -168,4 +168,6 @@ Jika Anda memiliki pertanyaan lebih lanjut, silakan hubungi kami melalui email:
 
 ```
 egidanuarta17@gmail.com
+alvin.lo2005@gmail.com
+ogyarjndra@gmail.com
 ```
