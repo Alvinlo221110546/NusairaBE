@@ -37,7 +37,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
-const port = 3020;
+const port = process.env.PORT;
 
 app.use(cookieParser());
 app.use(express.json());  
